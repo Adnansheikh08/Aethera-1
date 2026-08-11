@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 320" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <g opacity="0.7">
+    <path d="M182 122h150v96H182z" opacity="0.9"/>
+    <path d="M332 156l58-30v76l-58-30z"/>
+    <path d="M182 122l22-30h66l20 30"/>
+    <circle cx="248" cy="170" r="26"/>
+    <circle cx="248" cy="170" r="10" opacity="0.6"/>
+  </g>
+  <g opacity="0.34">
+    <path d="M126 262V178a26 26 0 0126-26"/>
+    <path d="M114 262h24"/>
+    <path d="M126 178l-16 22M126 178l16 22" opacity="0.7"/>
+  </g>
+  <g opacity="0.3" stroke-width="2.5">
+    <circle cx="86" cy="106" r="20"/>
+    <path d="M86 126v42"/>
+    <path d="M86 168l-22 44M86 168l22 44" opacity="0.8"/>
+    <path d="M64 142h44" opacity="0.6"/>
+  </g>
+  <g opacity="0.36">
+    <path d="M398 82a30 30 0 0142 0" opacity="0.7"/>
+    <path d="M386 66a48 48 0 0166 0" opacity="0.45"/>
+    <circle cx="419" cy="100" r="7"/>
+  </g>
+  <g opacity="0.25">
+    <path d="M44 274h392"/>
+    <path d="M198 274l-14 18M300 274l14 18" opacity="0.6"/>
+  </g>
+</svg>

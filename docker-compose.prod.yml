@@ -1,0 +1,50 @@
+services:
+  mongo:
+    image: mongo:8
+    volumes:
+      - mongo_prod_data:/data/db
+    expose:
+      - "27017"
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      target: runner
+    # The image's CMD already runs the server; no gunicorn-style process
+    # manager is needed. Run replicas behind nginx instead of in-process
+    # workers, since the WAF's ban list and rate-limit counters live in the
+    # per-process cache and would diverge across forks.
+    volumes:
+      # nginx serves the built SPA directly off this shared volume, so static
+      # requests never reach Node.
+      - spa_dist:/app/client/dist
+    expose:
+      - "5000"
+    environment:
+      - NODE_ENV=production
+      - MONGO_URI=mongodb://mongo:27017/aethera
+    env_file:
+      - ./server/.env
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - spa_dist:/usr/share/nginx/html:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+
+volumes:
+  mongo_prod_data:
+  # Populated by the api image at build time (client/dist) and read by nginx.
+  spa_dist:

@@ -1,0 +1,111 @@
+name: CI Quality Gate
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  client:
+    name: Client build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: client/package-lock.json
+
+      - name: Install Dependencies
+        working-directory: client
+        run: npm ci
+
+      - name: Dependency Security Scan
+        working-directory: client
+        # Advisory: the SPA's dependencies ship to the browser as bundled
+        # output, so a transitive advisory is not automatically exploitable
+        # here. It reports without blocking the build.
+        run: npm audit --audit-level=high || true
+
+      - name: Build SPA
+        working-directory: client
+        # The real gate: Vite fails the build on an unresolved import or a
+        # syntax error anywhere in the module graph, so this typechecks the
+        # wiring of every component that ends up in the bundle.
+        run: npm run build
+
+  server:
+    name: Server boot smoke
+    runs-on: ubuntu-latest
+
+    services:
+      mongo:
+        image: mongo:8
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --quiet --eval 'db.adminCommand({ ping: 1 })'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: server/package-lock.json
+
+      - name: Install Dependencies
+        working-directory: server
+        run: npm ci
+
+      - name: Dependency Security Scan
+        working-directory: server
+        # This one does block: server dependencies run with database and
+        # secret access, so a high-severity advisory here is a real exposure.
+        run: npm audit --audit-level=high
+
+      - name: Syntax Check
+        working-directory: server
+        # Cheap stand-in for the old ruff/mypy pass. `node --check` parses
+        # every module without executing it, so a typo fails here rather than
+        # at request time on a route nobody exercised.
+        run: find src -name '*.js' -print0 | xargs -0 -n1 node --check
+
+      - name: Boot and Health Check
+        working-directory: server
+        env:
+          # NODE_ENV stays unset-to-development on purpose: config/index.js
+          # only enforces required secrets in production, so the smoke test
+          # boots on defaults without CI needing the real keys.
+          MONGO_URI: mongodb://127.0.0.1:27017/aethera_ci
+          PORT: 5000
+        run: |
+          node src/index.js &
+          SERVER_PID=$!
+          # Poll rather than sleep: the boot waits on a Mongo handshake whose
+          # duration isn't fixed, and a flaky gate gets ignored.
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:5000/api/healthz > /tmp/health.json; then
+              echo "Healthy after ${i}s:"
+              cat /tmp/health.json
+              kill $SERVER_PID
+              exit 0
+            fi
+            # Fail fast if the process died instead of waiting out the loop.
+            kill -0 $SERVER_PID 2>/dev/null || { echo "Server exited during boot"; exit 1; }
+            sleep 1
+          done
+          echo "Server never reported healthy"
+          kill $SERVER_PID 2>/dev/null
+          exit 1

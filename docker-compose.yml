@@ -1,0 +1,46 @@
+# Development stack. The API runs in a container; the Vite dev server stays on
+# the host (`cd client && npm run dev`) so HMR and the /api proxy in
+# vite.config.js keep working against http://127.0.0.1:5000.
+services:
+  mongo:
+    image: mongo:8
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      target: runner
+    command: node --watch server/src/index.js
+    volumes:
+      # Source is mounted for --watch, but node_modules is masked by an
+      # anonymous volume: the host tree is Windows-built and would shadow the
+      # Linux binaries installed in the image.
+      - ./server:/app/server
+      - /app/server/node_modules
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=development
+      # 127.0.0.1 in server/.env points at the host; inside compose the
+      # database answers to its service name.
+      - MONGO_URI=mongodb://mongo:27017/aethera
+      - CLIENT_ORIGIN=http://localhost:5173
+    env_file:
+      # Secrets stay in server/.env — never inlined here, unlike the Django
+      # compose file this replaces, which had SECRET_KEY and the field
+      # encryption key committed in plaintext.
+      - ./server/.env
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+volumes:
+  mongo_data:

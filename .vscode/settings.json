@@ -1,0 +1,33 @@
+{
+    // Both halves of the project are ESM ("type": "module" in server, Vite in
+    // client), so relative imports must carry their .js extension. Auto-imports
+    // default to extensionless paths, which Node then fails to resolve at
+    // runtime while the editor still shows them as valid.
+    "javascript.preferences.importModuleSpecifierEnding": "js",
+
+    // The SPA's JSX lives in .jsx files with no build-time typechecking, so the
+    // editor's inference is the only signal that a prop or import is wrong.
+    "javascript.suggest.autoImports": true,
+    "javascript.updateImportsOnFileMove.enabled": "always",
+
+    "[javascript]": {
+        "editor.rulers": [
+            100
+        ]
+    },
+    "[javascriptreact]": {
+        "editor.rulers": [
+            100
+        ]
+    },
+
+    "files.exclude": {
+        "**/node_modules": true,
+        "**/dist": true
+    },
+    // Excluded from search only, not hidden: the lockfiles matter to CI (npm ci
+    // refuses to run without them) but bury real matches when grepping.
+    "search.exclude": {
+        "**/package-lock.json": true
+    }
+}

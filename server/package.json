@@ -1,0 +1,32 @@
+{
+  "name": "aethera-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Aethera agency API — Express + MongoDB (ported from Django)",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js",
+    "seed": "node src/scripts/seed.js",
+    "create-admin": "node src/scripts/createAdmin.js",
+    "import-legacy": "node src/scripts/importLegacy.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.9.5",
+    "pino": "^9.6.0",
+    "qrcode": "^1.5.4",
+    "speakeasy": "^2.0.0",
+    "zod": "^3.24.1"
+  }
+}

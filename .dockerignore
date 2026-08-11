@@ -1,0 +1,30 @@
+# Dependencies are installed inside the image. Without this exclusion the
+# host's Windows-built trees are copied in by `COPY server/ ./server/` and
+# overwrite the Linux binaries npm ci just produced — native modules then fail
+# at runtime with no build-time error.
+node_modules
+**/node_modules
+
+# Secrets must reach the container through env_file at run time, never baked
+# into a layer: image layers are readable by anyone who can pull the image,
+# and deleting the file in a later layer does not remove it from history.
+.env
+.env.*
+!.env.example
+
+# Build output is produced by the client-build stage; copying a stale local
+# dist in would silently ship whatever was last built on the host.
+dist
+build
+.vite
+
+# Not part of the runtime image.
+.git
+.github
+.vscode
+*.log
+coverage
+README.md
+docker-compose*.yml
+Dockerfile
+.dockerignore

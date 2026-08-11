@@ -1,0 +1,17 @@
+# ---- Node / MERN ----
+node_modules/
+dist/
+build/
+.vite/
+coverage/
+*.tsbuildinfo
+
+# ---- Secrets & local state ----
+.env
+.env.local
+.env.*.local
+*.log
+
+# ---- Editor / OS ----
+.DS_Store
+Thumbs.db
