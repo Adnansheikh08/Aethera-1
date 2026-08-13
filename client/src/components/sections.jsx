@@ -427,6 +427,21 @@ function StatTile({ stat, index }) {
   );
 }
 
+function CaseStudyCard({ study, index }) {
+  const tiltRef = useCardTilt();
+
+  return (
+    <Reveal as="article" className="card" key={study.slug} staggerIndex={index} ref={tiltRef}>
+      <p className="card-index">{study.metrics}</p>
+      <h3 className="card-title">{study.client_name}</h3>
+      <p>{study.challenge}</p>
+      <Link to={`/case-studies/${study.slug}`} className="learn-more">
+        Case study<span className="visually-hidden"> for {study.client_name}</span>
+      </Link>
+    </Reveal>
+  );
+}
+
 export function Proof({ caseStudies }) {
   return (
     <section
@@ -457,14 +472,7 @@ export function Proof({ caseStudies }) {
       {caseStudies.length > 0 && (
         <div className="services-grid" style={{ marginBlockStart: "var(--space-2xl)" }}>
           {caseStudies.map((study, index) => (
-            <Reveal as="article" className="card" key={study.slug} staggerIndex={index}>
-              <p className="card-index">{study.metrics}</p>
-              <h3 className="card-title">{study.client_name}</h3>
-              <p>{study.challenge}</p>
-              <Link to={`/case-studies/${study.slug}`} className="learn-more">
-                Case study<span className="visually-hidden"> for {study.client_name}</span>
-              </Link>
-            </Reveal>
+            <CaseStudyCard study={study} index={index} key={study.slug} />
           ))}
         </div>
       )}
