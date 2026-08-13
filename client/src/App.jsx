@@ -6,9 +6,11 @@ import Admin from "./admin/Admin.jsx";
 import { AuthProvider } from "./admin/AuthContext.jsx";
 import { CookieBanner, Preloader, ScrollProgress } from "./components/Chrome.jsx";
 import { Footer, Header, WhatsAppFloat } from "./components/Layout.jsx";
+import { useScrollTopOnNavigate } from "./hooks/useNavigation.js";
 import { CaseStudyDetail, ServiceDetail } from "./pages/Detail.jsx";
 import { Landing } from "./pages/Landing.jsx";
-import { DataErasure, NotFound, PrivacyPolicy, Terms } from "./pages/Legal.jsx";
+import { Contact } from "./pages/Contact.jsx";
+import { NotFound, PrivacyPolicy, Terms } from "./pages/Legal.jsx";
 
 const SITE_TITLE = "Aethera — Enterprise Software Agency & Cybersecurity";
 const SITE_DESCRIPTION =
@@ -68,6 +70,8 @@ function PublicSite() {
   const { pathname } = useLocation();
   const isLanding = pathname === "/";
 
+  useScrollTopOnNavigate();
+
   return (
     <>
       <SiteMeta />
@@ -85,11 +89,11 @@ function PublicSite() {
       <main id="main-content">
         <Routes>
           <Route path="/" element={<Landing introComplete={!isLanding || introComplete} />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/services/:slug" element={<ServiceDetail />} />
           <Route path="/case-studies/:slug" element={<CaseStudyDetail />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<Terms />} />
-          <Route path="/data-erasure" element={<DataErasure />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

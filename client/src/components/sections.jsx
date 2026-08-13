@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { Reveal } from "./Reveal.jsx";
@@ -32,8 +33,8 @@ const STATS = [
 
 const LOCATIONS = [
   { tag: "Main office", city: "Lucknow", address: "Uttar Pradesh, India", zone: "Asia/Kolkata" },
-  { tag: "Remote", city: "Dubai", address: "United Arab Emirates", zone: "Asia/Dubai" },
-  { tag: "Remote", city: "London", address: "United Kingdom", zone: "Europe/London" },
+  { tag: "Remote", city: "Delhi", address: "India", zone: "Asia/Kolkata" },
+  { tag: "Remote", city: "Noida", address: "Uttar Pradesh, India", zone: "Asia/Kolkata" },
 ];
 
 export function Hero({ introComplete }) {
@@ -72,7 +73,7 @@ export function Hero({ introComplete }) {
         </p>
         <div className="hero-ctas">
           <a href="#contact-section" className="cta-button btn-primary">
-            Enquiry
+            Contact
           </a>
           <a href="#work-section" className="cta-button btn-secondary">
             Selected Work
@@ -133,15 +134,16 @@ export function Statement() {
 }
 
 /** One service card; the tilt hook needs its own ref per card. */
-function ServiceCard({ service, index }) {
+function ServiceCard({ service, index, onDetailClick }) {
   const tiltRef = useCardTilt();
   const artwork = serviceBackground(service.slug);
 
   return (
-    <Reveal as="article" className="card service-card" staggerIndex={index}>
-      {/* Its own layer, not a background on the tilted div: useCardTilt writes
-          that element's `background` inline on every mousemove and would wipe
-          the image out on hover. Decorative, so it stays out of the a11y tree.
+    <Reveal as="article" className="card service-card" staggerIndex={index} ref={tiltRef}>
+      {/* Its own layer, not a background on the card: useCardTilt tilts the card
+          itself and rewrites its `background` on every mousemove, which would
+          wipe the image out on hover. Decorative, so it stays out of the a11y
+          tree.
 
           The quotes inside url() are load-bearing. Vite inlines an SVG this
           small as a data URI that carries single quotes around its attributes,
@@ -154,19 +156,68 @@ function ServiceCard({ service, index }) {
           aria-hidden="true"
         />
       ) : null}
-      <div ref={tiltRef}>
-        <p className="card-index">{String(index + 1).padStart(2, "0")}</p>
+      <div>
         <h3 className="card-title">{service.title}</h3>
         <p>{service.short_description}</p>
-        <Link to={`/services/${service.slug}`} className="learn-more">
+        <button
+          className="learn-more"
+          onClick={() => onDetailClick(service)}
+          type="button"
+        >
           Detail<span className="visually-hidden"> about {service.title}</span>
-        </Link>
+        </button>
       </div>
     </Reveal>
   );
 }
 
+function ServiceModal({ service, onClose }) {
+  return (
+    <>
+      <div
+        className="modal-backdrop"
+        onClick={onClose}
+        role="presentation"
+      />
+      <div className="modal-container" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div className="modal-content">
+          <button
+            className="modal-close"
+            onClick={onClose}
+            aria-label="Close service details"
+            type="button"
+          >
+            <span aria-hidden="true">✕</span>
+          </button>
+          <div className="modal-body">
+            <h2 id="modal-title" className="modal-title">{service.title}</h2>
+            <div className="modal-description" dangerouslySetInnerHTML={{ __html: service.description }} />
+            <div className="modal-actions">
+              <Link
+                to={`/services/${service.slug}`}
+                className="cta-button btn-primary"
+                onClick={onClose}
+              >
+                View Full Details
+              </Link>
+              <button
+                className="cta-button btn-secondary"
+                onClick={onClose}
+                type="button"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
 export function Focus({ services }) {
+  const [selectedService, setSelectedService] = useState(null);
+
   return (
     <section
       id="focus-section"
@@ -175,7 +226,7 @@ export function Focus({ services }) {
       data-reveal-group=""
     >
       <div className="section-head">
-        <p className="eyebrow">Focus</p>
+        <p className="eyebrow">Services</p>
         <div>
           <h2 id="focus-heading" className="section-heading">
             Our core offerings
@@ -191,10 +242,22 @@ export function Focus({ services }) {
           <p className="filter-empty">Service catalogue is being updated. Please check back shortly.</p>
         ) : (
           services.map((service, index) => (
-            <ServiceCard key={service.slug} service={service} index={index} />
+            <ServiceCard
+              key={service.slug}
+              service={service}
+              index={index}
+              onDetailClick={setSelectedService}
+            />
           ))
         )}
       </div>
+
+      {selectedService && (
+        <ServiceModal
+          service={selectedService}
+          onClose={() => setSelectedService(null)}
+        />
+      )}
     </section>
   );
 }
@@ -373,7 +436,7 @@ export function Proof({ caseStudies }) {
       data-reveal-group=""
     >
       <div className="section-head">
-        <p className="eyebrow">Engineering Proof</p>
+        <p className="eyebrow">Testimonials</p>
         <div>
           <h2 id="proof-heading" className="section-heading">
             Measured outcomes

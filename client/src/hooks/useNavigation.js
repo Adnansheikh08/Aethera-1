@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 const MOBILE_BREAKPOINT = "(max-width: 48rem)";
 
@@ -106,4 +107,33 @@ export function useSectionSpy(sectionIds) {
   }, [key]);
 
   return activeId;
+}
+
+/**
+ * Puts every client-side navigation at the top of the incoming page.
+ *
+ * Django served a fresh document per link, so the browser always started at the
+ * top. The router only swaps <main>, which leaves the outgoing page's scroll
+ * offset in place — clicking Home from halfway down a case study used to drop
+ * you halfway down the landing page.
+ *
+ * Instant rather than smooth: the `scroll-behavior: smooth` on html would
+ * animate the whole outgoing offset away *after* the new route has painted,
+ * so you would watch an unrelated page scroll past.
+ */
+export function useScrollTopOnNavigate() {
+  const { pathname, hash } = useLocation();
+  const previousPath = useRef(pathname);
+
+  useEffect(() => {
+    // First mount is the browser's business: it restores the scroll position on
+    // reload and resolves the fragment on a deep link. Only react to a move.
+    if (pathname === previousPath.current) return;
+    previousPath.current = pathname;
+
+    // A fragment names its own destination; only a bare path means "the top".
+    const target = hash ? document.getElementById(hash.slice(1)) : null;
+    if (target) target.scrollIntoView();
+    else window.scrollTo({ top: 0, behavior: "instant" });
+  }, [pathname, hash]);
 }

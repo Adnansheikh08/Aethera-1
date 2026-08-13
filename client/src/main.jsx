@@ -5,6 +5,7 @@ import { HelmetProvider } from "react-helmet-async";
 
 import { App } from "./App.jsx";
 import "./styles/style.css";
+import "./styles/modal.css";
 import "./styles/admin.css";
 
 /**

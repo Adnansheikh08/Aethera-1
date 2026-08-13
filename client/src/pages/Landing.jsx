@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 import { getLandingContent } from "../api/client.js";
 import { LeadForm } from "../components/LeadForm.jsx";
 import {
-  Comparison,
   Focus,
   Hero,
   Locations,
@@ -55,7 +55,6 @@ export function Landing({ introComplete }) {
       <Statement />
       <Focus services={services} />
       <SelectedWork services={services} portfolioItems={portfolioItems} />
-      <Comparison />
       <Proof caseStudies={caseStudies} />
       <Locations />
 
@@ -84,86 +83,7 @@ export function Landing({ introComplete }) {
           </p>
         )}
 
-        <div className="contact-layout">
-          <div className="contact-aside">
-            <p>
-              Prefer to skip the form? Reach the engineering team directly — these go to the same
-              inbox as the inquiry queue.
-            </p>
-            <ul className="contact-methods">
-              <li className="contact-method">
-                <span className="method-icon" aria-hidden="true">
-                  <svg
-                    viewBox="0 0 24 24"
-                    width="16"
-                    height="16"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    focusable="false"
-                  >
-                    <rect x="2" y="4" width="20" height="16" rx="2" />
-                    <path d="m2 7 10 6 10-6" />
-                  </svg>
-                </span>
-                <a href="mailto:mohammadharoonu@gmail.com" className="contact-link">
-                  mohammadharoonu@gmail.com
-                </a>
-              </li>
-              <li className="contact-method">
-                <span className="method-icon" aria-hidden="true">
-                  <svg
-                    viewBox="0 0 24 24"
-                    width="16"
-                    height="16"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    focusable="false"
-                  >
-                    <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2 4.2 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z" />
-                  </svg>
-                </span>
-                <a href="tel:+917985765985" className="contact-link">
-                  +91 79857 65985
-                </a>
-              </li>
-              <li className="contact-method">
-                <span className="method-icon" aria-hidden="true">
-                  <svg
-                    viewBox="0 0 24 24"
-                    width="16"
-                    height="16"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    focusable="false"
-                  >
-                    <rect x="2" y="2" width="20" height="20" rx="5" />
-                    <circle cx="12" cy="12" r="4" />
-                    <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
-                  </svg>
-                </span>
-                <a
-                  href="https://www.instagram.com/aethera09?igsh=MXV1djFtbWpkNjJqeA=="
-                  className="contact-link"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  @aethera09
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <LeadForm serviceChoices={serviceChoices} />
-        </div>
+        <LeadForm serviceChoices={serviceChoices} />
       </section>
     </>
   );

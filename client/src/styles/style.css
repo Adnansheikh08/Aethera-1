@@ -826,7 +826,10 @@ h4 {
     transform-style: preserve-3d;
     transition: border-color var(--duration-base) var(--ease),
                 box-shadow var(--duration-base) var(--ease),
-                transform var(--duration-base) var(--ease);
+                /* useCardTilt shortens this while it tracks the pointer, so the
+                   tilt does not trail the cursor; settling in and out keeps the
+                   base duration. Cards without the hook never set it. */
+                transform var(--card-tilt-duration, var(--duration-base)) var(--ease);
 }
 
 .card:hover {
@@ -888,7 +891,7 @@ h4 {
 
 /* Service-card artwork.
    Its own absolutely-positioned layer rather than a background on .card,
-   because useCardTilt writes the inner div's `background` inline on every
+   because useCardTilt writes the card's `background` inline on every
    mousemove — anything painted underneath it would be covered on hover. The
    background is clipped by the inherited radius, so no overflow rule is needed
    (and `overflow: hidden` would force .card's transform-style back to flat). */
@@ -908,8 +911,9 @@ h4 {
     opacity: 0.34;
 }
 
-/* The tilt div is the card's only in-flow child, so raising it is all that is
-   needed to keep the copy above the artwork. */
+/* The copy is the card's only in-flow child, so raising it is all that is
+   needed to keep it above the artwork. It rides along with the card's tilt
+   because .card is the transformed element and preserves 3D. */
 .service-card > div {
     position: relative;
     z-index: 1;
@@ -945,6 +949,125 @@ h4 {
 .learn-more:focus-visible,
 .portfolio-link:focus-visible {
     outline-offset: 4px;
+}
+
+/* ==========================================================================
+   Service detail dialog
+   Opened by a card's "Detail" link instead of routing to /services/<slug>.
+   A native <dialog>, so it sits in the top layer — above the sticky header and
+   the cookie banner without taking part in the z-index scale below.
+   ========================================================================== */
+.service-modal {
+    /* The UA centres a modal dialog on its own; these only cap it, so long copy
+       scrolls inside the panel rather than running off the viewport. Percentages
+       resolve against the viewport here, and unlike 100vw they exclude the
+       scrollbar. */
+    width: min(44rem, 100% - var(--space-8));
+    max-width: none;
+    max-height: 86vh;
+    max-height: min(86dvh, 48rem);
+    padding: 0;
+    color: var(--text-secondary);
+    background: none;
+    border: none;
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-xl);
+    /* The panel carries the surface and its own radius; clipping here keeps the
+       corners honest while the copy scrolls underneath them. */
+    overflow: hidden;
+    animation: service-modal-in var(--duration-base) var(--ease-out) both;
+}
+
+/* Literal values, no tokens: ::backdrop only inherits custom properties from
+   its originating element in recent browsers, so var() here would resolve to
+   nothing elsewhere and leave the page undimmed. */
+.service-modal::backdrop {
+    background: hsla(222, 26%, 9%, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    animation: service-modal-backdrop-in 250ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.service-modal-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    max-height: 100%;
+    padding: var(--space-8);
+    background: var(--bg-surface);
+    border-radius: inherit;
+}
+
+.service-modal-close {
+    position: absolute;
+    inset-block-start: var(--space-4);
+    inset-inline-end: var(--space-4);
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: var(--text-2xl);
+    line-height: 1;
+    color: var(--text-tertiary);
+    background: var(--bg-muted);
+    border-radius: var(--radius-full);
+    transition: color var(--duration-fast) var(--ease),
+                background-color var(--duration-fast) var(--ease);
+}
+
+.service-modal-close:hover {
+    color: var(--text-primary);
+    background: var(--border-subtle);
+}
+
+.service-modal-title {
+    /* Clears the close button, which is absolutely positioned over this row. */
+    padding-inline-end: var(--space-8);
+    font-size: var(--text-3xl);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+}
+
+.service-modal-lead {
+    font-size: var(--text-lg);
+}
+
+.service-modal-prose {
+    /* A flex item will not shrink below its content without this, and without
+       the shrink the header and the actions get pushed out of the panel instead
+       of the copy scrolling. */
+    min-height: 0;
+    max-width: none;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-inline-end: var(--space-2);
+}
+
+.service-modal-prose p:last-child {
+    margin-block-end: 0;
+}
+
+.service-modal-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    padding-block-start: var(--space-5);
+    border-block-start: 1px solid var(--border-subtle);
+}
+
+@keyframes service-modal-in {
+    from {
+        opacity: 0;
+        transform: translateY(1rem) scale(0.98);
+    }
+}
+
+@keyframes service-modal-backdrop-in {
+    from {
+        opacity: 0;
+    }
 }
 
 /* ==========================================================================
@@ -1968,6 +2091,19 @@ h4 {
         background-position: right -1rem bottom -1rem;
         background-size: 62% auto;
         opacity: 0.12;
+    }
+
+    .service-modal-card {
+        padding: var(--space-6);
+    }
+
+    .service-modal-title {
+        font-size: var(--text-2xl);
+    }
+
+    /* Both actions share the row until it runs out, then stack full width. */
+    .service-modal-actions .cta-button {
+        flex: 1 1 10rem;
     }
 }
 
