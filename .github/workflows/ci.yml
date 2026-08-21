@@ -1,10 +1,14 @@
 name: CI Quality Gate
 
+# Every branch, not just main/master. This repo's default branch is currently
+# feature/service-modal-popup, so a main/master-only filter meant the gate was
+# defined but never ran on a single push. '**' also matches slashed branch
+# names, and survives a future rename back to main without another edit.
 on:
   push:
-    branches: [ main, master ]
+    branches: [ '**' ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ '**' ]
 
 jobs:
   client:
