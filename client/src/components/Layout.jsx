@@ -1,5 +1,8 @@
+import { useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 
+import { AdminAccessModal } from "../admin/AdminAccessModal.jsx";
+import { useAuth } from "../admin/AuthContext.jsx";
 import { useNavigation, useSectionSpy } from "../hooks/useNavigation.js";
 import { useHeaderCondensed } from "../hooks/useScrollProgress.js";
 
@@ -15,16 +18,18 @@ import { useHeaderCondensed } from "../hooks/useScrollProgress.js";
 const NAV_ITEMS = [
   { id: "statement-section", label: "About" },
   { id: "focus-section", label: "Services" },
-  { to: "/projects", label: "Projects" },
+  // Routes to its own page, but the landing page also previews it as
+  // #work-section, so that id still needs to feed the section spy below.
+  { to: "/projects", spyId: "work-section", label: "Projects" },
   { id: "proof-section", label: "Testimonial" },
 ];
 
 /** Closes every nav list: a button in the header, a plain link in the footer. */
 const CONTACT = { id: "contact-section", label: "Contact Us" };
 
-// Route entries have no section to observe, so they are excluded rather than
-// contributing an id that getElementById will never resolve.
-const SPY_IDS = NAV_ITEMS.filter((item) => item.id).map((item) => item.id);
+// Route entries have no section of their own, but some still preview a
+// landing-page section (spyId) that the observer needs to watch.
+const SPY_IDS = NAV_ITEMS.map((item) => item.id ?? item.spyId).filter(Boolean);
 
 const navKey = (item) => item.id ?? item.to;
 
@@ -38,8 +43,14 @@ const navKey = (item) => item.id ?? item.to;
  */
 function NavEntry({ item, className, activeId, isLanding }) {
   if (item.to) {
+    // On the landing page the route never matches (it's "/"), so the spy
+    // takes over: the tab highlights while its preview section is in view.
+    const isSpiedActive = Boolean(item.spyId) && activeId === item.spyId;
+    let ariaCurrent = "true";
+    if (isLanding) ariaCurrent = isSpiedActive ? "true" : undefined;
+
     return (
-      <NavLink to={item.to} className={className} aria-current="true">
+      <NavLink to={item.to} className={className} aria-current={ariaCurrent}>
         {item.label}
       </NavLink>
     );
@@ -85,6 +96,8 @@ export function Header() {
   const isCondensed = useHeaderCondensed();
   const { pathname } = useLocation();
   const isLanding = pathname === "/";
+  const { token } = useAuth();
+  const [showAdminModal, setShowAdminModal] = useState(false);
 
   // The section spy only has sections to watch on the landing page.
   const activeId = useSectionSpy(isLanding ? SPY_IDS : []);
@@ -144,9 +157,26 @@ export function Header() {
                 {CONTACT.label}
               </a>
             </li>
+            <li>
+              {token ? (
+                <Link to="/admin" className="nav-item nav-admin-link">
+                  Admin console
+                </Link>
+              ) : (
+                <button
+                  type="button"
+                  className="nav-item nav-admin-trigger"
+                  onClick={() => setShowAdminModal(true)}
+                >
+                  Are you an admin?
+                </button>
+              )}
+            </li>
           </ul>
         </nav>
       </div>
+
+      {showAdminModal && <AdminAccessModal onClose={() => setShowAdminModal(false)} />}
     </header>
   );
 }

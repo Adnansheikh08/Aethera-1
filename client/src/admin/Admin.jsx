@@ -50,6 +50,8 @@ function AdminHeader() {
           <NavLink to="/admin/transactions">Transactions</NavLink>
           <NavLink to="/admin/erasures">Erasures</NavLink>
           <NavLink to="/admin/audit">Audit log</NavLink>
+          {user?.is_superuser && <NavLink to="/admin/admins">Admins</NavLink>}
+          <NavLink to="/admin/change-password">Change password</NavLink>
         </nav>
 
         <div className="admin-session">
@@ -205,7 +207,14 @@ function CrudPage({ resource }) {
       setEditing("closed");
       reload();
     } catch (err) {
-      setFeedback(err.message);
+      // Zod's per-field messages (err.fieldErrors) are far more useful than
+      // the generic "Validation failed" the server sends as err.message, so
+      // surface both when a 400 carries them.
+      const fieldErrors = Object.entries(err.fieldErrors ?? {});
+      const detail = fieldErrors
+        .map(([field, msgs]) => `${field} (${msgs.join(", ")})`)
+        .join("; ");
+      setFeedback(detail ? `${err.message}: ${detail}` : err.message);
     }
   }
 
@@ -579,6 +588,244 @@ function AuditLog() {
   );
 }
 
+/* -- Admin management (super admin only) -------------------------------------- */
+
+// Mirrors ADMIN_PERMISSIONS in server/src/models/User.js.
+const PERMISSIONS = [
+  ["services", "Services"],
+  ["portfolio", "Portfolio"],
+  ["case-studies", "Case studies"],
+  ["leads", "Leads"],
+  ["transactions", "Transactions"],
+  ["erasure-requests", "Erasures"],
+  ["audit-log", "Audit log"],
+];
+
+function PermissionCheckboxes({ name, defaultChecked = [] }) {
+  return (
+    <fieldset className="admin-permission-set">
+      <legend>Permissions</legend>
+      {PERMISSIONS.map(([key, label]) => (
+        <label key={key} className="admin-permission-option">
+          <input
+            type="checkbox"
+            name={name}
+            value={key}
+            defaultChecked={defaultChecked.includes(key)}
+          />
+          {label}
+        </label>
+      ))}
+    </fieldset>
+  );
+}
+
+function Admins() {
+  const { call, user } = useAuth();
+  const { data, error, loading, reload } = useAdminData(() => api.admins());
+  const [feedback, setFeedback] = useState(null);
+  const [inviteLink, setInviteLink] = useState(null);
+  const [editingPermissionsFor, setEditingPermissionsFor] = useState(null);
+
+  async function invite(event) {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const permissions = form.getAll("permissions");
+    try {
+      const result = await call(api.inviteAdmin({ email: form.get("email"), permissions }));
+      event.currentTarget.reset();
+      setInviteLink(result.inviteLink);
+      setFeedback(
+        result.emailed
+          ? "Admin invited — the invite link was emailed to them (valid 3 days)."
+          : "Admin invited, but the email could not be sent (SMTP not configured?). Share the link below manually.",
+      );
+      reload();
+    } catch (err) {
+      const fieldErrors = Object.entries(err.fieldErrors ?? {});
+      const detail = fieldErrors.map(([field, msgs]) => `${field} (${msgs.join(", ")})`).join("; ");
+      setFeedback(detail ? `${err.message}: ${detail}` : err.message);
+    }
+  }
+
+  async function toggleStatus(admin) {
+    const next = !admin.is_active;
+    if (!window.confirm(`${next ? "Re-enable" : "Disable"} "${admin.email || admin.username}"?`)) return;
+    try {
+      await call(api.setAdminStatus(admin.id, next));
+      reload();
+    } catch (err) {
+      setFeedback(err.message);
+    }
+  }
+
+  async function savePermissions(event, admin) {
+    event.preventDefault();
+    const permissions = new FormData(event.currentTarget).getAll("permissions");
+    try {
+      await call(api.setAdminPermissions(admin.id, permissions));
+      setEditingPermissionsFor(null);
+      reload();
+    } catch (err) {
+      setFeedback(err.message);
+    }
+  }
+
+  function statusLabel(admin) {
+    if (!admin.is_active) return admin.invite_expires_at ? "invite pending" : "disabled";
+    return "active";
+  }
+
+  return (
+    <section>
+      <h1>Admins</h1>
+
+      {feedback && (
+        <p className="admin-alert" role="status">
+          {feedback}
+        </p>
+      )}
+      {inviteLink && (
+        <p className="admin-hint">
+          Invite link: <code>{inviteLink}</code>
+        </p>
+      )}
+
+      <form onSubmit={invite} className="admin-form admin-form-wide">
+        <label htmlFor="admin-email">Email</label>
+        <input id="admin-email" name="email" type="email" required />
+        <PermissionCheckboxes name="permissions" />
+        <button type="submit" className="btn-primary">
+          Invite admin
+        </button>
+      </form>
+
+      <Panel title="admins" error={error} loading={loading}>
+        {data && (
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Last login</th>
+                <th aria-label="Actions" />
+              </tr>
+            </thead>
+            <tbody>
+              {data.items.map((admin) => (
+                <tr key={admin.id}>
+                  <td>{admin.email || admin.username}</td>
+                  <td>
+                    {admin.is_superuser
+                      ? "Super admin"
+                      : admin.permissions?.length
+                        ? admin.permissions.join(", ")
+                        : "Admin (no permissions yet)"}
+                  </td>
+                  <td>{statusLabel(admin)}</td>
+                  <td>{admin.last_login ? new Date(admin.last_login).toLocaleString() : "—"}</td>
+                  <td className="admin-row-actions">
+                    {!admin.is_superuser && (
+                      <>
+                        <button
+                          type="button"
+                          className="btn-secondary"
+                          onClick={() =>
+                            setEditingPermissionsFor(editingPermissionsFor === admin.id ? null : admin.id)
+                          }
+                        >
+                          Edit permissions
+                        </button>
+                        {admin.id !== user?.id && (
+                          <button type="button" className="btn-danger" onClick={() => toggleStatus(admin)}>
+                            {admin.is_active ? "Disable" : "Re-enable"}
+                          </button>
+                        )}
+                      </>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+
+        {editingPermissionsFor && (
+          <form
+            key={editingPermissionsFor}
+            onSubmit={(event) =>
+              savePermissions(event, data.items.find((a) => a.id === editingPermissionsFor))
+            }
+            className="admin-form admin-form-wide"
+          >
+            <PermissionCheckboxes
+              name="permissions"
+              defaultChecked={data.items.find((a) => a.id === editingPermissionsFor)?.permissions ?? []}
+            />
+            <div className="admin-form-actions">
+              <button type="submit" className="btn-primary">
+                Save permissions
+              </button>
+              <button type="button" className="btn-secondary" onClick={() => setEditingPermissionsFor(null)}>
+                Cancel
+              </button>
+            </div>
+          </form>
+        )}
+      </Panel>
+    </section>
+  );
+}
+
+/* -- Change password ------------------------------------------------------ */
+
+function ChangePassword() {
+  const { call } = useAuth();
+  const [feedback, setFeedback] = useState(null);
+
+  async function submit(event) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    const currentPassword = data.get("currentPassword");
+    const newPassword = data.get("newPassword");
+    if (newPassword !== data.get("confirmPassword")) {
+      setFeedback("New passwords do not match.");
+      return;
+    }
+    try {
+      await call(api.changePassword(currentPassword, newPassword));
+      form.reset();
+      setFeedback("Password changed. Other signed-in sessions have been signed out.");
+    } catch (err) {
+      setFeedback(err.message);
+    }
+  }
+
+  return (
+    <section>
+      <h1>Change password</h1>
+      {feedback && (
+        <p className="admin-alert" role="status">
+          {feedback}
+        </p>
+      )}
+      <form onSubmit={submit} className="admin-form">
+        <label htmlFor="currentPassword">Current password</label>
+        <input id="currentPassword" name="currentPassword" type="password" autoComplete="current-password" required />
+        <label htmlFor="newPassword">New password</label>
+        <input id="newPassword" name="newPassword" type="password" minLength={12} autoComplete="new-password" required />
+        <label htmlFor="confirmPassword">Confirm new password</label>
+        <input id="confirmPassword" name="confirmPassword" type="password" minLength={12} autoComplete="new-password" required />
+        <button type="submit" className="btn-primary">
+          Update password
+        </button>
+      </form>
+    </section>
+  );
+}
+
 /* -- Router -------------------------------------------------------------------- */
 
 export default function Admin() {
@@ -603,6 +850,8 @@ export default function Admin() {
             <Route path="transactions" element={<Transactions />} />
             <Route path="erasures" element={<Erasures />} />
             <Route path="audit" element={<AuditLog />} />
+            <Route path="admins" element={<Admins />} />
+            <Route path="change-password" element={<ChangePassword />} />
             <Route path="*" element={<Navigate to="/admin" replace />} />
           </Routes>
         </main>

@@ -416,6 +416,19 @@ h4 {
     outline-offset: 2px;
 }
 
+/* Shares .nav-item's look, but is a <button> rather than a link, so the box
+   model needs resetting before .nav-item's own rules can apply. */
+.nav-admin-trigger {
+    font: inherit;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.nav-admin-link {
+    color: var(--primary-600);
+}
+
 /* Mobile disclosure toggle — three bars collapsing into a cross. */
 .nav-toggle {
     display: none;
@@ -1055,6 +1068,70 @@ h4 {
     gap: var(--space-3);
     padding-block-start: var(--space-5);
     border-block-start: 1px solid var(--border-subtle);
+}
+
+/* ==========================================================================
+   Admin access dialog
+   Opened by the header's "Are you an admin?" trigger. Same native <dialog>
+   pattern as .service-modal above; .admin-auth-card supplies the sign-in form
+   itself, so this only has to size and centre the panel around it.
+   ========================================================================== */
+.admin-access-modal {
+    width: min(26rem, 100% - var(--space-8));
+    max-width: none;
+    max-height: min(90dvh, 40rem);
+    padding: 0;
+    background: none;
+    border: none;
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-xl);
+    overflow: hidden;
+    animation: service-modal-in var(--duration-base) var(--ease-out) both;
+}
+
+.admin-access-modal::backdrop {
+    background: hsla(222, 26%, 9%, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    animation: service-modal-backdrop-in 250ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.admin-access-modal-card {
+    position: relative;
+    max-height: 100%;
+    overflow-y: auto;
+    border-radius: inherit;
+}
+
+/* .admin-auth-card already supplies its own surface, border and shadow for the
+   full-page /admin route; inside the dialog those would just double up with
+   the dialog's own chrome, so this only widens it to fill the panel. */
+.admin-access-modal-card .admin-auth-card {
+    max-width: none;
+    border: none;
+    box-shadow: none;
+}
+
+.admin-access-modal-close {
+    position: absolute;
+    inset-block-start: var(--space-4);
+    inset-inline-end: var(--space-4);
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: var(--text-2xl);
+    line-height: 1;
+    color: var(--text-tertiary);
+    background: var(--bg-muted);
+    border-radius: var(--radius-full);
+    transition: color var(--duration-fast) var(--ease),
+                background-color var(--duration-fast) var(--ease);
+}
+
+.admin-access-modal-close:hover {
+    color: var(--text-primary);
+    background: var(--border-subtle);
 }
 
 @keyframes service-modal-in {

@@ -1,24 +1,26 @@
 import express from "express";
 
-import { asyncHandler, ApiError } from "../middleware/errors.js";
-import { requireAuth, attachUser } from "../middleware/auth.js";
+import { asyncHandler } from "../middleware/errors.js";
+import { requireAuth, attachUser, requireSuperuser, requirePermission } from "../middleware/auth.js";
 import {
   validate,
   serviceSchema,
   portfolioItemSchema,
   caseStudySchema,
   leadStatusSchema,
+  inviteAdminSchema,
+  updatePermissionsSchema,
+  updateStatusSchema,
 } from "../validators/schemas.js";
-import { serialize } from "../models/base.js";
-import { Service } from "../models/Service.js";
-import { PortfolioItem } from "../models/PortfolioItem.js";
-import { CaseStudy } from "../models/CaseStudy.js";
-import { Lead } from "../models/Lead.js";
-import { Transaction } from "../models/Transaction.js";
-import { DataErasureRequest } from "../models/DataErasureRequest.js";
-import { assertServiceUnreferenced } from "../services/agencyService.js";
-import { listLeads, decryptLead } from "../services/leadService.js";
-import { recordAudit, listAudit } from "../services/auditService.js";
+import { serviceController } from "../controllers/serviceController.js";
+import { portfolioController } from "../controllers/portfolioController.js";
+import { caseStudyController } from "../controllers/caseStudyController.js";
+import { leadController } from "../controllers/leadController.js";
+import { transactionController } from "../controllers/transactionController.js";
+import { erasureRequestController } from "../controllers/erasureRequestController.js";
+import { auditLogController } from "../controllers/auditLogController.js";
+import { statsController } from "../controllers/statsController.js";
+import { adminManagementController } from "../controllers/adminManagementController.js";
 
 /**
  * Replaces the Django admin site (apps/accounts/admin.py admin_site), which
@@ -29,210 +31,62 @@ const router = express.Router();
 
 router.use(requireAuth, attachUser);
 
-/** Generic CRUD factory — the models differ only in schema and audit label. */
-function crudRoutes({ path, model, schema, label, beforeDelete }) {
-  router.get(
-    path,
-    asyncHandler(async (req, res) => {
-      const limit = Math.min(Number(req.query.limit) || 100, 200);
-      const skip = Number(req.query.skip) || 0;
-      const [items, total] = await Promise.all([
-        model.find().sort({ created_at: -1 }).skip(skip).limit(limit).lean(),
-        model.countDocuments(),
-      ]);
-      res.json({ items: serialize(items), total });
-    }),
-  );
-
-  router.post(
-    path,
-    validate(schema),
-    asyncHandler(async (req, res) => {
-      const doc = await model.create(req.validated);
-      await recordAudit({
-        user: req.user,
-        action: `Created ${label}`,
-        objectRepr: doc.title || doc.client_name || doc.id,
-        changes: JSON.stringify(req.validated),
-        ip: req.clientIp,
-      });
-      res.status(201).json({ item: serialize(doc) });
-    }),
-  );
-
-  router.put(
-    `${path}/:id`,
-    validate(schema),
-    asyncHandler(async (req, res) => {
-      const before = serialize(await model.findById(req.params.id).lean());
-      if (!before) throw new ApiError(404, `${label} not found`);
-
-      const doc = await model.findByIdAndUpdate(req.params.id, req.validated, {
-        new: true,
-        runValidators: true,
-      });
-
-      await recordAudit({
-        user: req.user,
-        action: `Updated ${label}`,
-        objectRepr: doc.title || doc.client_name || doc.id,
-        changes: JSON.stringify({ before, after: req.validated }),
-        ip: req.clientIp,
-      });
-      res.json({ item: serialize(doc) });
-    }),
-  );
-
-  router.delete(
-    `${path}/:id`,
-    asyncHandler(async (req, res) => {
-      const doc = await model.findById(req.params.id);
-      if (!doc) throw new ApiError(404, `${label} not found`);
-
-      if (beforeDelete) await beforeDelete(doc);
-
-      await model.findByIdAndDelete(req.params.id);
-      await recordAudit({
-        user: req.user,
-        action: `Deleted ${label}`,
-        objectRepr: doc.title || doc.client_name || doc.id,
-        ip: req.clientIp,
-      });
-      res.json({ status: "deleted", id: req.params.id });
-    }),
-  );
+/** Wires a CRUD controller (see controllers/crudFactory.js) up to REST routes, gated by permission. */
+function crudRoutes(path, controller, schema, permission) {
+  const gate = requirePermission(permission);
+  router.get(path, gate, asyncHandler(controller.list));
+  router.post(path, gate, validate(schema), asyncHandler(controller.create));
+  router.put(`${path}/:id`, gate, validate(schema), asyncHandler(controller.update));
+  router.delete(`${path}/:id`, gate, asyncHandler(controller.remove));
 }
 
-crudRoutes({
-  path: "/services",
-  model: Service,
-  schema: serviceSchema,
-  label: "service",
-  // Reinstates Django's on_delete=PROTECT.
-  beforeDelete: (doc) => assertServiceUnreferenced(doc._id),
-});
-
-crudRoutes({
-  path: "/portfolio",
-  model: PortfolioItem,
-  schema: portfolioItemSchema,
-  label: "portfolio item",
-});
-
-crudRoutes({
-  path: "/case-studies",
-  model: CaseStudy,
-  schema: caseStudySchema,
-  label: "case study",
-});
+crudRoutes("/services", serviceController, serviceSchema, "services");
+crudRoutes("/portfolio", portfolioController, portfolioItemSchema, "portfolio");
+crudRoutes("/case-studies", caseStudyController, caseStudySchema, "case-studies");
 
 /** Leads are read-only apart from status: PII must not be editable in place. */
-router.get(
-  "/leads",
-  asyncHandler(async (req, res) => {
-    const { status, limit, skip } = req.query;
-    res.json(
-      await listLeads({
-        status,
-        limit: Number(limit) || 50,
-        skip: Number(skip) || 0,
-      }),
-    );
-  }),
-);
-
-router.get(
-  "/leads/:id",
-  asyncHandler(async (req, res) => {
-    const lead = await Lead.findById(req.params.id);
-    if (!lead) throw new ApiError(404, "Lead not found");
-
-    // Reading decrypted PII is itself an auditable event.
-    await recordAudit({
-      user: req.user,
-      action: "Viewed lead PII",
-      objectRepr: `Lead ${lead.id}`,
-      ip: req.clientIp,
-    });
-    res.json({ lead: decryptLead(lead) });
-  }),
-);
-
+const leadsGate = requirePermission("leads");
+router.get("/leads", leadsGate, asyncHandler(leadController.list));
+router.get("/leads/:id", leadsGate, asyncHandler(leadController.getOne));
 router.patch(
   "/leads/:id/status",
+  leadsGate,
   validate(leadStatusSchema),
-  asyncHandler(async (req, res) => {
-    const lead = await Lead.findByIdAndUpdate(
-      req.params.id,
-      { status: req.validated.status },
-      { new: true },
-    );
-    if (!lead) throw new ApiError(404, "Lead not found");
-
-    await recordAudit({
-      user: req.user,
-      action: "Updated lead status",
-      objectRepr: `Lead ${lead.id}`,
-      changes: JSON.stringify({ status: req.validated.status }),
-      ip: req.clientIp,
-    });
-    res.json({ lead: decryptLead(lead) });
-  }),
+  asyncHandler(leadController.updateStatus),
 );
 
 router.get(
   "/transactions",
-  asyncHandler(async (req, res) => {
-    const limit = Math.min(Number(req.query.limit) || 100, 200);
-    const [items, total] = await Promise.all([
-      Transaction.find().sort({ created_at: -1 }).limit(limit).lean(),
-      Transaction.countDocuments(),
-    ]);
-    res.json({ items: serialize(items), total });
-  }),
+  requirePermission("transactions"),
+  asyncHandler(transactionController.list),
 );
-
 router.get(
   "/erasure-requests",
-  asyncHandler(async (_req, res) => {
-    const items = await DataErasureRequest.find().sort({ created_at: -1 }).lean();
-    res.json({ items: serialize(items), total: items.length });
-  }),
+  requirePermission("erasure-requests"),
+  asyncHandler(erasureRequestController.list),
 );
+router.get("/audit-log", requirePermission("audit-log"), asyncHandler(auditLogController.list));
+router.get("/stats", asyncHandler(statsController.getStats));
 
-router.get(
-  "/audit-log",
-  asyncHandler(async (req, res) => {
-    res.json(
-      await listAudit({ limit: Number(req.query.limit) || 100, skip: Number(req.query.skip) || 0 }),
-    );
-  }),
+/** Add/edit/disable admin accounts — restricted to the super admin. */
+router.get("/admins", requireSuperuser, asyncHandler(adminManagementController.list));
+router.post(
+  "/admins/invite",
+  requireSuperuser,
+  validate(inviteAdminSchema),
+  asyncHandler(adminManagementController.invite),
 );
-
-/** Dashboard summary counts. */
-router.get(
-  "/stats",
-  asyncHandler(async (_req, res) => {
-    const [services, portfolio, caseStudies, leads, newLeads, transactions, erasures] =
-      await Promise.all([
-        Service.countDocuments({ is_active: true }),
-        PortfolioItem.countDocuments({ is_published: true }),
-        CaseStudy.countDocuments({ is_published: true }),
-        Lead.countDocuments(),
-        Lead.countDocuments({ status: "NEW" }),
-        Transaction.countDocuments(),
-        DataErasureRequest.countDocuments({ status: "COMPLETED" }),
-      ]);
-    res.json({
-      services,
-      portfolio_items: portfolio,
-      case_studies: caseStudies,
-      leads,
-      new_leads: newLeads,
-      transactions,
-      completed_erasures: erasures,
-    });
-  }),
+router.patch(
+  "/admins/:id/permissions",
+  requireSuperuser,
+  validate(updatePermissionsSchema),
+  asyncHandler(adminManagementController.setPermissions),
+);
+router.patch(
+  "/admins/:id/status",
+  requireSuperuser,
+  validate(updateStatusSchema),
+  asyncHandler(adminManagementController.setStatus),
 );
 
 export default router;

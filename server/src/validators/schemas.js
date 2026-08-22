@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { SERVICE_CHOICES, STATUS_CHOICES } from "../models/Lead.js";
+import { ADMIN_PERMISSIONS } from "../models/User.js";
 import { ApiError } from "../middleware/errors.js";
 
 /**
@@ -24,7 +25,7 @@ export const erasureSchema = z.object({
 });
 
 export const loginSchema = z.object({
-  username: z.string().trim().min(1).max(150),
+  username: z.string().trim().min(1).max(150).email("Enter a valid email address"),
   password: z.string().min(1).max(256),
 });
 
@@ -67,6 +68,30 @@ export const caseStudySchema = z.object({
 
 export const leadStatusSchema = z.object({
   status: z.enum(STATUS_CHOICES),
+});
+
+/** Super-admin-only: invites a new basic admin with a scoped permission set. */
+export const inviteAdminSchema = z.object({
+  email: z.string().trim().min(1).max(150).email("Enter a valid email address"),
+  permissions: z.array(z.enum(ADMIN_PERMISSIONS)).optional().default([]),
+});
+
+export const updatePermissionsSchema = z.object({
+  permissions: z.array(z.enum(ADMIN_PERMISSIONS)).default([]),
+});
+
+export const updateStatusSchema = z.object({
+  is_active: z.boolean(),
+});
+
+export const acceptInviteSchema = z.object({
+  token: z.string().min(1),
+  password: z.string().min(12, "Password must be at least 12 characters").max(256),
+});
+
+export const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1),
+  newPassword: z.string().min(12, "Password must be at least 12 characters").max(256),
 });
 
 /**

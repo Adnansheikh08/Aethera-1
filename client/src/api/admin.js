@@ -25,6 +25,9 @@ export const confirmTotpSetup = (pendingToken, code) =>
 
 export const refresh = () => request("/auth/refresh", { method: "POST" });
 
+export const acceptInvite = (token, password) =>
+  request("/auth/invite/accept", { method: "POST", body: { token, password } });
+
 /* -- authenticated calls ------------------------------------------------ */
 
 /**
@@ -60,6 +63,15 @@ export const api = {
   auditLog: (limit = 100) => authed(`${ADMIN}/audit-log?limit=${limit}`),
   transactions: () => authed(`${ADMIN}/transactions`),
   erasureRequests: () => authed(`${ADMIN}/erasure-requests`),
+
+  admins: () => authed(`${ADMIN}/admins`),
+  inviteAdmin: (body) => authed(`${ADMIN}/admins/invite`, { method: "POST", body }),
+  setAdminPermissions: (id, permissions) =>
+    authed(`${ADMIN}/admins/${id}/permissions`, { method: "PATCH", body: { permissions } }),
+  setAdminStatus: (id, is_active) =>
+    authed(`${ADMIN}/admins/${id}/status`, { method: "PATCH", body: { is_active } }),
+  changePassword: (currentPassword, newPassword) =>
+    authed("/auth/change-password", { method: "POST", body: { currentPassword, newPassword } }),
 
   leads: ({ status, limit = 50, skip = 0 } = {}) => {
     const q = new URLSearchParams({ limit: String(limit), skip: String(skip) });

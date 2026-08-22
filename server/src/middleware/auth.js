@@ -51,3 +51,16 @@ export function requireSuperuser(req, _res, next) {
   }
   return next();
 }
+
+/**
+ * Gates a CRUD resource behind a granted permission. Superusers always pass —
+ * only the env-anchored super admin ever holds is_superuser, so this is what
+ * actually scopes what an invited basic admin can touch.
+ */
+export function requirePermission(resource) {
+  return (req, _res, next) => {
+    if (req.auth?.isSuperuser) return next();
+    if (req.user?.permissions?.includes(resource)) return next();
+    return next(new ApiError(403, `Missing permission: ${resource}`));
+  };
+}
