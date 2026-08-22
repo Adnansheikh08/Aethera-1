@@ -72,4 +72,24 @@ export const config = {
 
   // Ported from apps/accounts — obfuscated admin path
   adminUrlPath: process.env.ADMIN_URL_PATH || "portal-admin-8f2e9a7c",
+
+  // The one email/password pair that always logs in with superuser rights
+  // (see services/authService.js). Any other email self-provisions a basic
+  // admin account instead — the tradeoff the product asked for over having
+  // no self-serve admin signup at all.
+  superAdminEmail: (process.env.SUPER_ADMIN_EMAIL || process.env.ADMIN_EMAIL || "")
+    .trim()
+    .toLowerCase(),
+  superAdminPassword: process.env.SUPER_ADMIN_PASSWORD || process.env.ADMIN_PASSWORD || "",
+
+  // SMTP transport for admin invite emails (services/mailer.js). Left blank in
+  // development: the invite link just gets logged/returned instead of mailed.
+  smtp: {
+    host: process.env.SMTP_HOST || "",
+    port: Number(process.env.SMTP_PORT || 587),
+    secure: process.env.SMTP_SECURE === "true",
+    user: process.env.SMTP_USER || "",
+    pass: process.env.SMTP_PASS || "",
+    from: process.env.SMTP_FROM || "Aethera <no-reply@aethera.dev>",
+  },
 };

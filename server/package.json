@@ -24,6 +24,7 @@
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.5",
+    "nodemailer": "^9.0.5",
     "pino": "^9.6.0",
     "qrcode": "^1.5.4",
     "speakeasy": "^2.0.0",

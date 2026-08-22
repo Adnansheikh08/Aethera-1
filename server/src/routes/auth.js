@@ -2,7 +2,14 @@ import express from "express";
 
 import { asyncHandler } from "../middleware/errors.js";
 import { requireAuth, attachUser } from "../middleware/auth.js";
-import { validate, loginSchema, totpSchema, pendingOnlySchema } from "../validators/schemas.js";
+import {
+  validate,
+  loginSchema,
+  totpSchema,
+  pendingOnlySchema,
+  changePasswordSchema,
+  acceptInviteSchema,
+} from "../validators/schemas.js";
 import {
   authenticate,
   verifyTotp,
@@ -10,7 +17,9 @@ import {
   confirmTotpEnrolment,
   refreshAccessToken,
   revokeSessions,
+  changePassword,
 } from "../services/authService.js";
+import { acceptInvite } from "../services/adminInviteService.js";
 import { recordAudit } from "../services/auditService.js";
 import { config } from "../config/index.js";
 
@@ -52,10 +61,45 @@ router.post(
       ip: req.clientIp,
     });
 
-    await recordAudit({ user, action: "Signed in", objectRepr: user.username, ip: req.clientIp });
+    await recordAudit({
+      user,
+      action: user.is_superuser ? "Super admin signed in" : "Signed in",
+      objectRepr: user.username,
+      ip: req.clientIp,
+    });
 
     res.cookie("refresh_token", refreshToken, refreshCookieOptions);
     res.json({ accessToken, user });
+  }),
+);
+
+router.post(
+  "/invite/accept",
+  validate(acceptInviteSchema),
+  asyncHandler(async (req, res) => {
+    await acceptInvite({ token: req.validated.token, password: req.validated.password });
+    res.json({ status: "invite_accepted" });
+  }),
+);
+
+router.post(
+  "/change-password",
+  requireAuth,
+  attachUser,
+  validate(changePasswordSchema),
+  asyncHandler(async (req, res) => {
+    await changePassword({
+      userId: req.user.id,
+      currentPassword: req.validated.currentPassword,
+      newPassword: req.validated.newPassword,
+    });
+    await recordAudit({
+      user: req.user,
+      action: "Changed own password",
+      objectRepr: req.user.username,
+      ip: req.clientIp,
+    });
+    res.json({ status: "password_changed" });
   }),
 );
 

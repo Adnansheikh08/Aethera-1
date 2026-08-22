@@ -3,6 +3,17 @@ import mongoose from "mongoose";
 
 import { baseSchemaOptions } from "./base.js";
 
+/** Resource keys an admin can be granted access to (see middleware/auth.js requirePermission). */
+export const ADMIN_PERMISSIONS = [
+  "services",
+  "portfolio",
+  "case-studies",
+  "leads",
+  "transactions",
+  "erasure-requests",
+  "audit-log",
+];
+
 /**
  * Replaces django.contrib.auth.User plus the django_otp TOTP device.
  *
@@ -34,6 +45,16 @@ const userSchema = new mongoose.Schema(
     totp_confirmed: { type: Boolean, default: false },
     // Single-use recovery codes, stored as bcrypt hashes.
     recovery_code_hashes: { type: [String], default: [], select: false },
+
+    // Resource keys this admin may act on (see middleware/auth.js requirePermission).
+    // Ignored for is_superuser accounts, which always have full access.
+    permissions: { type: [String], default: [] },
+
+    // --- Invite-only admin provisioning (replaces self-service signup) ---
+    // Set while a seat is pending; cleared once the invite is redeemed.
+    invite_token_hash: { type: String, default: "", select: false },
+    invite_expires_at: { type: Date, default: null },
+    invited_by: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
 
     last_login: { type: Date, default: null },
     // Refresh-token invalidation: bumping this logs every session out.

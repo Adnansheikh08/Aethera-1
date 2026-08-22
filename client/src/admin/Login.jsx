@@ -11,8 +11,12 @@ import { useAuth } from "./AuthContext.jsx";
  * First-time accounts land in enrolment instead of verification, because the
  * server answers SETUP_REQUIRED until a device is confirmed. There is no path
  * that skips the second factor.
+ *
+ * `embedded` drops the full-page wrapper and the noindex Helmet so the same
+ * flow can sit inside the public site's "Are you an admin?" popup instead of
+ * only rendering at the /admin route.
  */
-export default function Login() {
+export default function Login({ embedded = false }) {
   const { signIn } = useAuth();
   const [stage, setStage] = useState("credentials");
   const [pendingToken, setPendingToken] = useState(null);
@@ -70,6 +74,108 @@ export default function Login() {
     run(async () => setEnrolment(await beginTotpSetup(pendingToken)));
   }, [stage]);
 
+  const card = (
+    <div className="admin-auth-card">
+      <p className="section-eyebrow">Restricted</p>
+      <h1>Aethera Console</h1>
+
+      {error && (
+        <p className="admin-alert" role="alert">
+          {error}
+        </p>
+      )}
+
+      {stage === "credentials" && (
+        <form onSubmit={onCredentials} className="admin-form">
+          <p className="admin-hint">
+            Admin access is invite-only. If you received an invite link, use it to set your
+            password before signing in here.
+          </p>
+          <label htmlFor="username">Email</label>
+          <input id="username" name="username" type="email" autoComplete="username" required />
+          <label htmlFor="password">Password</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            autoComplete="current-password"
+            required
+          />
+          <button type="submit" className="btn-primary" disabled={busy}>
+            {busy ? "Verifying…" : "Continue"}
+          </button>
+        </form>
+      )}
+
+      {stage === "verify" && (
+        <form onSubmit={onVerify} className="admin-form">
+          <p className="admin-hint">
+            Enter the six-digit code from your authenticator, or one recovery code.
+          </p>
+          <label htmlFor="code">Verification code</label>
+          <input
+            id="code"
+            name="code"
+            inputMode="text"
+            autoComplete="one-time-code"
+            autoFocus
+            required
+          />
+          <button type="submit" className="btn-primary" disabled={busy}>
+            {busy ? "Checking…" : "Verify"}
+          </button>
+        </form>
+      )}
+
+      {stage === "enrol" && (
+        <form onSubmit={onConfirmEnrolment} className="admin-form">
+          <p className="admin-hint">
+            Two-factor authentication is required. Scan this with your authenticator app,
+            then enter the code it shows.
+          </p>
+          {enrolment?.qrDataUrl && (
+            <img className="admin-qr" src={enrolment.qrDataUrl} alt="TOTP enrolment QR code" />
+          )}
+          {enrolment?.secret && (
+            <p className="admin-secret">
+              Manual entry: <code>{enrolment.secret}</code>
+            </p>
+          )}
+          <label htmlFor="setup-code">Code from app</label>
+          <input id="setup-code" name="code" inputMode="numeric" autoComplete="off" required />
+          <button type="submit" className="btn-primary" disabled={busy || !enrolment?.secret}>
+            {busy ? "Confirming…" : "Confirm device"}
+          </button>
+        </form>
+      )}
+
+      {stage === "recovery" && (
+        <div className="admin-form">
+          <p className="admin-hint">
+            Store these recovery codes somewhere safe. Each works once, and they will not be
+            shown again.
+          </p>
+          <ul className="admin-recovery">
+            {recoveryCodes.map((code) => (
+              <li key={code}>
+                <code>{code}</code>
+              </li>
+            ))}
+          </ul>
+          <button
+            type="button"
+            className="btn-primary"
+            onClick={() => signIn(enrolment.accessToken, enrolment.user)}
+          >
+            I have saved them — continue
+          </button>
+        </div>
+      )}
+    </div>
+  );
+
+  if (embedded) return card;
+
   return (
     <div className="admin-auth">
       <Helmet>
@@ -78,99 +184,7 @@ export default function Login() {
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
 
-      <div className="admin-auth-card">
-        <p className="section-eyebrow">Restricted</p>
-        <h1>Aethera Console</h1>
-
-        {error && (
-          <p className="admin-alert" role="alert">
-            {error}
-          </p>
-        )}
-
-        {stage === "credentials" && (
-          <form onSubmit={onCredentials} className="admin-form">
-            <label htmlFor="username">Username</label>
-            <input id="username" name="username" autoComplete="username" required />
-            <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              autoComplete="current-password"
-              required
-            />
-            <button type="submit" className="btn-primary" disabled={busy}>
-              {busy ? "Verifying…" : "Continue"}
-            </button>
-          </form>
-        )}
-
-        {stage === "verify" && (
-          <form onSubmit={onVerify} className="admin-form">
-            <p className="admin-hint">
-              Enter the six-digit code from your authenticator, or one recovery code.
-            </p>
-            <label htmlFor="code">Verification code</label>
-            <input
-              id="code"
-              name="code"
-              inputMode="text"
-              autoComplete="one-time-code"
-              autoFocus
-              required
-            />
-            <button type="submit" className="btn-primary" disabled={busy}>
-              {busy ? "Checking…" : "Verify"}
-            </button>
-          </form>
-        )}
-
-        {stage === "enrol" && (
-          <form onSubmit={onConfirmEnrolment} className="admin-form">
-            <p className="admin-hint">
-              Two-factor authentication is required. Scan this with your authenticator app,
-              then enter the code it shows.
-            </p>
-            {enrolment?.qrDataUrl && (
-              <img className="admin-qr" src={enrolment.qrDataUrl} alt="TOTP enrolment QR code" />
-            )}
-            {enrolment?.secret && (
-              <p className="admin-secret">
-                Manual entry: <code>{enrolment.secret}</code>
-              </p>
-            )}
-            <label htmlFor="setup-code">Code from app</label>
-            <input id="setup-code" name="code" inputMode="numeric" autoComplete="off" required />
-            <button type="submit" className="btn-primary" disabled={busy || !enrolment?.secret}>
-              {busy ? "Confirming…" : "Confirm device"}
-            </button>
-          </form>
-        )}
-
-        {stage === "recovery" && (
-          <div className="admin-form">
-            <p className="admin-hint">
-              Store these recovery codes somewhere safe. Each works once, and they will not be
-              shown again.
-            </p>
-            <ul className="admin-recovery">
-              {recoveryCodes.map((code) => (
-                <li key={code}>
-                  <code>{code}</code>
-                </li>
-              ))}
-            </ul>
-            <button
-              type="button"
-              className="btn-primary"
-              onClick={() => signIn(enrolment.accessToken, enrolment.user)}
-            >
-              I have saved them — continue
-            </button>
-          </div>
-        )}
-      </div>
+      {card}
     </div>
   );
 }

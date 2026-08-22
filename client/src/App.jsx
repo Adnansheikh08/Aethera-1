@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { Route, Routes, useLocation } from "react-router-dom";
 
 import Admin from "./admin/Admin.jsx";
+import AcceptInvite from "./admin/AcceptInvite.jsx";
 import { AuthProvider } from "./admin/AuthContext.jsx";
 import { CookieBanner, Preloader, ScrollProgress } from "./components/Chrome.jsx";
 import { Footer, Header, WhatsAppFloat } from "./components/Layout.jsx";
@@ -116,22 +117,20 @@ function PublicSite() {
  * WhatsApp float or cookie banner — which is what Django achieved by serving the
  * admin from a separate template tree rather than from base.html.
  *
- * AuthProvider wraps only this branch, so a public visitor never triggers the
- * refresh-token probe on mount.
+ * AuthProvider wraps both branches: the public site's header offers an
+ * "Are you an admin?" popup that signs in without leaving the page, and that
+ * session has to already be live by the time it forwards the visitor to
+ * /admin, or AdminGate would just show the login screen a second time.
  */
 export function App() {
   return (
-    <Routes>
-      <Route
-        path="/admin/*"
-        element={
-          <AuthProvider>
-            <Admin />
-          </AuthProvider>
-        }
-      />
-      <Route path="*" element={<PublicSite />} />
-    </Routes>
+    <AuthProvider>
+      <Routes>
+        <Route path="/admin/invite" element={<AcceptInvite />} />
+        <Route path="/admin/*" element={<Admin />} />
+        <Route path="*" element={<PublicSite />} />
+      </Routes>
+    </AuthProvider>
   );
 }
 

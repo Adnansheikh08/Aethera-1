@@ -28,6 +28,11 @@ const PENDING_TTL_SECONDS = 300; // 5 minutes to complete the second factor
 const LOGIN_ATTEMPT_LIMIT = 5;
 const LOGIN_ATTEMPT_WINDOW = 900; // 15 minutes
 
+// The super admin email is the highest-value credential in the system, so it
+// gets a tighter lockout than ordinary admins.
+const SUPER_ADMIN_ATTEMPT_LIMIT = 3;
+const SUPER_ADMIN_ATTEMPT_WINDOW = 1800; // 30 minutes
+
 function signAccessToken(user) {
   return jwt.sign(
     { sub: user.id, username: user.username, is_superuser: user.is_superuser, typ: "access" },
@@ -54,17 +59,17 @@ function signPendingToken(user) {
  * Throttles credential stuffing per username+IP. Django's admin had no such
  * limiter, but an exposed JSON login endpoint needs one.
  */
-function assertNotThrottled(key) {
+function assertNotThrottled(key, limit = LOGIN_ATTEMPT_LIMIT) {
   const attempts = cache.get(`login_attempts:${key}`, 0) || 0;
-  if (attempts >= LOGIN_ATTEMPT_LIMIT) {
+  if (attempts >= limit) {
     throw new ApiError(429, "Too many failed login attempts. Try again later.");
   }
 }
 
-function recordFailedLogin(key, ip) {
+function recordFailedLogin(key, ip, { limit = LOGIN_ATTEMPT_LIMIT, window = LOGIN_ATTEMPT_WINDOW } = {}) {
   const attempts = (cache.get(`login_attempts:${key}`, 0) || 0) + 1;
-  cache.set(`login_attempts:${key}`, attempts, LOGIN_ATTEMPT_WINDOW);
-  if (attempts >= LOGIN_ATTEMPT_LIMIT) {
+  cache.set(`login_attempts:${key}`, attempts, window);
+  if (attempts >= limit) {
     registerSecurityViolation(ip, "Repeated failed admin login attempts");
   }
 }
@@ -75,23 +80,51 @@ function clearFailedLogins(key) {
 
 /** Step 1: verify credentials, return a token that only unlocks step 2. */
 export async function authenticate({ username, password, ip }) {
-  const throttleKey = `${String(username).toLowerCase()}:${ip}`;
-  assertNotThrottled(throttleKey);
+  const email = String(username || "").trim().toLowerCase();
+  const throttleKey = `${email}:${ip}`;
+  const isSuperAdminEmail = Boolean(config.superAdminEmail) && email === config.superAdminEmail;
+  const limit = isSuperAdminEmail ? SUPER_ADMIN_ATTEMPT_LIMIT : LOGIN_ATTEMPT_LIMIT;
+  const window = isSuperAdminEmail ? SUPER_ADMIN_ATTEMPT_WINDOW : LOGIN_ATTEMPT_WINDOW;
+  assertNotThrottled(throttleKey, limit);
 
-  const user = await User.findOne({ username, is_active: true }).select(
-    "+password_hash +totp_secret",
-  );
+  let user = await User.findOne({ email, is_active: true }).select("+password_hash +totp_secret");
 
-  // Always run a bcrypt comparison, even when the user is missing, so response
-  // timing does not reveal which usernames exist.
-  const valid = user
-    ? await user.verifyPassword(password)
-    : await bcrypt.compare(String(password), "$2a$12$invalidinvalidinvalidinvalidinvalidinvalidinvalidinvalidin");
+  if (isSuperAdminEmail) {
+    // The super admin's identity is anchored to the env-configured password,
+    // not a stored hash, so rotating it in .env takes effect immediately.
+    if (!config.superAdminPassword || password !== config.superAdminPassword) {
+      recordFailedLogin(throttleKey, ip, { limit, window });
+      logger.warn({ ip }, "Failed super admin login attempt");
+      throw new ApiError(401, "Invalid credentials");
+    }
 
-  if (!user || !valid) {
-    recordFailedLogin(throttleKey, ip);
+    if (!user) {
+      user = new User({ username: email, email, is_superuser: true, is_staff: true, is_active: true });
+      await user.setPassword(password);
+      await user.save();
+    } else if (!user.is_superuser) {
+      user.is_superuser = true;
+      await user.save();
+    }
+  } else if (!user) {
+    // Admin accounts are invite-only now (see adminInviteService.js): an
+    // unrecognised email is always rejected, never silently provisioned.
+    // A dummy hash comparison keeps response timing the same either way, so
+    // it does not reveal which emails have accounts.
+    await bcrypt.compare(
+      String(password),
+      "$2a$12$invalidinvalidinvalidinvalidinvalidinvalidinvalidinvalidin",
+    );
+    recordFailedLogin(throttleKey, ip, { limit, window });
     logger.warn({ ip }, "Failed admin login attempt");
     throw new ApiError(401, "Invalid credentials");
+  } else {
+    const valid = await user.verifyPassword(password);
+    if (!valid) {
+      recordFailedLogin(throttleKey, ip, { limit, window });
+      logger.warn({ ip }, "Failed admin login attempt");
+      throw new ApiError(401, "Invalid credentials");
+    }
   }
 
   clearFailedLogins(throttleKey);
@@ -259,4 +292,17 @@ export async function refreshAccessToken(refreshToken) {
 /** Revokes every issued refresh token for a user. */
 export async function revokeSessions(userId) {
   await User.findByIdAndUpdate(userId, { $inc: { token_version: 1 } });
+}
+
+/** Self-service password rotation. Revokes other sessions' refresh tokens. */
+export async function changePassword({ userId, currentPassword, newPassword }) {
+  const user = await User.findById(userId).select("+password_hash");
+  if (!user) throw new ApiError(401, "Account unavailable");
+
+  const valid = await user.verifyPassword(currentPassword);
+  if (!valid) throw new ApiError(401, "Current password is incorrect");
+
+  await user.setPassword(newPassword);
+  user.token_version += 1;
+  await user.save();
 }
