@@ -301,31 +301,22 @@ function PortfolioCard({ item, index, cardProps }) {
   );
 }
 
-export function SelectedWork({ services, portfolioItems }) {
+/**
+ * The interactive half of the portfolio: filter chips, the live-region count and
+ * the card grid — everything except the surrounding heading.
+ *
+ * Extracted so the landing page's Selected Work section and the /projects index
+ * render the same markup from the same filter hook instead of two copies that
+ * drift. Only one board mounts per route, so the ids below stay unique.
+ */
+export function PortfolioBoard({ services, portfolioItems }) {
   const { statusText, isEmpty, cardProps, chipProps } = usePortfolioFilter(
     portfolioItems,
     (item) => item.service?.slug,
   );
 
   return (
-    <section
-      id="work-section"
-      className="container"
-      aria-labelledby="work-heading"
-      data-reveal-group=""
-    >
-      <div className="section-head">
-        <p className="eyebrow">Selected Work</p>
-        <div>
-          <h2 id="work-heading" className="section-heading">
-            Delivered engagements
-          </h2>
-          <p className="section-subtitle">
-            A cross-section of platforms and campaigns shipped to production.
-          </p>
-        </div>
-      </div>
-
+    <>
       <div
         className="filter-bar"
         data-filter-bar=""
@@ -366,6 +357,37 @@ export function SelectedWork({ services, portfolioItems }) {
         <p className="filter-empty" data-filter-empty="" hidden={!isEmpty}>
           No projects match that discipline yet.
         </p>
+      </div>
+    </>
+  );
+}
+
+export function SelectedWork({ services, portfolioItems }) {
+  return (
+    <section
+      id="work-section"
+      className="container"
+      aria-labelledby="work-heading"
+      data-reveal-group=""
+    >
+      <div className="section-head">
+        <p className="eyebrow">Selected Work</p>
+        <div>
+          <h2 id="work-heading" className="section-heading">
+            Delivered engagements
+          </h2>
+          <p className="section-subtitle">
+            A cross-section of platforms and campaigns shipped to production.
+          </p>
+        </div>
+      </div>
+
+      <PortfolioBoard services={services} portfolioItems={portfolioItems} />
+
+      <div className="hero-ctas">
+        <Link to="/projects" className="cta-button btn-secondary">
+          View all projects
+        </Link>
       </div>
     </section>
   );

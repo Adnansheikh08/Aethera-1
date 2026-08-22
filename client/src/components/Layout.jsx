@@ -4,23 +4,57 @@ import { useNavigation, useSectionSpy } from "../hooks/useNavigation.js";
 import { useHeaderCondensed } from "../hooks/useScrollProgress.js";
 
 /**
- * Site-wide wayfinding order — Home, About, Services, Testimonial, Contact Us.
+ * Site-wide wayfinding order — Home, About, Services, Projects, Testimonial,
+ * Contact Us.
  *
  * The header nav and the footer's Navigate list both render this array, wrapped
  * by the same Home and Contact entries, so the two lists cannot drift apart.
- * These are anchors into the landing page's sections, exactly as base.html's
- * nav was; Home is the one that is a route, so it gets its own component.
+ * An entry with `id` is an anchor into a landing-page section, exactly as
+ * base.html's nav was; an entry with `to` is a route of its own.
  */
 const NAV_ITEMS = [
   { id: "statement-section", label: "About" },
   { id: "focus-section", label: "Services" },
+  { to: "/projects", label: "Projects" },
   { id: "proof-section", label: "Testimonial" },
 ];
 
 /** Closes every nav list: a button in the header, a plain link in the footer. */
 const CONTACT = { id: "contact-section", label: "Contact Us" };
 
-const SPY_IDS = NAV_ITEMS.map((item) => item.id);
+// Route entries have no section to observe, so they are excluded rather than
+// contributing an id that getElementById will never resolve.
+const SPY_IDS = NAV_ITEMS.filter((item) => item.id).map((item) => item.id);
+
+const navKey = (item) => item.id ?? item.to;
+
+/**
+ * One nav entry, in whichever form the item calls for.
+ *
+ * Routes go through NavLink so the active state follows the router rather than
+ * the section spy. Its `aria-current` is pinned to "true" because the
+ * stylesheet keys the active treatment off that exact value, not off NavLink's
+ * "page" default — and NavLink still only emits the attribute while active.
+ */
+function NavEntry({ item, className, activeId, isLanding }) {
+  if (item.to) {
+    return (
+      <NavLink to={item.to} className={className} aria-current="true">
+        {item.label}
+      </NavLink>
+    );
+  }
+
+  return (
+    <a
+      href={`/#${item.id}`}
+      className={className}
+      aria-current={isLanding && activeId === item.id ? "true" : undefined}
+    >
+      {item.label}
+    </a>
+  );
+}
 
 /**
  * Home needs the router rather than an anchor — and a nudge. Routing to "/"
@@ -96,14 +130,13 @@ export function Header() {
               />
             </li>
             {NAV_ITEMS.map((item) => (
-              <li key={item.id}>
-                <a
-                  href={`/#${item.id}`}
+              <li key={navKey(item)}>
+                <NavEntry
+                  item={item}
                   className="nav-item"
-                  aria-current={isLanding && activeId === item.id ? "true" : undefined}
-                >
-                  {item.label}
-                </a>
+                  activeId={activeId}
+                  isLanding={isLanding}
+                />
               </li>
             ))}
             <li>
@@ -140,10 +173,8 @@ export function Footer() {
                 <HomeLink className="contact-link" />
               </li>
               {NAV_ITEMS.map((item) => (
-                <li key={item.id}>
-                  <a href={`/#${item.id}`} className="contact-link">
-                    {item.label}
-                  </a>
+                <li key={navKey(item)}>
+                  <NavEntry item={item} className="contact-link" />
                 </li>
               ))}
               <li>

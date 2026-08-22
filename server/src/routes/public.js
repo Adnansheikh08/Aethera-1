@@ -72,6 +72,26 @@ router.get(
   }),
 );
 
+/**
+ * Projects page payload: the full published portfolio plus the service list the
+ * filter chips are built from, in one request like /content/landing.
+ *
+ * Same selector as the landing grid — getFeaturedPortfolioItems() never applied
+ * a limit (the "featured" in the name is a Django port artefact), so it already
+ * returns every published item newest-first, which is the whole index this page
+ * wants. Landing and /projects therefore cannot disagree about what is live.
+ */
+router.get(
+  "/content/projects",
+  asyncHandler(async (_req, res) => {
+    const [portfolioItems, services] = await Promise.all([
+      getFeaturedPortfolioItems(),
+      getActiveServices(),
+    ]);
+    res.json({ portfolio_items: portfolioItems, services });
+  }),
+);
+
 router.get(
   "/services",
   asyncHandler(async (_req, res) => {
@@ -163,6 +183,10 @@ router.get(
 
     const urls = [
       `<url><loc>${origin}/</loc><priority>1.0</priority></url>`,
+      // No trailing slash: SiteMeta builds the canonical from the router's
+      // pathname, so /projects/ here would advertise a URL the page itself
+      // never claims as canonical.
+      `<url><loc>${origin}/projects</loc><priority>0.9</priority></url>`,
       ...services.map(
         (s) => `<url><loc>${origin}/services/${s.slug}/</loc><priority>0.8</priority></url>`,
       ),

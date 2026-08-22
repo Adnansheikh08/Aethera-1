@@ -10,6 +10,7 @@ import { useScrollTopOnNavigate } from "./hooks/useNavigation.js";
 import { CaseStudyDetail, ServiceDetail } from "./pages/Detail.jsx";
 import { Landing } from "./pages/Landing.jsx";
 import { Contact } from "./pages/Contact.jsx";
+import { Projects } from "./pages/Projects.jsx";
 import { NotFound, PrivacyPolicy, Terms } from "./pages/Legal.jsx";
 
 const SITE_TITLE = "Aethera — Enterprise Software Agency & Cybersecurity";
@@ -89,6 +90,7 @@ function PublicSite() {
       <main id="main-content">
         <Routes>
           <Route path="/" element={<Landing introComplete={!isLanding || introComplete} />} />
+          <Route path="/projects" element={<Projects />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/services/:slug" element={<ServiceDetail />} />
           <Route path="/case-studies/:slug" element={<CaseStudyDetail />} />

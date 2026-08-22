@@ -54,6 +54,7 @@ async function request(path, { method = "GET", body, signal, token } = {}) {
 }
 
 export const getLandingContent = (signal) => request("/content/landing", { signal });
+export const getProjectsContent = (signal) => request("/content/projects", { signal });
 export const getService = (slug, signal) => request(`/services/${slug}`, { signal });
 export const getCaseStudy = (slug, signal) => request(`/case-studies/${slug}`, { signal });
 export const submitLead = (values) => request("/leads", { method: "POST", body: values });
