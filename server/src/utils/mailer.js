@@ -12,6 +12,7 @@ function getTransporter() {
       host: config.smtp.host,
       port: config.smtp.port,
       secure: config.smtp.secure,
+      family: 4,
       auth: config.smtp.user ? { user: config.smtp.user, pass: config.smtp.pass } : undefined,
     });
   }
