@@ -2,6 +2,7 @@ import { createApp } from "./app.js";
 import { config } from "./config/index.js";
 import { connectDatabase, disconnectDatabase } from "./config/database.js";
 import { logger } from "./utils/logger.js";
+import { verifyMailConnection } from "./utils/mailer.js";
 
 /** Entrypoint. Replaces manage.py runserver / the WSGI application. */
 async function main() {
@@ -13,6 +14,13 @@ async function main() {
       { port: config.port, env: config.env, admin: `/api/${config.adminUrlPath}` },
       "Aethera API listening",
     );
+    verifyMailConnection()
+    .then((result) => {
+      logger.info({ result }, "SMTP verification completed");
+    })
+    .catch((err) => {
+      logger.error({ err }, "SMTP verification failed");
+    });
   });
 
   // Without this, an in-flight request is severed mid-write on redeploy and
