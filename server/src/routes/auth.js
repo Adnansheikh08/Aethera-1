@@ -25,15 +25,10 @@ import { config } from "../config/index.js";
 
 const router = express.Router();
 
-/**
- * Refresh tokens live in an httpOnly cookie so XSS cannot read them; the
- * access token is returned in the body for the SPA to hold in memory only.
- * This is the split django-two-factor-auth got for free from session cookies.
- */
 const refreshCookieOptions = {
   httpOnly: true,
   secure: config.isProd,
-  sameSite: "strict",
+  sameSite: config.isProd ? "none" : "lax",
   path: "/api/auth",
   maxAge: 7 * 24 * 60 * 60 * 1000,
 };
