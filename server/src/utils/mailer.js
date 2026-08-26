@@ -41,3 +41,28 @@ export async function sendMail({ to, subject, text, html }) {
     return { sent: false };
   }
 }
+
+export async function verifyMailConnection() {
+  const transport = getTransporter();
+
+  if (!transport) {
+    logger.warn("SMTP not configured");
+    return false;
+  }
+
+  try {
+    await transport.verify();
+    logger.info("SMTP connection verified successfully");
+    return true;
+  } catch (err) {
+    logger.error(
+      {
+        err: err.message,
+        code: err.code,
+        command: err.command,
+      },
+      "SMTP connection verification failed"
+    );
+    return false;
+  }
+}
