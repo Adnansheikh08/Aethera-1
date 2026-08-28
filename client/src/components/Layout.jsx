@@ -27,30 +27,66 @@ const NAV_ITEMS = [
 /** Closes every nav list: a button in the header, a plain link in the footer. */
 const CONTACT = { id: "contact-section", label: "Contact Us" };
 
+/**
+ * Landing sections the spy watches without owning a highlight of their own.
+ *
+ * The spy marks whichever watched section holds the viewport, so a section it
+ * cannot see leaves the previous entry lit long after that entry's section has
+ * scrolled by — Testimonial used to stay marked through Operating hours and the
+ * enquiry form, all the way to the footer. Naming them here hands the active
+ * state over to a section with no nav entry, which reads as "nothing is current".
+ *
+ * The hero and the marquee are deliberately left out. Nothing being active above
+ * the first section is exactly what puts the marker on Home.
+ */
+const UNMAPPED_SPY_IDS = ["locations-section", CONTACT.id];
+
 // Route entries have no section of their own, but some still preview a
-// landing-page section (spyId) that the observer needs to watch.
-const SPY_IDS = NAV_ITEMS.map((item) => item.id ?? item.spyId).filter(Boolean);
+// landing-page section (spyId) that the observer needs to watch. Order is
+// irrelevant — useSectionSpy sorts by document position.
+const SPY_IDS = [
+  ...NAV_ITEMS.map((item) => item.id ?? item.spyId).filter(Boolean),
+  ...UNMAPPED_SPY_IDS,
+];
 
 const navKey = (item) => item.id ?? item.to;
 
 /**
  * One nav entry, in whichever form the item calls for.
  *
- * Routes go through NavLink so the active state follows the router rather than
- * the section spy. Its `aria-current` is pinned to "true" because the
- * stylesheet keys the active treatment off that exact value, not off NavLink's
- * "page" default — and NavLink still only emits the attribute while active.
+ * A route entry has two different owners of its active state, and they need two
+ * different elements:
+ *
+ *   off the landing page  NavLink, so the router decides. `aria-current` is
+ *                         pinned to "true" because the stylesheet keys the active
+ *                         treatment off that exact value rather than NavLink's
+ *                         "page" default, and NavLink only emits it while active.
+ *   on the landing page   Link, because the spy decides — Projects highlights
+ *                         while its preview section is in view. NavLink cannot be
+ *                         used here: the very behaviour relied on above works
+ *                         against us, since it re-emits `aria-current` only when
+ *                         its own route matches, and on "/" the /projects route
+ *                         never does. Whatever the spy worked out was dropped on
+ *                         the floor, so the tab never lit up at all.
  */
 function NavEntry({ item, className, activeId, isLanding }) {
   if (item.to) {
-    // On the landing page the route never matches (it's "/"), so the spy
-    // takes over: the tab highlights while its preview section is in view.
-    const isSpiedActive = Boolean(item.spyId) && activeId === item.spyId;
-    let ariaCurrent = "true";
-    if (isLanding) ariaCurrent = isSpiedActive ? "true" : undefined;
+    if (isLanding) {
+      const isSpiedActive = Boolean(item.spyId) && activeId === item.spyId;
+
+      return (
+        <Link
+          to={item.to}
+          className={className}
+          aria-current={isSpiedActive ? "true" : undefined}
+        >
+          {item.label}
+        </Link>
+      );
+    }
 
     return (
-      <NavLink to={item.to} className={className} aria-current={ariaCurrent}>
+      <NavLink to={item.to} className={className} aria-current="true">
         {item.label}
       </NavLink>
     );
@@ -153,7 +189,15 @@ export function Header() {
               </li>
             ))}
             <li>
-              <a href={`/#${CONTACT.id}`} className="header-btn">
+              {/* Styled as the header's filled button rather than a nav item, so
+                  there is no `.header-btn[aria-current]` rule and this changes
+                  nothing visually — it is here so the attribute does not lie to
+                  a screen reader while the enquiry form is the section in view. */}
+              <a
+                href={`/#${CONTACT.id}`}
+                className="header-btn"
+                aria-current={isLanding && activeId === CONTACT.id ? "true" : undefined}
+              >
                 {CONTACT.label}
               </a>
             </li>

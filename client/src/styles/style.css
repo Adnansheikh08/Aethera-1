@@ -1,71 +1,135 @@
 /* ==========================================================================
-   Aethera — Modern Professional Theme
+   Aethera — Dark Premium Theme
 
-   A contemporary design system built on a neutral ground with a single
-   confident blue accent. Hierarchy comes from scale, weight and elevation
-   rather than decoration, so the page reads as a product surface: quiet,
-   dense where it should be, and generous where it matters.
+   A dark-first design system: the page sits on near-black navy, every panel
+   above it is *lighter* rather than shadowed, and emphasis is carried by an
+   electric blue with a cyan second voice. Depth comes from light and colour
+   instead of drop shadows, which is what separates a dark surface that reads
+   as engineered from one that just reads as inverted.
+
+   The whole palette lives in the token block below. Components reference the
+   semantic layer (--bg-*, --text-*, --border-*) and never the raw ramps, so
+   the ground the site stands on is one edit away.
    ========================================================================== */
 
 /* ==========================================================================
    Design tokens
    ========================================================================== */
 :root {
-    /* Neutral ramp — cool grey, perceptually even steps. */
-    --neutral-0: hsl(0, 0%, 100%);
-    --neutral-50: hsl(220, 30%, 98.5%);
-    --neutral-100: hsl(220, 24%, 96%);
-    --neutral-200: hsl(220, 20%, 91%);
-    --neutral-300: hsl(220, 16%, 82%);
-    --neutral-400: hsl(220, 12%, 64%);
-    --neutral-500: hsl(220, 10%, 48%);
-    --neutral-600: hsl(220, 13%, 36%);
-    --neutral-700: hsl(220, 16%, 25%);
-    --neutral-800: hsl(220, 20%, 15%);
-    --neutral-900: hsl(222, 26%, 9%);
+    /* Hands the UA the theme, so form controls, scrollbars, spinners and the
+       canvas behind an overscroll all render dark without being restyled one
+       by one. Without it the browser paints light chrome around a dark page. */
+    color-scheme: dark;
 
-    /* Primary accent — a single blue carries every emphasis on the page. */
-    --primary-50: hsl(214, 100%, 97%);
-    --primary-100: hsl(214, 95%, 93%);
-    --primary-200: hsl(214, 92%, 85%);
-    --primary-300: hsl(214, 88%, 72%);
-    --primary-400: hsl(214, 84%, 60%);
-    --primary-500: hsl(214, 80%, 50%);
-    --primary-600: hsl(215, 78%, 43%);
-    --primary-700: hsl(216, 72%, 35%);
-    --primary-800: hsl(217, 66%, 27%);
-    --primary-900: hsl(218, 60%, 20%);
+    /* Neutral ramp — cool navy-grey, still ordered light-to-dark. Only the
+       semantic tokens below decide which end the page actually stands on. */
+    --neutral-0: hsl(210, 40%, 99%);
+    --neutral-50: hsl(213, 32%, 95%);
+    --neutral-100: hsl(214, 26%, 89%);
+    --neutral-200: hsl(215, 20%, 77%);
+    --neutral-300: hsl(215, 17%, 64%);
+    --neutral-400: hsl(216, 15%, 52%);
+    --neutral-500: hsl(217, 15%, 41%);
+    --neutral-600: hsl(218, 17%, 31%);
+    --neutral-700: hsl(219, 21%, 22%);
+    --neutral-800: hsl(220, 27%, 15%);
+    --neutral-900: hsl(221, 34%, 10%);
+    --neutral-950: hsl(222, 41%, 7%);
+    --neutral-1000: hsl(222, 47%, 4%);
 
-    /* Semantic state colours. */
-    --success: hsl(158, 64%, 32%);
-    --success-bg: hsl(158, 60%, 96%);
-    --danger: hsl(0, 68%, 47%);
-    --danger-bg: hsl(0, 80%, 97%);
+    /* Electric blue.
 
-    /* Surfaces. */
-    --bg-page: var(--neutral-0);
-    --bg-subtle: var(--neutral-50);
-    --bg-muted: var(--neutral-100);
-    --bg-surface: var(--neutral-0);
-    --bg-inverse: var(--neutral-900);
+       The ramp runs deep-to-bright, the reverse of the light theme it replaces.
+       On a near-black page it is the low steps that read as "barely there"
+       tints and the high steps that glow, so 50 is a whisper of blue in the
+       dark and 900 is almost white — which keeps every existing "low number =
+       recessive, high number = prominent" call site correct. */
+    --primary-50: hsl(217, 60%, 12%);
+    --primary-100: hsl(217, 66%, 17%);
+    --primary-200: hsl(216, 71%, 25%);
+    --primary-300: hsl(215, 79%, 37%);
+    --primary-400: hsl(214, 89%, 51%);
+    --primary-500: hsl(213, 100%, 60%);
+    --primary-600: hsl(212, 100%, 67%);
+    --primary-700: hsl(210, 100%, 76%);
+    --primary-800: hsl(208, 100%, 85%);
+    --primary-900: hsl(206, 100%, 93%);
 
-    /* Text hierarchy. */
-    --text-primary: var(--neutral-900);
-    --text-secondary: var(--neutral-600);
-    --text-tertiary: var(--neutral-500);
-    --text-faint: var(--neutral-400);
-    --text-on-primary: var(--neutral-0);
-    --text-on-inverse: var(--neutral-100);
+    /* Cyan — the second voice. Never carries meaning on its own; it exists to
+       give the blue somewhere to travel to in a gradient and to make a glow
+       read as light rather than as a coloured shadow. */
+    --accent-400: hsl(191, 90%, 43%);
+    --accent-500: hsl(188, 95%, 53%);
+    --accent-600: hsl(186, 100%, 63%);
+    --accent-700: hsl(184, 100%, 75%);
 
-    /* Borders. */
-    --border-subtle: var(--neutral-200);
-    --border-default: var(--neutral-300);
-    --border-strong: var(--neutral-400);
-    --border-inverse: hsla(0, 0%, 100%, 0.14);
+    /* Semantic state colours, lifted for legibility against a dark ground —
+       the light theme's deep green and red both went to mud down here. */
+    --success: hsl(158, 72%, 52%);
+    --success-bg: hsla(158, 72%, 45%, 0.12);
+    --danger: hsl(0, 85%, 67%);
+    --danger-bg: hsla(0, 85%, 60%, 0.14);
+
+    /* Surfaces.
+
+       Elevation is inverted from the light theme: the page is the *deepest*
+       step and anything raised off it is lighter. --bg-subtle stays below
+       --bg-surface on purpose, so a band can recess while the cards inside it
+       lift, and a stat tile can brighten on hover by swapping one for the
+       other. */
+    --bg-page: var(--neutral-1000);
+    --bg-subtle: hsl(222, 42%, 6.5%);
+    --bg-surface: hsl(221, 34%, 8.5%);
+    --bg-muted: hsl(221, 30%, 13%);
+    --bg-elevated: hsl(220, 29%, 11%);
+    /* Unused as of this theme. It resolves to the ramp's light end — the literal
+       inverse of a dark page — and .admin-header, its only consumer, was the one
+       glaring white slab in the console because of it. Kept as a slot for a
+       deliberate light-on-dark callout; anything reaching for it by name should
+       check that it really wants near-white, not just "the other surface". */
+    --bg-inverse: var(--neutral-0);
+
+    /* Text hierarchy. --text-on-primary is near-black because the accent fills
+       are bright: dark type on electric blue is far sharper than white on it,
+       and it is the only pairing that clears contrast at these lightnesses. */
+    --text-primary: hsl(210, 40%, 98%);
+    --text-secondary: hsl(214, 20%, 73%);
+    --text-tertiary: hsl(215, 16%, 59%);
+    --text-faint: hsl(216, 14%, 45%);
+    --text-on-primary: hsl(222, 47%, 6%);
+    /* Pairs with --bg-inverse, and unused for the same reason. */
+    --text-on-inverse: hsl(222, 47%, 8%);
+
+    /* Borders are translucent white rather than solid greys, so a hairline
+       reads correctly over the page, over a card and over glass without three
+       separate values. */
+    --border-subtle: hsla(210, 55%, 82%, 0.09);
+    --border-default: hsla(210, 52%, 82%, 0.15);
+    --border-strong: hsla(210, 50%, 84%, 0.26);
+    --border-inverse: hsla(210, 55%, 82%, 0.11);
+
+    /* Glass — for chrome that floats over scrolling content. The blur does the
+       separating; the fill only needs to stop text showing through. */
+    --glass-bg: hsla(222, 44%, 5%, 0.72);
+    --glass-border: hsla(210, 60%, 84%, 0.10);
+
+    /* Signature gradients, defined once so every brand surface carries the
+       same one rather than a hand-mixed approximation. */
+    --gradient-brand: linear-gradient(135deg, var(--primary-500), var(--accent-500));
+    --gradient-brand-soft: linear-gradient(135deg, hsla(213, 100%, 60%, 0.16), hsla(188, 95%, 53%, 0.08) 55%, transparent);
+    /* A hairline that starts lit and fades out — the lit top edge on cards. */
+    --gradient-hairline: linear-gradient(120deg, hsla(213, 100%, 70%, 0.5), hsla(188, 95%, 62%, 0.22) 42%, transparent 78%);
+
+    /* Grid overlay line, faint enough to be felt rather than counted. */
+    --grid-line: hsla(210, 60%, 84%, 0.045);
 
     /* Typography. */
     --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
     --font-display: var(--font-body);
+    /* Loaded in index.html and, until now, never actually used — the editorial
+       counterweight to Inter. Kept separate from --font-display because that
+       one dresses the admin console, which wants no serif in it. */
+    --font-serif: "Instrument Serif", "Iowan Old Style", Georgia, serif;
     --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
     /* Fluid type scale — display sizes breathe, body sizes stay fixed so the
@@ -94,7 +158,11 @@
     --space-12: 3rem;
     --space-16: 4rem;
     --space-20: 5rem;
-    --space-section: clamp(4.5rem, 3rem + 6vw, 7.5rem);
+    /* Applied as padding-block on every .container, so adjacent sections stack it
+       twice — the gap a reader actually sees between two sections is double this.
+       Capped at 5rem to keep that combined gap at 10rem rather than the 15rem the
+       old 7.5rem produced, which read as dead space on wide screens. */
+    --space-section: clamp(3rem, 2.25rem + 3vw, 5rem);
 
     --shell-max: 75rem;
     --measure: 40rem;
@@ -107,13 +175,32 @@
     --radius-2xl: 1.5rem;
     --radius-full: 62.5rem;
 
-    /* Elevation. */
-    --shadow-xs: 0 1px 2px hsla(220, 30%, 10%, 0.04);
-    --shadow-sm: 0 1px 3px hsla(220, 30%, 10%, 0.06), 0 1px 2px hsla(220, 30%, 10%, 0.04);
-    --shadow-md: 0 4px 12px hsla(220, 30%, 10%, 0.07), 0 2px 4px hsla(220, 30%, 10%, 0.04);
-    --shadow-lg: 0 12px 28px hsla(220, 30%, 10%, 0.09), 0 4px 8px hsla(220, 30%, 10%, 0.04);
-    --shadow-xl: 0 24px 48px hsla(220, 30%, 10%, 0.12), 0 8px 16px hsla(220, 30%, 10%, 0.05);
-    --shadow-focus: 0 0 0 3px var(--primary-100);
+    /* Elevation.
+
+       Near-black rather than tinted, and heavier than the light theme's, because
+       a shadow on a dark ground has almost no luminance left to spend — it only
+       starts reading at these opacities. --shadow-2xl was referenced by the
+       portfolio card and the service modal but never defined, which silently
+       dropped both declarations; it exists now. */
+    --shadow-xs: 0 1px 2px hsla(222, 60%, 2%, 0.4);
+    --shadow-sm: 0 1px 3px hsla(222, 60%, 2%, 0.5), 0 1px 2px hsla(222, 60%, 2%, 0.4);
+    --shadow-md: 0 4px 12px hsla(222, 60%, 2%, 0.55), 0 2px 4px hsla(222, 60%, 2%, 0.4);
+    --shadow-lg: 0 12px 28px hsla(222, 60%, 2%, 0.6), 0 4px 8px hsla(222, 60%, 2%, 0.45);
+    --shadow-xl: 0 24px 48px hsla(222, 60%, 2%, 0.66), 0 8px 16px hsla(222, 60%, 2%, 0.5);
+    --shadow-2xl: 0 40px 80px hsla(222, 60%, 2%, 0.72), 0 16px 32px hsla(222, 60%, 2%, 0.55);
+    --shadow-focus: 0 0 0 3px hsla(213, 100%, 60%, 0.32);
+
+    /* Glow.
+
+       The real elevation scale down here. Each one is a 1px lit ring plus a
+       coloured bloom, so a hovered surface looks like it has been switched on
+       rather than lifted — the effect a drop shadow cannot produce against
+       near-black. Sits alongside the shadows above; the two are usually paired. */
+    --glow-sm: 0 0 0 1px hsla(213, 100%, 68%, 0.2), 0 4px 16px hsla(213, 100%, 50%, 0.1);
+    --glow-md: 0 0 0 1px hsla(213, 100%, 68%, 0.32), 0 8px 28px hsla(213, 100%, 50%, 0.18);
+    --glow-lg: 0 0 0 1px hsla(213, 100%, 72%, 0.42), 0 18px 48px hsla(213, 100%, 52%, 0.24),
+               0 0 32px hsla(188, 95%, 56%, 0.14);
+    --glow-cyan: 0 0 24px hsla(188, 95%, 56%, 0.3);
 
     /* Motion — one family of curves so restraint reads as intent. */
     --ease: cubic-bezier(0.4, 0, 0.2, 1);
@@ -145,7 +232,20 @@ body {
     font-size: var(--text-base);
     line-height: 1.65;
     color: var(--text-secondary);
-    background: var(--bg-page);
+    background-color: var(--bg-page);
+    /* Two soft washes of brand light bled into the top of the document.
+       Deliberately not `background-attachment: fixed` — pinning a gradient to
+       the viewport repaints it on every scroll frame, and letting it scroll away
+       is also the better effect: the glow belongs to the hero, and the page
+       gets genuinely darker and quieter as the reader descends.
+
+       Sized in rem rather than % so the geometry does not stretch with the
+       document; a percentage here would resolve against the full page height and
+       smear the whole thing into a flat tint. */
+    background-image:
+        radial-gradient(58rem 34rem at 18% -6rem, hsla(213, 100%, 52%, 0.14), transparent 68%),
+        radial-gradient(44rem 30rem at 92% 2rem, hsla(188, 95%, 50%, 0.08), transparent 66%);
+    background-repeat: no-repeat;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -196,9 +296,11 @@ h4 {
     border-radius: var(--radius-sm);
 }
 
+/* Translucent rather than a solid fill, so the selected glyphs keep their own
+   colour and weight instead of being repainted onto a blue slab. */
 ::selection {
-    background: var(--primary-100);
-    color: var(--primary-900);
+    background: hsla(213, 100%, 60%, 0.3);
+    color: var(--text-primary);
 }
 
 /* ==========================================================================
@@ -244,8 +346,17 @@ h4 {
     padding-block: var(--space-section);
 }
 
+/* Layered on the element rather than a pseudo-element: .band is composed onto
+   .container, whose children are laid out in normal flow, and adding a
+   positioned ::before here would put a containing block under markup that never
+   asked for one. --bg-subtle sits a step *above* --bg-page in the dark
+   elevation scale, so the band still reads as a distinct plate even though its
+   name says recessive. */
 .band {
-    background: var(--bg-subtle);
+    background-color: var(--bg-subtle);
+    background-image:
+        radial-gradient(70% 120% at 50% 0%, hsla(213, 100%, 56%, 0.07), transparent 62%),
+        linear-gradient(180deg, hsla(210, 60%, 84%, 0.02), transparent 40%);
     border-block: 1px solid var(--border-subtle);
     max-width: none;
     padding-inline: max(var(--space-6), calc(50vw - var(--shell-max) / 2));
@@ -296,8 +407,9 @@ h4 {
 .preloader-bar {
     width: 0;
     height: 100%;
-    background: var(--primary-500);
+    background: var(--gradient-brand);
     border-radius: inherit;
+    box-shadow: 0 0 12px hsla(213, 100%, 55%, 0.5);
     transition: width var(--duration-fast) linear;
 }
 
@@ -318,7 +430,10 @@ h4 {
     z-index: 120;
     width: 100%;
     height: 2px;
-    background: var(--primary-500);
+    background: var(--gradient-brand);
+    /* The rail is 2px of light on a dark page; without the bloom it reads as a
+       hairline artefact rather than a deliberate indicator. */
+    box-shadow: 0 0 10px hsla(213, 100%, 58%, 0.55);
     transform: scaleX(0);
     transform-origin: 0 50%;
 }
@@ -330,17 +445,45 @@ h4 {
     position: sticky;
     inset-block-start: 0;
     z-index: 110;
-    background: hsla(0, 0%, 100%, 0.8);
-    backdrop-filter: saturate(180%) blur(12px);
-    -webkit-backdrop-filter: saturate(180%) blur(12px);
+    background: var(--glass-bg);
+    /* Saturation is pulled back from the light theme's 180%: over a dark page
+       the blur samples mostly the brand glow, and boosting that as hard turned
+       the bar into a blue tint rather than glass. */
+    backdrop-filter: saturate(150%) blur(16px);
+    -webkit-backdrop-filter: saturate(150%) blur(16px);
     border-block-end: 1px solid transparent;
     transition: border-color var(--duration-base) var(--ease),
-                box-shadow var(--duration-base) var(--ease);
+                box-shadow var(--duration-base) var(--ease),
+                background-color var(--duration-base) var(--ease);
 }
 
 .site-header.is-condensed {
-    border-block-end-color: var(--border-subtle);
-    box-shadow: var(--shadow-sm);
+    border-block-end-color: var(--glass-border);
+    box-shadow: var(--shadow-lg);
+}
+
+/* A lit filament along the bottom edge, revealed only once the bar has
+   detached from the hero. It sits on top of the border rather than replacing
+   it, so the hairline still holds the layout where the gradient fades out.
+   Sticky is a positioned value, so this anchors to the header itself. */
+.site-header::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: -1px;
+    height: 1px;
+    background: linear-gradient(90deg,
+                transparent,
+                hsla(213, 100%, 70%, 0.45) 32%,
+                hsla(188, 95%, 62%, 0.38) 68%,
+                transparent);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--duration-base) var(--ease);
+}
+
+.site-header.is-condensed::after {
+    opacity: 1;
 }
 
 .nav-container {
@@ -362,7 +505,10 @@ h4 {
 }
 
 .orange-char {
-    color: var(--primary-500);
+    color: var(--accent-500);
+    /* A single lit pixel of punctuation. text-shadow rather than a filter so it
+       costs nothing and cannot blur the letterforms beside it. */
+    text-shadow: 0 0 12px hsla(188, 95%, 56%, 0.7);
 }
 
 .nav-links {
@@ -388,9 +534,12 @@ h4 {
     background: var(--bg-muted);
 }
 
+/* Set by the section spy in Layout.jsx, not by the router — keyed off the
+   attribute so there is no visual-only class to fall out of sync. */
 .nav-item[aria-current="true"] {
-    color: var(--primary-600);
+    color: var(--primary-700);
     background: var(--primary-50);
+    box-shadow: inset 0 0 0 1px hsla(213, 100%, 70%, 0.18);
 }
 
 .header-btn {
@@ -401,14 +550,22 @@ h4 {
     font-size: var(--text-sm);
     font-weight: 550;
     color: var(--text-on-primary);
-    background: var(--neutral-900);
+    /* The light theme filled this with near-black, which on a near-black page
+       would have disappeared entirely. It becomes the brand gradient instead —
+       the one solid accent surface in the header. */
+    background: var(--gradient-brand);
     border-radius: var(--radius-md);
-    transition: background-color var(--duration-fast) var(--ease),
-                transform var(--duration-fast) var(--ease);
+    box-shadow: 0 2px 10px hsla(213, 100%, 50%, 0.28);
+    transition: box-shadow var(--duration-fast) var(--ease),
+                transform var(--duration-fast) var(--ease),
+                filter var(--duration-fast) var(--ease);
 }
 
+/* A gradient cannot be transitioned, so hover brightens the same paint instead
+   of swapping it for another one. */
 .header-btn:hover {
-    background: var(--neutral-700);
+    filter: brightness(1.1);
+    box-shadow: 0 4px 18px hsla(213, 100%, 55%, 0.42), var(--glow-cyan);
     transform: translateY(-1px);
 }
 
@@ -497,22 +654,30 @@ h4 {
     margin-block-end: var(--space-12);
 }
 
+/* Statement is a section-head and nothing else, so the margin above has nothing
+   to separate it from — it just adds to the section's own bottom padding. */
+.section-head:last-child {
+    margin-block-end: 0;
+}
+
 .eyebrow {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-2);
+    gap: var(--space-3);
     font-size: var(--text-2xs);
     font-weight: 600;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--primary-600);
+    color: var(--primary-700);
 }
 
+/* Brightest where it meets the label and fading out to the left, so the rule
+   reads as light spilling off the text rather than a bar stuck to it. */
 .eyebrow::before {
     content: "";
-    width: 1.5rem;
+    width: 1.75rem;
     height: 1px;
-    background: var(--primary-300);
+    background: linear-gradient(90deg, transparent, var(--primary-500));
 }
 
 .section-heading {
@@ -528,7 +693,7 @@ h4 {
 }
 
 /* ==========================================================================
-   Hero with 3D depth
+   Hero
    ========================================================================== */
 .hero {
     position: relative;
@@ -540,30 +705,42 @@ h4 {
     perspective: 1000px;
 }
 
-/* Animated gradient orbs with depth */
+/* Engineering grid.
+
+   Two hairline gratings, then masked with a radial fade so the lines dissolve
+   before they reach any edge — a grid that runs to a hard border reads as a
+   table, and one that fades out reads as depth. The mask is why this needs its
+   own layer rather than living on .hero's background. */
 .hero::before {
     content: "";
     position: absolute;
-    inset-block-start: -30%;
-    inset-inline-end: -10%;
-    width: min(50rem, 90vw);
-    aspect-ratio: 1;
-    background: radial-gradient(circle at 30% 40%, var(--primary-100) 0%, var(--primary-50) 35%, transparent 70%);
+    inset: 0;
+    background-image:
+        linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: 4.5rem 4.5rem;
+    mask-image: radial-gradient(72% 62% at 46% 38%, black, transparent 76%);
+    -webkit-mask-image: radial-gradient(72% 62% at 46% 38%, black, transparent 76%);
     pointer-events: none;
-    animation: float-orb 20s ease-in-out infinite;
-    transform-style: preserve-3d;
 }
 
+/* The single ambient light source in the section. One orb rather than the two
+   the light theme used: against near-black, two overlapping washes stopped
+   reading as light and started reading as a smudge. */
 .hero::after {
     content: "";
     position: absolute;
-    inset-block-end: -20%;
-    inset-inline-start: -5%;
-    width: min(35rem, 70vw);
+    inset-block-start: -28%;
+    inset-inline-end: -8%;
+    width: min(46rem, 88vw);
     aspect-ratio: 1;
-    background: radial-gradient(circle at 60% 50%, hsla(214, 100%, 90%, 0.4) 0%, transparent 60%);
+    background: radial-gradient(circle at 42% 44%,
+                hsla(213, 100%, 58%, 0.2) 0%,
+                hsla(196, 96%, 54%, 0.09) 36%,
+                transparent 68%);
     pointer-events: none;
-    animation: float-orb 15s ease-in-out infinite reverse;
+    animation: float-orb 24s ease-in-out infinite;
+    transform-style: preserve-3d;
 }
 
 @keyframes float-orb {
@@ -583,24 +760,38 @@ h4 {
 .badge-pill {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-2);
+    gap: var(--space-3);
     padding: var(--space-2) var(--space-4);
     margin-block-end: var(--space-6);
     font-size: var(--text-xs);
     font-weight: 500;
+    letter-spacing: 0.01em;
     color: var(--text-secondary);
-    background: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
+    background: hsla(221, 34%, 11%, 0.66);
+    border: 1px solid var(--glass-border);
     border-radius: var(--radius-full);
-    box-shadow: var(--shadow-xs);
+    /* Inner top highlight: the one-pixel lit edge that makes a translucent pill
+       look like a physical object catching light from above. */
+    box-shadow: var(--shadow-sm), inset 0 1px 0 hsla(210, 60%, 92%, 0.07);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
 }
 
+/* Status light. The ring is a second shadow on the same dot rather than another
+   element, and it breathes so the badge reads as a live signal. */
 .badge-pill::before {
     content: "";
     width: 0.4375rem;
     height: 0.4375rem;
     background: var(--success);
     border-radius: var(--radius-full);
+    box-shadow: 0 0 8px hsla(158, 72%, 55%, 0.8);
+    animation: status-pulse 2.6s var(--ease) infinite;
+}
+
+@keyframes status-pulse {
+    0%, 100% { box-shadow: 0 0 8px hsla(158, 72%, 55%, 0.8), 0 0 0 0 hsla(158, 72%, 52%, 0.35); }
+    70% { box-shadow: 0 0 8px hsla(158, 72%, 55%, 0.8), 0 0 0 5px hsla(158, 72%, 52%, 0); }
 }
 
 .hero-headline {
@@ -612,9 +803,33 @@ h4 {
     color: var(--text-primary);
 }
 
+/* The editorial counterweight, and the first thing on the site to actually use
+   the Instrument Serif that index.html has been loading all along. Sized up
+   slightly because the serif's lowercase runs shorter than Inter's at a shared
+   font-size, which otherwise makes the second line look like a step down. */
 .serif-italic {
     display: block;
-    color: var(--primary-600);
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.07em;
+    letter-spacing: -0.015em;
+    color: var(--primary-700);
+}
+
+/* Guarded, because the declaration that empties the glyphs and the one that
+   repaints them are separate: unsupported clipping plus `color: transparent`
+   is an invisible headline. Inside @supports they stand or fall together. */
+@supports ((background-clip: text) or (-webkit-background-clip: text)) {
+    .serif-italic {
+        background: linear-gradient(100deg,
+                    var(--primary-800) 0%,
+                    var(--accent-600) 52%,
+                    var(--primary-700) 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
 }
 
 /* Headline cascade — words are wrapped by the reveal module, so the no-JS
@@ -693,33 +908,39 @@ h4 {
                 border-color var(--duration-fast) var(--ease),
                 color var(--duration-fast) var(--ease),
                 box-shadow var(--duration-fast) var(--ease),
+                /* Gradients cannot be interpolated, so the filled button
+                   brightens its existing paint instead of crossfading to a
+                   second one. */
+                filter var(--duration-fast) var(--ease),
                 transform var(--duration-fast) var(--ease);
 }
 
 .btn-primary {
     color: var(--text-on-primary);
-    background: var(--primary-600);
-    border: 1px solid var(--primary-600);
-    box-shadow: var(--shadow-sm);
+    background: var(--gradient-brand);
+    border: 1px solid transparent;
+    /* Ambient bloom, then a lit top edge inside the button. The inset is what
+       stops a flat gradient from looking like a coloured rectangle. */
+    box-shadow: 0 2px 12px hsla(213, 100%, 50%, 0.3),
+                inset 0 1px 0 hsla(210, 100%, 96%, 0.28);
     transform-style: preserve-3d;
 }
 
 .btn-primary:hover {
-    background: var(--primary-700);
-    border-color: var(--primary-700);
-    box-shadow: var(--shadow-xl), 0 0 20px var(--primary-200);
+    filter: brightness(1.12) saturate(1.05);
+    box-shadow: 0 8px 28px hsla(213, 100%, 54%, 0.42),
+                var(--glow-cyan),
+                inset 0 1px 0 hsla(210, 100%, 96%, 0.34);
+    /* translateZ has a perspective to resolve against inside the hero, which is
+       where this button carries the page. */
     transform: translateY(-2px) translateZ(10px);
-    animation: pulse-glow 2s ease-in-out infinite;
 }
 
 .btn-primary:active {
+    filter: none;
     transform: translateY(0) translateZ(0);
-    box-shadow: var(--shadow-xs);
-}
-
-@keyframes pulse-glow {
-    0%, 100% { box-shadow: var(--shadow-xl), 0 0 20px var(--primary-200); }
-    50% { box-shadow: var(--shadow-xl), 0 0 30px var(--primary-300); }
+    box-shadow: 0 1px 4px hsla(213, 100%, 50%, 0.3),
+                inset 0 1px 0 hsla(210, 100%, 96%, 0.2);
 }
 
 .btn-primary:focus-visible {
@@ -728,13 +949,17 @@ h4 {
 
 .btn-secondary {
     color: var(--text-primary);
-    background: var(--bg-surface);
+    background: hsla(221, 32%, 13%, 0.6);
     border: 1px solid var(--border-default);
+    box-shadow: inset 0 1px 0 hsla(210, 60%, 92%, 0.05);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
 }
 
 .btn-secondary:hover {
-    background: var(--bg-muted);
+    background: hsla(221, 32%, 17%, 0.75);
     border-color: var(--border-strong);
+    box-shadow: var(--glow-sm), inset 0 1px 0 hsla(210, 60%, 92%, 0.07);
     transform: translateY(-1px);
 }
 
@@ -743,8 +968,9 @@ h4 {
 }
 
 .cta-button:disabled {
-    opacity: 0.55;
+    opacity: 0.45;
     cursor: not-allowed;
+    filter: none;
     transform: none;
     box-shadow: none;
 }
@@ -752,11 +978,14 @@ h4 {
 /* ==========================================================================
    Capability marquee
    ========================================================================== */
+/* The two `black` stops are mask luminance, not colour — full opacity — so they
+   are correct as literals and must not be tokenised with the rest of the theme. */
 .marquee {
     display: flex;
     overflow: hidden;
     padding-block: var(--space-5);
-    background: var(--bg-subtle);
+    background-color: var(--bg-subtle);
+    background-image: linear-gradient(90deg, hsla(213, 100%, 56%, 0.06), transparent 30%, transparent 70%, hsla(188, 95%, 52%, 0.05));
     border-block: 1px solid var(--border-subtle);
     mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
     -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
@@ -786,12 +1015,16 @@ h4 {
     color: var(--text-tertiary);
 }
 
+/* --primary-300 lands at 37% lightness under the inverted ramp, which a quarter-rem
+   dot cannot carry against a near-black band. Brighter, plus a bloom the same
+   size as the dot, so the separators read as lit pips rather than smudges. */
 .marquee-item::after {
     content: "";
     width: 0.25rem;
     height: 0.25rem;
-    background: var(--primary-300);
+    background: var(--accent-500);
     border-radius: var(--radius-full);
+    box-shadow: 0 0 6px hsla(188, 95%, 56%, 0.65);
 }
 
 @keyframes marquee-scroll {
@@ -808,6 +1041,7 @@ h4 {
     font-weight: 600;
     line-height: 1.25;
     letter-spacing: -0.03em;
+    text-wrap: balance;
 }
 
 .statement-note {
@@ -826,16 +1060,31 @@ h4 {
     gap: var(--space-6);
 }
 
+/* Service cards are sized as a set: every row takes the tallest row's height, so
+   one service whose copy runs long cannot leave the rest of the catalogue looking
+   like a different component. Scoped with :has() because the case-study grid in
+   Proof reuses .services-grid and should keep sizing to its own content. */
+.services-grid:has(.service-card) {
+    grid-auto-rows: 1fr;
+}
+
 .card {
     position: relative;
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
     padding: var(--space-8);
+    /* Must stay exactly this, with no gradient of its own: useCardTilt writes
+       `radial-gradient(...), var(--bg-surface)` inline while the pointer is over
+       the card, so anything else here would be swapped out on hover and swapped
+       back on leave — the card would visibly change colour. All decoration is in
+       the pseudo-elements below for that reason. The hook's white glare needed no
+       change for the dark theme: 15% white over this surface reads as a specular
+       highlight rather than the wash it was on white. */
     background: var(--bg-surface);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-xs);
+    box-shadow: var(--shadow-sm);
     transform-style: preserve-3d;
     transition: border-color var(--duration-base) var(--ease),
                 box-shadow var(--duration-base) var(--ease),
@@ -845,17 +1094,23 @@ h4 {
                 transform var(--card-tilt-duration, var(--duration-base)) var(--ease);
 }
 
+/* --glow-lg, not --glow-sm. This is the largest hover move in the design — 8px
+   up, 20px toward the viewer and a 2deg tilt — and it was lit at the same tier
+   as a secondary button, which read as the card moving without switching on.
+   It is also the only call site the top of the glow scale was ever cut for. */
 .card:hover {
-    border-color: var(--border-default);
-    box-shadow: var(--shadow-xl), 0 0 0 1px var(--primary-100);
+    border-color: hsla(213, 100%, 72%, 0.3);
+    box-shadow: var(--shadow-xl), var(--glow-lg);
     transform: translateY(-8px) translateZ(20px) rotateX(2deg);
 }
 
+/* Brand wash. Paints above the card's own background but below the copy, which
+   is what the negative z-index buys inside .card's stacking context. */
 .card::before {
     content: "";
     position: absolute;
     inset: -1px;
-    background: linear-gradient(135deg, var(--primary-100), transparent 40%);
+    background: var(--gradient-brand-soft);
     border-radius: inherit;
     opacity: 0;
     transition: opacity var(--duration-base) var(--ease);
@@ -867,13 +1122,32 @@ h4 {
     opacity: 1;
 }
 
+/* The lit top edge. Inset from both sides so it fades out before the corners,
+   where a full-width line would have to fight the border radius. Dim at rest so
+   the grid reads as a set of switched-on surfaces, full on hover. */
+.card::after {
+    content: "";
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 14%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, hsla(213, 100%, 74%, 0.55), transparent);
+    opacity: 0.4;
+    transition: opacity var(--duration-base) var(--ease);
+    pointer-events: none;
+}
+
+.card:hover::after {
+    opacity: 1;
+}
+
 .card-index {
     font-family: var(--font-mono);
     font-size: var(--text-xs);
     font-weight: 500;
     font-variant-numeric: tabular-nums;
     letter-spacing: 0.05em;
-    color: var(--primary-500);
+    color: var(--accent-500);
 }
 
 .card-icon {
@@ -881,8 +1155,10 @@ h4 {
     place-items: center;
     width: 2.75rem;
     height: 2.75rem;
-    color: var(--primary-600);
+    color: var(--primary-700);
     background: var(--primary-50);
+    /* A tint fill this close to the page needs an edge to be a shape at all. */
+    border: 1px solid hsla(213, 100%, 70%, 0.16);
     border-radius: var(--radius-lg);
 }
 
@@ -915,13 +1191,17 @@ h4 {
     background-repeat: no-repeat;
     background-position: right -2rem bottom -1.5rem;
     background-size: 76% auto;
-    opacity: 0.18;
+    /* Nudged up from the light theme's 0.18/0.34. The artwork is line work, and
+       thin bright strokes on near-black lose far more presence to opacity than
+       the same strokes on white did. The SVGs themselves were retinted from the
+       old #2563eb to the electric blue, or they would have sunk into the card. */
+    opacity: 0.22;
     transition: opacity var(--duration-base) var(--ease);
     pointer-events: none;
 }
 
 .service-card:hover .service-card-art {
-    opacity: 0.34;
+    opacity: 0.42;
 }
 
 /* The copy is the card's only in-flow child, so raising it is all that is
@@ -930,6 +1210,31 @@ h4 {
 .service-card > div {
     position: relative;
     z-index: 1;
+    /* Fills the card's height so .learn-more's `margin-block-start: auto` has a
+       column to push against. Without it the auto margin is inert — the div is
+       not a flex container — and with equal-height rows the Detail link strands
+       itself directly under short copy, halfway up the card. */
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* short_description is free text and one entry currently runs to a full
+   paragraph, which unclamped sets the height of every card in the grid. Three
+   lines each keeps the row honest; the full copy is one click away in the Detail
+   dialog, so nothing is actually hidden from the reader. */
+.service-card p {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    overflow: hidden;
+}
+
+/* Blockified by the flex column above, so it would otherwise stretch to the full
+   card width and drag its focus ring out with it. */
+.service-card .learn-more {
+    align-self: flex-start;
 }
 
 .learn-more,
@@ -984,7 +1289,7 @@ h4 {
     background: none;
     border: none;
     border-radius: var(--radius-2xl);
-    box-shadow: var(--shadow-xl);
+    box-shadow: var(--shadow-2xl);
     /* The panel carries the surface and its own radius; clipping here keeps the
        corners honest while the copy scrolls underneath them. */
     overflow: hidden;
@@ -993,14 +1298,19 @@ h4 {
 
 /* Literal values, no tokens: ::backdrop only inherits custom properties from
    its originating element in recent browsers, so var() here would resolve to
-   nothing elsewhere and leave the page undimmed. */
+   nothing elsewhere and leave the page undimmed. Deeper and more opaque than the
+   light theme's dim — over a dark page a 55% scrim barely registers as a state
+   change, and the panel needs the contrast to detach. */
 .service-modal::backdrop {
-    background: hsla(222, 26%, 9%, 0.55);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    background: hsla(222, 47%, 2%, 0.74);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     animation: service-modal-backdrop-in 250ms cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
+/* --bg-elevated rather than --bg-surface: a panel in the top layer is above
+   every card on the page, and on a dark ground that has to be said with
+   lightness, since there is no shadow left to say it with. */
 .service-modal-card {
     position: relative;
     display: flex;
@@ -1008,7 +1318,10 @@ h4 {
     gap: var(--space-3);
     max-height: 100%;
     padding: var(--space-8);
-    background: var(--bg-surface);
+    background:
+        radial-gradient(120% 80% at 100% 0%, hsla(213, 100%, 54%, 0.1), transparent 60%),
+        var(--bg-elevated);
+    border: 1px solid var(--border-default);
     border-radius: inherit;
 }
 
@@ -1084,15 +1397,16 @@ h4 {
     background: none;
     border: none;
     border-radius: var(--radius-2xl);
-    box-shadow: var(--shadow-xl);
+    box-shadow: var(--shadow-2xl);
     overflow: hidden;
     animation: service-modal-in var(--duration-base) var(--ease-out) both;
 }
 
+/* Literal for the same reason as .service-modal::backdrop above. */
 .admin-access-modal::backdrop {
-    background: hsla(222, 26%, 9%, 0.55);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    background: hsla(222, 47%, 2%, 0.74);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     animation: service-modal-backdrop-in 250ms cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
@@ -1100,14 +1414,19 @@ h4 {
     position: relative;
     max-height: 100%;
     overflow-y: auto;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-default);
     border-radius: inherit;
 }
 
 /* .admin-auth-card already supplies its own surface, border and shadow for the
    full-page /admin route; inside the dialog those would just double up with
-   the dialog's own chrome, so this only widens it to fill the panel. */
+   the dialog's own chrome, so this only widens it to fill the panel. The
+   background goes too — the card's --bg-surface is a step darker than the
+   dialog's --bg-elevated, which showed as a panel inside a panel. */
 .admin-access-modal-card .admin-auth-card {
     max-width: none;
+    background: none;
     border: none;
     box-shadow: none;
 }
@@ -1176,10 +1495,13 @@ h4 {
     border-color: var(--border-default);
 }
 
+/* Filled with the accent rather than the near-black the light theme used, which
+   down here would have been a pressed chip indistinguishable from the page. */
 .filter-chip[aria-pressed="true"] {
     color: var(--text-on-primary);
-    background: var(--neutral-900);
-    border-color: var(--neutral-900);
+    background: var(--primary-600);
+    border-color: var(--primary-600);
+    box-shadow: 0 2px 12px hsla(213, 100%, 55%, 0.28);
 }
 
 /* ==========================================================================
@@ -1192,6 +1514,12 @@ h4 {
 }
 
 .portfolio-card {
+    /* The ::after wash below is absolutely positioned, and without this it
+       resolved against whatever positioned ancestor it could find. It only
+       looked right because the card happens to be transformed on hover — which
+       makes it a containing block — and the wash is invisible at rest. Anchoring
+       it properly removes the coincidence. */
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
@@ -1199,7 +1527,7 @@ h4 {
     background: var(--bg-surface);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-xs);
+    box-shadow: var(--shadow-sm);
     transform-style: preserve-3d;
     transition: opacity var(--duration-base) var(--ease),
                 transform var(--duration-base) var(--ease),
@@ -1207,18 +1535,21 @@ h4 {
                 box-shadow var(--duration-base) var(--ease);
 }
 
+/* No infinite float animation any more. A card that bobs up and down for as
+   long as the pointer rests on it draws attention to the effect rather than to
+   the work, and it kept a compositor layer animating indefinitely. The lift is
+   now a single settled state. */
 .portfolio-card:hover {
-    border-color: var(--primary-200);
-    box-shadow: var(--shadow-2xl), 0 0 0 1px var(--primary-100);
+    border-color: hsla(213, 100%, 72%, 0.34);
+    box-shadow: var(--shadow-2xl), var(--glow-md);
     transform: translateY(-12px) translateZ(30px) rotateX(3deg) scale(1.02);
-    animation: card-float 3s ease-in-out infinite;
 }
 
 .portfolio-card::after {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, var(--primary-100) 0%, transparent 50%);
+    background: var(--gradient-brand-soft);
     border-radius: inherit;
     opacity: 0;
     transition: opacity var(--duration-base) var(--ease);
@@ -1226,12 +1557,7 @@ h4 {
 }
 
 .portfolio-card:hover::after {
-    opacity: 0.4;
-}
-
-@keyframes card-float {
-    0%, 100% { transform: translateY(-12px) translateZ(30px) rotateX(3deg) scale(1.02); }
-    50% { transform: translateY(-16px) translateZ(35px) rotateX(3deg) scale(1.02); }
+    opacity: 1;
 }
 
 /* Filter exit state — the module removes the class on the next frame, so the
@@ -1253,10 +1579,15 @@ h4 {
     color: var(--text-tertiary);
 }
 
-/* Decorative browser-window thumbnail. */
+/* Decorative browser-window thumbnail. Recessed below the card rather than
+   raised: it is the deepest surface in the layout, with a wash of brand light
+   coming in from the top edge so it reads as a lit screen. */
 .portfolio-media {
     overflow: hidden;
-    background: var(--neutral-900);
+    background:
+        radial-gradient(130% 100% at 50% 0%, hsla(213, 100%, 52%, 0.12), transparent 62%),
+        var(--neutral-1000);
+    border: 1px solid var(--border-subtle);
     border-radius: var(--radius-lg);
 }
 
@@ -1286,13 +1617,16 @@ h4 {
 .window-content .symbol {
     font-family: var(--font-mono);
     font-size: var(--text-3xl);
-    color: var(--primary-400);
+    color: var(--primary-500);
+    text-shadow: 0 0 18px hsla(213, 100%, 58%, 0.45);
 }
 
+/* The label reads "build passing", so it is green — the state it is describing
+   rather than a neutral grey that says nothing. */
 .code-line {
     font-family: var(--font-mono);
     font-size: var(--text-2xs);
-    color: var(--neutral-400);
+    color: var(--success);
 }
 
 .metric-badge {
@@ -1304,6 +1638,7 @@ h4 {
     text-transform: uppercase;
     color: var(--primary-700);
     background: var(--primary-50);
+    border: 1px solid hsla(213, 100%, 70%, 0.16);
     border-radius: var(--radius-full);
 }
 
@@ -1334,14 +1669,18 @@ h4 {
     letter-spacing: -0.02em;
 }
 
+/* The ungraded side. Was --neutral-100, which in this palette is a near-white
+   slab — the one place the inverted ramp would have punched a hole in the page. */
 .compare-panel-before {
     color: var(--text-tertiary);
-    background: var(--neutral-100);
+    background:
+        radial-gradient(100% 100% at 50% 0%, hsla(210, 30%, 60%, 0.06), transparent 70%),
+        var(--bg-muted);
 }
 
 .compare-panel-after {
-    color: var(--neutral-0);
-    background: linear-gradient(135deg, var(--primary-700), var(--primary-500));
+    color: var(--text-on-primary);
+    background: var(--gradient-brand);
     /* Driven by the slider module through --compare-position. */
     clip-path: inset(0 0 0 var(--compare-position, 50%));
 }
@@ -1352,7 +1691,7 @@ h4 {
     inset-inline-start: var(--compare-position, 50%);
     width: 2px;
     background: var(--neutral-0);
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 0 12px hsla(210, 80%, 92%, 0.5);
     pointer-events: none;
 }
 
@@ -1365,7 +1704,7 @@ h4 {
     height: 2.5rem;
     background: var(--neutral-0);
     border-radius: var(--radius-full);
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-lg), 0 0 20px hsla(210, 80%, 92%, 0.3);
     transform: translate(-50%, -50%);
 }
 
@@ -1392,8 +1731,9 @@ h4 {
     inset-inline-start: var(--space-4);
     padding: var(--space-2) var(--space-4);
     font-size: var(--text-xs);
-    color: var(--neutral-0);
-    background: hsla(222, 26%, 9%, 0.72);
+    color: var(--text-primary);
+    background: hsla(222, 47%, 4%, 0.72);
+    border: 1px solid var(--glass-border);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     border-radius: var(--radius-full);
@@ -1410,6 +1750,10 @@ h4 {
 }
 
 .stat-tile {
+    /* Same latent bug as .portfolio-card: the ::before wash below had no
+       positioned ancestor to resolve against except while the tile was
+       transformed on hover. */
+    position: relative;
     padding: var(--space-8) var(--space-6);
     background: var(--bg-subtle);
     border: 1px solid var(--border-subtle);
@@ -1421,10 +1765,12 @@ h4 {
                 box-shadow var(--duration-base) var(--ease);
 }
 
+/* --bg-subtle sits *below* --bg-surface in this palette, so swapping one for the
+   other on hover lifts the tile toward the light instead of away from it. */
 .stat-tile:hover {
     background: var(--bg-surface);
-    border-color: var(--primary-300);
-    box-shadow: var(--shadow-lg), 0 0 0 1px var(--primary-100);
+    border-color: hsla(213, 100%, 72%, 0.3);
+    box-shadow: var(--shadow-lg), var(--glow-sm);
     transform: translateY(-6px) translateZ(20px) rotateX(5deg);
 }
 
@@ -1432,7 +1778,7 @@ h4 {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, var(--primary-50) 0%, transparent 60%);
+    background: var(--gradient-brand-soft);
     border-radius: inherit;
     opacity: 0;
     transition: opacity var(--duration-base) var(--ease);
@@ -1444,6 +1790,7 @@ h4 {
 }
 
 .stat-value {
+    position: relative;
     display: flex;
     align-items: baseline;
     font-size: var(--text-5xl);
@@ -1454,10 +1801,25 @@ h4 {
     line-height: 1;
 }
 
+/* Gradient numerals, guarded the same way the hero's serif line is: the clip and
+   the transparent fill have to be supported together or not applied at all.
+
+   The clip covers every glyph inside the element, .stat-suffix included, but that
+   child declares its own opaque colour below and so paints over the gradient —
+   which is the intent: the figure carries the gradient, the unit stays solid. */
+@supports ((background-clip: text) or (-webkit-background-clip: text)) {
+    .stat-value {
+        background: linear-gradient(160deg, var(--text-primary) 18%, hsla(213, 100%, 78%, 0.75));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+}
+
 .stat-suffix {
     font-size: 0.5em;
     font-weight: 550;
-    color: var(--primary-500);
+    color: var(--accent-500);
 }
 
 .stat-label {
@@ -1476,19 +1838,31 @@ h4 {
 }
 
 .location {
+    position: relative;
     padding: var(--space-6);
     background: var(--bg-surface);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-xs);
+    box-shadow: var(--shadow-sm);
+    transition: border-color var(--duration-base) var(--ease),
+                box-shadow var(--duration-base) var(--ease),
+                transform var(--duration-base) var(--ease);
+}
+
+/* These cards sit inside a .band, which is darker than they are, so they already
+   read as raised — hover only has to switch the light on. */
+.location:hover {
+    border-color: hsla(213, 100%, 72%, 0.26);
+    box-shadow: var(--shadow-md), var(--glow-sm);
+    transform: translateY(-3px);
 }
 
 .location-tag {
     font-size: var(--text-2xs);
     font-weight: 600;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--primary-600);
+    color: var(--primary-700);
 }
 
 .location-city {
@@ -1518,8 +1892,10 @@ h4 {
     color: var(--text-faint);
 }
 
+/* Cyan once the clock is actually ticking — mono tabular digits in the accent
+   read as a live readout, which is the whole point of showing local time. */
 .location-clock[data-clock].is-live {
-    color: var(--text-primary);
+    color: var(--accent-600);
 }
 
 /* ==========================================================================
@@ -1561,8 +1937,9 @@ h4 {
     flex-shrink: 0;
     width: 2.25rem;
     height: 2.25rem;
-    color: var(--primary-600);
+    color: var(--primary-700);
     background: var(--primary-50);
+    border: 1px solid hsla(213, 100%, 70%, 0.16);
     border-radius: var(--radius-md);
 }
 
@@ -1580,12 +1957,27 @@ h4 {
     outline-offset: 3px;
 }
 
+/* The form is the page's closing argument, so this is the most elevated surface
+   on it: a brand-lit top edge and a wash pulled in from the corner. */
 .contact-info-card {
+    position: relative;
     padding: var(--space-8);
-    background: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
+    background:
+        radial-gradient(120% 90% at 100% 0%, hsla(213, 100%, 52%, 0.09), transparent 62%),
+        var(--bg-surface);
+    border: 1px solid var(--border-default);
     border-radius: var(--radius-2xl);
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-xl);
+}
+
+.contact-info-card::before {
+    content: "";
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, hsla(213, 100%, 74%, 0.55), transparent);
+    pointer-events: none;
 }
 
 .form-intro {
@@ -1617,11 +2009,17 @@ h4 {
     font-family: inherit;
     font-size: var(--text-sm);
     color: var(--text-primary);
-    background: var(--bg-surface);
+    /* Recessed rather than raised. These sit inside .contact-info-card, which is
+       already --bg-surface, so matching it would have flattened the field into
+       its own container; going darker than the card is what reads as a well.
+       The inset hairline is the lip of that well catching light. */
+    background: hsla(222, 44%, 5%, 0.55);
     border: 1px solid var(--border-default);
     border-radius: var(--radius-md);
+    box-shadow: inset 0 1px 2px hsla(222, 60%, 2%, 0.4);
     transition: border-color var(--duration-fast) var(--ease),
-                box-shadow var(--duration-fast) var(--ease);
+                box-shadow var(--duration-fast) var(--ease),
+                background-color var(--duration-fast) var(--ease);
 }
 
 .form-input::placeholder,
@@ -1634,7 +2032,12 @@ h4 {
 .form-textarea:focus {
     outline: none;
     border-color: var(--primary-500);
-    box-shadow: var(--shadow-focus);
+    /* background-color, never the `background` shorthand: the shorthand resets
+       background-image to none, and being more specific than the .form-select
+       rule below it would take the chevron away for exactly as long as the
+       control is focused. */
+    background-color: hsla(222, 44%, 6%, 0.8);
+    box-shadow: var(--shadow-focus), inset 0 1px 2px hsla(222, 60%, 2%, 0.4);
 }
 
 .form-textarea {
@@ -1647,8 +2050,11 @@ h4 {
     -webkit-appearance: none;
     padding-inline-end: var(--space-10);
     cursor: pointer;
-    /* Inline chevron keeps the control single-element and themable. */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    /* Inline chevron keeps the control single-element. The stroke was a hardcoded
+       #6b7280 for the light theme — invisible against the well above — and a
+       data URI cannot read a custom property, so the new value is written in
+       here directly. It tracks --text-tertiary. */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238b97ab' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right var(--space-4) center;
     background-size: 1rem;
@@ -1709,8 +2115,9 @@ h4 {
 .progress-fill {
     width: 33.333%;
     height: 100%;
-    background: var(--primary-500);
+    background: var(--gradient-brand);
     border-radius: inherit;
+    box-shadow: 0 0 10px hsla(213, 100%, 58%, 0.45);
     transition: width var(--duration-slow) var(--ease);
 }
 
@@ -1812,9 +2219,31 @@ h4 {
 /* ==========================================================================
    Footer
    ========================================================================== */
+/* No longer the page's one dark block — the whole site is dark now, so the
+   footer separates itself by sitting a shade *above* the page ground with a lit
+   seam along the top, rather than by inverting. Every colour below moved from a
+   raw --neutral-* to the semantic layer for the same reason: there is no inverse
+   context left for them to be the exception to. */
 .site-footer {
-    background: var(--neutral-900);
-    color: var(--neutral-400);
+    position: relative;
+    background:
+        radial-gradient(60% 100% at 50% 100%, hsla(213, 100%, 50%, 0.07), transparent 70%),
+        var(--bg-subtle);
+    color: var(--text-tertiary);
+}
+
+.site-footer::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: 0;
+    height: 1px;
+    background: linear-gradient(90deg,
+                transparent,
+                hsla(213, 100%, 70%, 0.3) 30%,
+                hsla(188, 95%, 62%, 0.24) 70%,
+                transparent);
+    pointer-events: none;
 }
 
 .site-footer .container {
@@ -1833,14 +2262,14 @@ h4 {
     font-size: var(--text-xl);
     font-weight: 650;
     letter-spacing: -0.03em;
-    color: var(--neutral-0);
+    color: var(--text-primary);
 }
 
 .footer-tagline {
     max-width: 32ch;
     margin-block-start: var(--space-4);
     font-size: var(--text-sm);
-    color: var(--neutral-400);
+    color: var(--text-tertiary);
 }
 
 .footer-heading {
@@ -1849,7 +2278,7 @@ h4 {
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--neutral-0);
+    color: var(--text-primary);
 }
 
 .footer-list {
@@ -1858,15 +2287,15 @@ h4 {
 }
 
 .site-footer .contact-link {
-    color: var(--neutral-400);
+    color: var(--text-tertiary);
 }
 
 .site-footer .contact-link:hover {
-    color: var(--neutral-0);
+    color: var(--text-primary);
 }
 
 .site-footer .contact-link:focus-visible {
-    outline-color: var(--primary-300);
+    outline-color: var(--primary-500);
 }
 
 .badge-container {
@@ -1879,7 +2308,7 @@ h4 {
     padding: var(--space-1) var(--space-3);
     font-size: var(--text-2xs);
     font-weight: 500;
-    color: var(--neutral-300);
+    color: var(--text-secondary);
     background: hsla(0, 0%, 100%, 0.06);
     border: 1px solid var(--border-inverse);
     border-radius: var(--radius-full);
@@ -1902,21 +2331,27 @@ h4 {
 }
 
 .footer-legal a {
-    color: var(--neutral-400);
+    color: var(--text-tertiary);
     transition: color var(--duration-fast) var(--ease);
 }
 
 .footer-legal a:hover {
-    color: var(--neutral-0);
+    color: var(--text-primary);
 }
 
 .footer-legal a:focus-visible {
-    outline-color: var(--primary-300);
+    outline-color: var(--primary-500);
 }
 
 /* ==========================================================================
    Floating WhatsApp action
    ========================================================================== */
+/* The green is WhatsApp's own brand colour and is deliberately left off the
+   theme: recolouring a third-party affordance to match the site makes it
+   unrecognisable, which is the one thing it cannot afford to be. Its glow is
+   green to match, not the site's blue, for the same reason.
+   --neutral-0 is the ramp's light end, which the semantic layer never inverted,
+   so it is still the near-white this glyph needs. */
 .whatsapp-float {
     position: fixed;
     inset-block-end: var(--space-6);
@@ -1927,16 +2362,17 @@ h4 {
     width: 3.25rem;
     height: 3.25rem;
     color: var(--neutral-0);
-    background: hsl(142, 70%, 40%);
+    background: linear-gradient(150deg, hsl(142, 68%, 45%), hsl(148, 72%, 36%));
+    border: 1px solid hsla(142, 70%, 70%, 0.28);
     border-radius: var(--radius-full);
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-lg), 0 0 20px hsla(142, 70%, 45%, 0.28);
     transition: transform var(--duration-base) var(--ease),
                 box-shadow var(--duration-base) var(--ease);
 }
 
 .whatsapp-float:hover {
     transform: scale(1.06);
-    box-shadow: var(--shadow-xl);
+    box-shadow: var(--shadow-xl), 0 0 32px hsla(142, 72%, 48%, 0.45);
 }
 
 .whatsapp-float:focus-visible {
@@ -1961,6 +2397,12 @@ h4 {
 /* ==========================================================================
    Cookie consent
    ========================================================================== */
+/* --bg-elevated, not --bg-surface: this floats over live content, and on a dark
+   ground the only way left to say "above everything" is lightness — the shadow
+   that used to do that job is invisible against a near-black page. The brand
+   wash on top ties it to the cards rather than letting it read as a stray
+   system panel. Deliberately opaque, unlike the header: consent copy has to
+   stay legible over whatever is scrolling behind it. */
 .cookie-banner {
     position: fixed;
     inset-block-end: var(--space-6);
@@ -1970,10 +2412,11 @@ h4 {
     gap: var(--space-4);
     width: min(24rem, calc(100vw - var(--space-12)));
     padding: var(--space-6);
-    background: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
+    background-color: var(--bg-elevated);
+    background-image: var(--gradient-brand-soft);
+    border: 1px solid var(--border-default);
     border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-xl);
+    box-shadow: var(--shadow-2xl);
     opacity: 0;
     visibility: hidden;
     transform: translateY(1rem);
@@ -2029,16 +2472,58 @@ h4 {
 /* ==========================================================================
    Interior pages
    ========================================================================== */
+/* An interior page opens on this band with no hero above it, so it carries the
+   grid and the glow the hero would otherwise have supplied — otherwise
+   /projects and /privacy-policy start on a flat slab. Same 4.5rem cell as
+   .hero::before, faded out downward so it hands over cleanly to the page.
+
+   The shell inset lives here now rather than on .page-title, using the same
+   `max()` trick as .band. Every one of the eight .page-header instances is an
+   .eyebrow followed by a .page-title, and only the title carried the
+   max-width/auto-margin/padding — so the eyebrow was starting hard against the
+   viewport edge while the heading below it was centred inside the shell. Paying
+   it once on the parent aligns both, and it is why .page-title below is now
+   typography only. */
 .page-header {
+    position: relative;
+    isolation: isolate;
     padding-block: var(--space-16) var(--space-10);
-    background: var(--bg-subtle);
+    padding-inline: max(var(--space-6), calc(50vw - var(--shell-max) / 2));
+    background-color: var(--bg-subtle);
+    background-image: radial-gradient(64% 130% at 22% -2rem, hsla(213, 100%, 54%, 0.13), transparent 66%);
     border-block-end: 1px solid var(--border-subtle);
 }
 
+.page-header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image:
+        linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: 4.5rem 4.5rem;
+    mask-image: linear-gradient(180deg, black, transparent 88%);
+    -webkit-mask-image: linear-gradient(180deg, black, transparent 88%);
+    pointer-events: none;
+}
+
+/* The lit seam that every other section boundary gets. Sits on the border, not
+   instead of it — the hairline still carries the edge at 0 opacity in the
+   middle of the gradient. */
+.page-header::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: -1px;
+    height: 1px;
+    background: var(--gradient-hairline);
+    pointer-events: none;
+}
+
 .page-title {
-    max-width: var(--shell-max);
-    margin-inline: auto;
-    padding-inline: var(--space-6);
+    position: relative;
+    margin-block-start: var(--space-3);
     font-size: var(--text-5xl);
     letter-spacing: -0.03em;
 }
@@ -2098,7 +2583,14 @@ h4 {
         display: block;
     }
 
-    /* Panel collapses into a sheet below the header bar. */
+    /* Panel collapses into a sheet below the header bar.
+
+       Opaque and one elevation step *above* the bar, not glass like it. The
+       sheet hangs below the header's own box, so its backdrop root would be the
+       header — which has a backdrop-filter of its own and does not contain the
+       page content down there. A nested blur would sample nothing useful and
+       the sheet would come out flat and translucent over live text. Lightness
+       plus the lit seam below carries "floating" instead. */
     .nav-links {
         position: absolute;
         inset-block-start: 100%;
@@ -2107,9 +2599,10 @@ h4 {
         align-items: stretch;
         gap: var(--space-1);
         padding: var(--space-4);
-        background: var(--bg-surface);
-        border-block-end: 1px solid var(--border-subtle);
-        box-shadow: var(--shadow-lg);
+        background-color: var(--bg-elevated);
+        background-image: var(--gradient-brand-soft);
+        border-block-end: 1px solid var(--glass-border);
+        box-shadow: var(--shadow-2xl);
     }
 
     .nav-links[data-collapsed="true"] {

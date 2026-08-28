@@ -79,6 +79,19 @@ export function useNavigation() {
  * underline is a stylesheet reaction to that attribute, so there is no
  * visual-only class that can drift out of sync.
  *
+ * The band the observer watches is the middle 10% of the viewport, so at a
+ * boundary two sections can hold it at once and, briefly, none can. Both cases
+ * need an answer, which is why the intersecting ids are accumulated in a set and
+ * the active one is derived from it rather than written straight from whichever
+ * entry the callback happened to visit last:
+ *
+ *   - two in the band  -> the higher one wins, the same way reading does
+ *   - none in the band -> null, which is what puts the marker back on Home
+ *
+ * That second case is the one a `setActiveId` inside `if (isIntersecting)` cannot
+ * express: leaving a section is not an event it reacts to, so scrolling back to
+ * the top used to leave About lit with no section in view at all.
+ *
  * Takes the section ids to watch and returns the currently active one.
  */
 export function useSectionSpy(sectionIds) {
@@ -88,15 +101,32 @@ export function useSectionSpy(sectionIds) {
   useEffect(() => {
     const sections = sectionIds
       .map((id) => document.getElementById(id))
-      .filter((section) => section !== null);
+      .filter((section) => section !== null)
+      // Sorted by where the nodes actually sit, not by the order they were
+      // listed in, so "the higher one wins" cannot be broken by an id being
+      // appended to the caller's array in the wrong place.
+      .sort((a, b) =>
+        a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1,
+      );
 
-    if (sections.length === 0) return undefined;
+    if (sections.length === 0) {
+      // Leaving the landing page empties the list; the stale id has to go with
+      // it or it outlives the sections it referred to.
+      setActiveId(null);
+      return undefined;
+    }
+
+    const order = sections.map((section) => section.id);
+    const inBand = new Set();
 
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (entry.isIntersecting) setActiveId(entry.target.id);
+          if (entry.isIntersecting) inBand.add(entry.target.id);
+          else inBand.delete(entry.target.id);
         }
+
+        setActiveId(order.find((id) => inBand.has(id)) ?? null);
       },
       { rootMargin: "-45% 0px -45% 0px" },
     );

@@ -8,6 +8,7 @@ import { useLocalClock } from "../hooks/useLocalClock.js";
 import { useComparisonSlider } from "../hooks/useComparisonSlider.js";
 import { usePortfolioFilter, ALL_CATEGORIES } from "../hooks/usePortfolioFilter.js";
 import { splitWords, useHeadlineReveal } from "../hooks/useReveal.js";
+import { useScrollLock } from "../hooks/useScrollLock.js";
 import { serviceBackground } from "../data/serviceBackgrounds.js";
 
 const CAPABILITIES = [
@@ -172,6 +173,11 @@ function ServiceCard({ service, index, onDetailClick }) {
 }
 
 function ServiceModal({ service, onClose }) {
+  // The backdrop and panel are position-fixed divs, not a <dialog>, so the page
+  // underneath stays a live scroll container — the wheel goes straight past them
+  // to the section behind. Nothing but locking the body stops that.
+  useScrollLock();
+
   return (
     <>
       <div
@@ -492,7 +498,11 @@ export function Proof({ caseStudies }) {
       </div>
 
       {caseStudies.length > 0 && (
-        <div className="services-grid" style={{ marginBlockStart: "var(--space-2xl)" }}>
+        /* --space-16, not the --space-2xl this used to name: the scale in
+           style.css is numeric (--space-1 … --space-20), so --space-2xl never
+           resolved and the whole declaration was dropped at computed-value
+           time. The case-study grid was butting straight up against the stats. */
+        <div className="services-grid" style={{ marginBlockStart: "var(--space-16)" }}>
           {caseStudies.map((study, index) => (
             <CaseStudyCard study={study} index={index} key={study.slug} />
           ))}
@@ -525,7 +535,15 @@ function LocationCard({ location, index }) {
 
 export function Locations() {
   return (
-    <section className="container band" aria-labelledby="locations-heading" data-reveal-group="">
+    /* The id is here for the section spy in Layout.jsx, not for a link: this
+       section has no nav entry, and without an id the spy cannot tell that the
+       reader has moved past Testimonial. */
+    <section
+      id="locations-section"
+      className="container band"
+      aria-labelledby="locations-heading"
+      data-reveal-group=""
+    >
       <div className="section-head">
         <p className="eyebrow">Where We Are</p>
         <div>
