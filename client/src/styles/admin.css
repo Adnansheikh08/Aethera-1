@@ -30,14 +30,17 @@
     padding: var(--space-6);
 }
 
+/* Lifted with light and a brand bloom rather than --shadow-md, which has nothing
+   to darken against a near-black sign-in page. */
 .admin-auth-card {
     width: 100%;
     max-width: 26rem;
     padding: var(--space-8);
-    background: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
+    background-color: var(--bg-surface);
+    background-image: var(--gradient-brand-soft);
+    border: 1px solid var(--border-default);
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-2xl), var(--glow-sm);
 }
 
 .admin-auth-card h1 {
@@ -54,13 +57,21 @@
     color: var(--text-tertiary);
 }
 
+/* Left white on purpose. The server renders this through `qrcode.toDataURL`,
+   whose default is black modules on an opaque white field, and inverting a QR
+   to suit the theme breaks a good number of scanners. So the white stays and is
+   framed instead — a light plaque with a real border, rather than a bright
+   rectangle that looks like a hole punched in the card. --border-subtle is a
+   translucent white and would have been invisible against it. */
 .admin-qr {
     display: block;
     width: 12rem;
     height: 12rem;
     margin: var(--space-4) auto;
-    border: 1px solid var(--border-subtle);
+    background: hsl(0, 0%, 100%);
+    border: 1px solid hsla(213, 100%, 70%, 0.35);
     border-radius: var(--radius-sm);
+    box-shadow: 0 0 0 4px hsla(0, 0%, 100%, 0.06), var(--shadow-lg);
 }
 
 .admin-secret code,
@@ -70,6 +81,10 @@
     word-break: break-all;
 }
 
+/* Recessed, not raised: these are one-time recovery codes to be read off the
+   screen, and the dark-theme idiom for "a well you read out of" is a surface
+   below the card, the same treatment the form inputs get. --bg-muted had it
+   sitting a step *above* the card it is embedded in. */
 .admin-recovery {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -77,8 +92,10 @@
     margin: var(--space-4) 0;
     padding: var(--space-4);
     list-style: none;
-    background: var(--bg-muted);
+    background: hsla(222, 44%, 5%, 0.55);
+    border: 1px solid var(--border-subtle);
     border-radius: var(--radius-md);
+    box-shadow: inset 0 1px 2px hsla(222, 60%, 2%, 0.5);
 }
 
 .admin-hint {
@@ -89,10 +106,20 @@
 
 /* --- Shell -------------------------------------------------------------- */
 
+/* Glass, matching .site-header, rather than the --bg-inverse it used to take.
+   "Inverse" meant a dark bar over a light page; now that the page is dark the
+   same token resolves to near-white and this was the one glaring slab in the
+   console. The white overlays on the nav items below were written for that dark
+   bar and only work now that the bar is dark again. */
 .admin-header {
-    background: var(--bg-inverse);
-    color: var(--text-on-inverse);
-    border-bottom: 1px solid var(--border-inverse);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--glass-bg);
+    backdrop-filter: saturate(150%) blur(16px);
+    -webkit-backdrop-filter: saturate(150%) blur(16px);
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--glass-border);
 }
 
 .admin-header-inner {
@@ -130,20 +157,25 @@
 .admin-nav a {
     padding: var(--space-2) var(--space-3);
     font-size: var(--text-sm);
-    color: var(--text-faint);
+    color: var(--text-tertiary);
     text-decoration: none;
     border-radius: var(--radius-sm);
+    transition: color var(--duration-fast) var(--ease),
+                background-color var(--duration-fast) var(--ease);
 }
 
 .admin-nav a:hover {
-    color: var(--text-on-inverse);
+    color: var(--text-primary);
     background: hsla(0, 0%, 100%, 0.06);
 }
 
-/* react-router sets .active on the matched NavLink. */
+/* react-router sets .active on the matched NavLink. The brand tint rather than
+   another white step, so the current section reads as selected instead of just
+   hovered — the two were a hard 6%-vs-12% pair to tell apart. */
 .admin-nav a.active {
-    color: var(--text-on-inverse);
-    background: hsla(0, 0%, 100%, 0.12);
+    color: var(--primary-800);
+    background: hsla(213, 100%, 60%, 0.14);
+    box-shadow: inset 0 0 0 1px hsla(213, 100%, 68%, 0.22);
 }
 
 .admin-session {
@@ -377,8 +409,11 @@
     white-space: nowrap;
     cursor: pointer;
     border-radius: var(--radius-sm);
+    /* `filter` is in the list because .btn-primary is a gradient now, and a
+       gradient cannot be interpolated — its hover state brightens instead. */
     transition: background-color var(--duration-fast) var(--ease),
-                border-color var(--duration-fast) var(--ease);
+                border-color var(--duration-fast) var(--ease),
+                filter var(--duration-fast) var(--ease);
 }
 
 .admin-frame .btn-danger {
@@ -401,13 +436,19 @@
 
 /* --- Lead detail dialog -------------------------------------------------- */
 
+/* The old hsla(222, 26%, 9%, 0.55) was written to dim a light page. Over a
+   near-black console it removes almost no lightness — there is none left to
+   take — so the separation comes from the blur and from the panel below being
+   lighter than the page, the same way the public site's modals now work. */
 .admin-overlay {
     position: fixed;
     inset: 0;
     display: grid;
     place-items: center;
     padding: var(--space-6);
-    background: hsla(222, 26%, 9%, 0.55);
+    background: hsla(222, 47%, 2%, 0.74);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     z-index: 50;
 }
 
@@ -416,10 +457,15 @@
     max-width: 32rem;
     max-height: 85vh;
     overflow-y: auto;
+    /* Reaching the end of this scroll would otherwise hand the rest of the
+       gesture to the page behind the overlay. */
+    overscroll-behavior: contain;
     padding: var(--space-6);
-    background: var(--bg-surface);
+    background-color: var(--bg-elevated);
+    background-image: radial-gradient(120% 80% at 100% 0%, hsla(213, 100%, 54%, 0.1), transparent 60%);
+    border: 1px solid var(--border-default);
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-2xl);
 }
 
 .admin-modal h2 {

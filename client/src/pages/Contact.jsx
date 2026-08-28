@@ -42,7 +42,7 @@ export function Contact() {
 
       <section className="container" aria-labelledby="contact-heading">
         <div className="prose" style={{ marginBottom: "3rem" }}>
-          <p style={{ fontSize: "1.125rem", lineHeight: 1.6, color: "var(--color-text-secondary)" }}>
+          <p style={{ fontSize: "1.125rem", lineHeight: 1.6, color: "var(--text-secondary)" }}>
             Tell us what you are building. We reply to every qualified inquiry within two business hours. All submissions are encrypted at rest and never shared with third parties.
           </p>
         </div>

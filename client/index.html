@@ -4,7 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="color-scheme" content="light">
+    <!-- Dark, matching `color-scheme: dark` on :root in style.css. This one is
+         read before any CSS arrives, so it is what stops the browser painting a
+         white canvas for the first frame. -->
+    <meta name="color-scheme" content="dark">
     <title>Aethera — Enterprise Software Agency &amp; Cybersecurity</title>
     <meta name="description"
         content="We build secure, high-performance, and ultra-scalable web platforms and enterprise applications aligned to the OWASP ASVS standard.">
@@ -12,9 +15,16 @@
     <!-- Preconnect ahead of the font CSS request to remove a round trip from LCP. -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Instrument Serif carries the display voice; Inter handles body copy. -->
+    <!-- Instrument Serif carries the display voice; Inter handles body copy.
+
+         Inter is requested as the variable range 400..700 rather than the two
+         static instances 400 and 500. The stylesheet asks for 550, 600, 640, 650
+         and 660 in places, and with only two instances loaded the browser was
+         synthesising every one of those by smearing the 500 — which is what
+         makes headings look slightly muddy at large sizes. One variable file
+         also weighs less than the several statics it replaces. -->
     <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500&display=swap">
+        href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400..700&display=swap">
 </head>
 
 <body>
