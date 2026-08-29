@@ -79,7 +79,7 @@ function PublicSite() {
       <SiteMeta />
 
       {/* Only the landing page had the intro sequence; deep links skip it. */}
-      {isLanding && <Preloader onComplete={() => setIntroComplete(true)} />}
+      {isLanding && !introComplete && <Preloader onComplete={() => setIntroComplete(true)} />}
       <ScrollProgress />
 
       <a className="skip-link" href="#main-content">

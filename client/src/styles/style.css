@@ -121,30 +121,30 @@
     --gradient-hairline: linear-gradient(120deg, hsla(213, 100%, 70%, 0.5), hsla(188, 95%, 62%, 0.22) 42%, transparent 78%);
 
     /* Grid overlay line, faint enough to be felt rather than counted. */
-    --grid-line: hsla(210, 60%, 84%, 0.045);
+    --grid-line: hsla(210, 60%, 84%, 0.065);
 
     /* Typography. */
-    --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-    --font-display: var(--font-body);
+    --font-body: "Space Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --font-display: "IBM Plex Mono", "Space Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     /* Loaded in index.html and, until now, never actually used — the editorial
        counterweight to Inter. Kept separate from --font-display because that
        one dresses the admin console, which wants no serif in it. */
-    --font-serif: "Instrument Serif", "Iowan Old Style", Georgia, serif;
-    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --font-serif: "IBM Plex Mono", "Space Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --font-mono: "Space Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
     /* Fluid type scale — display sizes breathe, body sizes stay fixed so the
        measure never drifts. */
-    --text-display: clamp(2.75rem, 1.9rem + 4.25vw, 5.25rem);
-    --text-5xl: clamp(2.25rem, 1.75rem + 2.5vw, 3.5rem);
-    --text-4xl: clamp(1.875rem, 1.6rem + 1.4vw, 2.5rem);
-    --text-3xl: clamp(1.5rem, 1.35rem + 0.75vw, 1.875rem);
-    --text-2xl: 1.375rem;
-    --text-xl: 1.125rem;
-    --text-lg: 1.0625rem;
-    --text-base: 1rem;
-    --text-sm: 0.875rem;
-    --text-xs: 0.8125rem;
-    --text-2xs: 0.75rem;
+    --text-display: clamp(2.0rem, 1.7rem + 3vw, 4.0rem);
+    --text-5xl: clamp(1.85rem, 1.6rem + 1.8vw, 2.85rem);
+    --text-4xl: clamp(1.55rem, 1.45rem + 1.0vw, 2.15rem);
+    --text-3xl: clamp(1.3rem, 1.25rem + 0.5vw, 1.65rem);
+    --text-2xl: 1.25rem;
+    --text-xl: 1.0625rem;
+    --text-lg: 1.0rem;
+    --text-base: 0.9375rem;
+    --text-sm: 0.8125rem;
+    --text-xs: 0.75rem;
+    --text-2xs: 0.6875rem;
 
     /* Spacing on a 4px rhythm. */
     --space-1: 0.25rem;
@@ -160,9 +160,9 @@
     --space-20: 5rem;
     /* Applied as padding-block on every .container, so adjacent sections stack it
        twice — the gap a reader actually sees between two sections is double this.
-       Capped at 5rem to keep that combined gap at 10rem rather than the 15rem the
-       old 7.5rem produced, which read as dead space on wide screens. */
-    --space-section: clamp(3rem, 2.25rem + 3vw, 5rem);
+       Capped at 3rem to keep that combined gap at 6rem rather than the 10rem the
+       old 5rem produced, which read as dead space on wide screens. */
+    --space-section: clamp(1.5rem, 1rem + 1.5vw, 3rem);
 
     --shell-max: 75rem;
     --measure: 40rem;
@@ -211,6 +211,96 @@
 }
 
 /* ==========================================================================
+   Light Mode Theme
+   ========================================================================== */
+:root.light {
+    color-scheme: light;
+
+    /* Light Theme semantic tokens */
+    --bg-page: hsl(215, 20%, 97%); /* soft off-white/light neutral */
+    --bg-subtle: hsl(215, 18%, 94%);
+    --bg-surface: hsl(0, 0%, 100%); /* white cards */
+    --bg-muted: hsl(215, 15%, 91%);
+    --bg-elevated: hsl(0, 0%, 100%);
+    --bg-inverse: hsl(222, 41%, 7%);
+
+    --text-primary: hsl(222, 35%, 12%); /* dark charcoal */
+    --text-secondary: hsl(218, 14%, 38%); /* muted gray */
+    --text-tertiary: hsl(218, 12%, 52%);
+    --text-faint: hsl(218, 10%, 65%);
+    --text-on-primary: hsl(222, 47%, 6%);
+    --text-on-inverse: hsl(210, 40%, 98%);
+
+    --border-subtle: hsla(222, 35%, 12%, 0.07); /* subtle dark borders */
+    --border-default: hsla(222, 35%, 12%, 0.13);
+    --border-strong: hsla(222, 35%, 12%, 0.22);
+    --border-inverse: hsla(222, 35%, 12%, 0.08);
+
+    --glass-bg: hsla(215, 20%, 97%, 0.72);
+    --glass-border: hsla(222, 35%, 12%, 0.08);
+
+    /* Update shadow colors to be dark-on-light shadows */
+    --shadow-xs: 0 1px 2px hsla(222, 30%, 10%, 0.05);
+    --shadow-sm: 0 1px 3px hsla(222, 30%, 10%, 0.08), 0 1px 2px hsla(222, 30%, 10%, 0.04);
+    --shadow-md: 0 4px 12px hsla(222, 30%, 10%, 0.08), 0 2px 4px hsla(222, 30%, 10%, 0.04);
+    --shadow-lg: 0 12px 28px hsla(222, 30%, 10%, 0.1), 0 4px 8px hsla(222, 30%, 10%, 0.04);
+    --shadow-xl: 0 24px 48px hsla(222, 30%, 10%, 0.12), 0 8px 16px hsla(222, 30%, 10%, 0.05);
+    --shadow-2xl: 0 40px 80px hsla(222, 30%, 10%, 0.14), 0 16px 32px hsla(222, 30%, 10%, 0.06);
+
+    /* Update glows for light theme */
+    --glow-sm: 0 0 0 1px hsla(213, 100%, 50%, 0.12), 0 4px 16px hsla(213, 100%, 50%, 0.06);
+    --glow-md: 0 0 0 1px hsla(213, 100%, 50%, 0.2), 0 8px 28px hsla(213, 100%, 50%, 0.1);
+
+    /* Grid overlay line for light theme */
+    --grid-line: hsla(222, 35%, 12%, 0.045);
+
+    /* Darken cyan accent colors slightly for text readability in light theme */
+    --accent-400: hsl(191, 90%, 32%);
+    --accent-500: hsl(188, 95%, 35%);
+    --accent-600: hsl(186, 95%, 38%);
+    --accent-700: hsl(184, 90%, 42%);
+}
+
+/* Light mode overrides for form controls, buttons, badges, close buttons, etc. */
+:root.light .form-input,
+:root.light .form-select,
+:root.light .form-textarea {
+    background: rgba(0, 0, 0, 0.04);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+:root.light .form-input:focus,
+:root.light .form-select:focus,
+:root.light .form-textarea:focus {
+    background-color: hsl(0, 0%, 100%);
+    box-shadow: var(--shadow-focus), inset 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+:root.light .btn-secondary {
+    background: rgba(0, 0, 0, 0.04);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+:root.light .btn-secondary:hover {
+    background: rgba(0, 0, 0, 0.08);
+    border-color: var(--border-strong);
+}
+
+:root.light .badge-pill {
+    background: rgba(0, 0, 0, 0.04);
+    box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+:root.light .security-badge {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+:root.light .modal-close,
+:root.light .service-modal-close {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+/* ==========================================================================
    Reset
    ========================================================================== */
 *,
@@ -228,6 +318,7 @@ html {
 }
 
 body {
+    position: relative;
     font-family: var(--font-body);
     font-size: var(--text-base);
     line-height: 1.65;
@@ -250,6 +341,20 @@ body {
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     overflow-x: hidden;
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background-image:
+        linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: 3rem 3rem;
+    pointer-events: none;
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.7) 20%, rgba(0, 0, 0, 0.3) 100%);
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.7) 20%, rgba(0, 0, 0, 0.3) 100%);
 }
 
 body.is-locked {
@@ -283,7 +388,16 @@ ol {
 h1,
 h2,
 h3,
-h4 {
+h4,
+h5,
+h6,
+.section-heading,
+.page-title,
+.card-title,
+.modal-title,
+.service-modal-title,
+.hero-headline {
+    font-family: var(--font-display);
     color: var(--text-primary);
     font-weight: 600;
     line-height: 1.2;
@@ -363,61 +477,140 @@ h4 {
 }
 
 /* ==========================================================================
-   Preloader
+   Glitch Matrix Preloader Overlay
    ========================================================================== */
-.preloader {
-    display: none;
-}
-
-.js-enabled .preloader {
+.preloader-overlay {
     position: fixed;
     inset: 0;
-    z-index: 300;
+    z-index: 9999;
+    background: #040508;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: var(--space-5);
-    background: var(--bg-page);
-    transition: opacity var(--duration-slow) var(--ease),
-                visibility var(--duration-slow) var(--ease);
+    overflow: hidden;
+    pointer-events: all;
+    transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+                visibility 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-.preloader.is-complete {
+.preloader-overlay.is-fadeout {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
 }
 
-.preloader-brand {
-    font-size: var(--text-2xl);
-    font-weight: 600;
-    letter-spacing: -0.03em;
-    color: var(--text-primary);
-}
-
-.preloader-track {
-    width: min(15rem, 60vw);
-    height: 2px;
-    overflow: hidden;
-    background: var(--border-subtle);
-    border-radius: var(--radius-full);
-}
-
-.preloader-bar {
-    width: 0;
+.preloader-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
     height: 100%;
-    background: var(--gradient-brand);
-    border-radius: inherit;
-    box-shadow: 0 0 12px hsla(213, 100%, 55%, 0.5);
-    transition: width var(--duration-fast) linear;
+    opacity: 0.75;
 }
 
-.preloader-count {
+/* CRT Scanline Effect */
+.preloader-scanlines {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0) 50%,
+        rgba(0, 0, 0, 0.12) 50%
+    );
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.preloader-content-wrapper {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100px;
+    padding: var(--space-6);
+    text-align: center;
+}
+
+.preloader-boot-text {
     font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    font-variant-numeric: tabular-nums;
-    color: var(--text-tertiary);
+    font-size: var(--text-sm);
+    color: var(--primary-400);
+    letter-spacing: 0.15em;
+    text-shadow: 0 0 8px rgba(37, 99, 235, 0.5);
+    animation: boot-pulse 0.8s ease-in-out infinite alternate,
+               horizontal-glitch 2s steps(2) infinite;
+}
+
+.preloader-logo {
+    font-family: var(--font-display);
+    font-size: var(--text-5xl);
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--text-primary);
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+                transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+}
+
+.preloader-logo.is-visible {
+    opacity: 1;
+    transform: scale(1);
+    animation: logo-glitch 1.5s steps(1) infinite;
+}
+
+/* Animations */
+@keyframes boot-pulse {
+    from {
+        opacity: 0.6;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes logo-glitch {
+    0%, 95%, 100% {
+        text-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+    }
+    96% {
+        text-shadow: -2px 0 red, 2px 0 blue;
+        transform: translate(-1px, 1px);
+    }
+    97% {
+        text-shadow: 2px -1px green, -2px 2px red;
+        transform: translate(2px, -1px);
+    }
+    98% {
+        text-shadow: none;
+        transform: translate(0, 0);
+    }
+}
+
+@keyframes horizontal-glitch {
+    0%, 100% {
+        transform: skewX(0deg);
+    }
+    85% {
+        transform: skewX(0deg);
+    }
+    86% {
+        transform: skewX(10deg);
+        opacity: 0.85;
+    }
+    87% {
+        transform: skewX(-8deg);
+        opacity: 0.9;
+    }
+    88% {
+        transform: skewX(0deg);
+        opacity: 1;
+    }
 }
 
 /* ==========================================================================
@@ -580,6 +773,72 @@ h4 {
     background: none;
     border: none;
     cursor: pointer;
+}
+
+/* Header Actions and Theme Toggle */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+}
+
+.theme-toggle-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    background: none;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    cursor: pointer;
+    overflow: hidden;
+    transition: color var(--duration-fast) var(--ease),
+                background-color var(--duration-fast) var(--ease),
+                border-color var(--duration-fast) var(--ease);
+}
+
+.theme-toggle-btn:hover {
+    color: var(--text-primary);
+    background: var(--bg-muted);
+    border-color: var(--border-default);
+}
+
+.theme-toggle-icon-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-toggle-icon-wrapper svg {
+    position: absolute;
+    transition: transform var(--duration-base) var(--ease),
+                opacity var(--duration-base) var(--ease);
+}
+
+.theme-toggle-icon-wrapper.dark .sun-icon {
+    opacity: 0;
+    transform: rotate(45deg) scale(0.5);
+}
+
+.theme-toggle-icon-wrapper.dark .moon-icon {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+}
+
+.theme-toggle-icon-wrapper.light .sun-icon {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+}
+
+.theme-toggle-icon-wrapper.light .moon-icon {
+    opacity: 0;
+    transform: rotate(-45deg) scale(0.5);
 }
 
 .nav-admin-link {
@@ -775,6 +1034,24 @@ h4 {
     box-shadow: var(--shadow-sm), inset 0 1px 0 hsla(210, 60%, 92%, 0.07);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
+}
+
+.badge-text {
+    display: inline-block;
+    transition: opacity 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+                transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.badge-text.fade-out {
+    opacity: 0;
+    transform: translateY(-4px);
+}
+
+.badge-text.fade-in {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 /* Status light. The ring is a second shadow on the same dot rather than another
@@ -1049,6 +1326,70 @@ h4 {
     margin-block-start: var(--space-6);
     font-size: var(--text-lg);
     color: var(--text-secondary);
+}
+
+/* Statement responsive side-by-side grid */
+.statement-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    align-items: center;
+}
+
+@media (min-width: 64em) {
+    .statement-grid {
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: var(--space-12);
+    }
+}
+
+.statement-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.statement-image-wrapper {
+    position: relative;
+    border-radius: var(--radius-2xl);
+    border: 1px solid var(--border-default);
+    background: var(--bg-surface);
+    box-shadow: var(--shadow-xl);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: box-shadow var(--duration-base) var(--ease), border-color var(--duration-base) var(--ease);
+}
+
+.statement-image-wrapper::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    border: 1px solid transparent;
+    background: var(--gradient-hairline) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+}
+
+.statement-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    transition: transform var(--duration-slow) var(--ease);
+}
+
+.statement-image-wrapper:hover {
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-2xl), var(--glow-md);
+}
+
+.statement-image-wrapper:hover .statement-image {
+    transform: scale(1.03);
 }
 
 /* ==========================================================================

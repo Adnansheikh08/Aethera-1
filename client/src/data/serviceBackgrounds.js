@@ -4,6 +4,8 @@ import digitalAdvertisingCampaigns from "../assets/services/digital-advertising-
 import videoPhotoEditing from "../assets/services/video-photo-editing.svg";
 import highCtrThumbnailDesign from "../assets/services/high-ctr-thumbnail-design.svg";
 import onLocationVlogShoots from "../assets/services/on-location-vlog-shoots.svg";
+import uiUxDesign from "../assets/services/ui-ux-design.svg";
+import softwareTesting from "../assets/services/software-testing.svg";
 
 /**
  * Background artwork for the service cards, keyed by the slug the API already
@@ -18,11 +20,16 @@ import onLocationVlogShoots from "../assets/services/on-location-vlog-shoots.svg
  */
 const SERVICE_BACKGROUNDS = {
   "web-development": webDevelopment,
+  "web-dev": webDevelopment,
   "mobile-app-development": mobileAppDevelopment,
+  "mobile-dev": mobileAppDevelopment,
   "digital-advertising-campaigns": digitalAdvertisingCampaigns,
+  "a-d": digitalAdvertisingCampaigns,
   "video-photo-editing": videoPhotoEditing,
   "high-ctr-thumbnail-design": highCtrThumbnailDesign,
   "on-location-vlog-shoots": onLocationVlogShoots,
+  "ui-ux-design": uiUxDesign,
+  "software-testing": softwareTesting,
 };
 
 export const serviceBackground = (slug) => SERVICE_BACKGROUNDS[slug] ?? null;

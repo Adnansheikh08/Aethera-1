@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import { Reveal } from "./Reveal.jsx";
@@ -10,6 +10,7 @@ import { usePortfolioFilter, ALL_CATEGORIES } from "../hooks/usePortfolioFilter.
 import { splitWords, useHeadlineReveal } from "../hooks/useReveal.js";
 import { useScrollLock } from "../hooks/useScrollLock.js";
 import { serviceBackground } from "../data/serviceBackgrounds.js";
+import builtDeliberatelyImg from "../assets/built-deliberately.png";
 
 const CAPABILITIES = [
   "Web Development",
@@ -38,15 +39,51 @@ const LOCATIONS = [
   { tag: "Remote", city: "Noida", address: "Uttar Pradesh, India", zone: "Asia/Kolkata" },
 ];
 
-export function Hero({ introComplete }) {
+export function Hero({ introComplete, services = [] }) {
   // The headline cascade waits for the intro to resolve, as the vanilla
   // composition root did by awaiting the preloader's promise.
   const isRevealed = useHeadlineReveal(120, { enabled: introComplete });
+  const [serviceIndex, setServiceIndex] = useState(0);
+  const [fadeState, setFadeState] = useState("in");
+
+  const defaultServices = [
+    "Cybersecurity & Enterprise Software",
+    "Secure Application Engineering",
+    "Threat Analysis & Mitigation",
+    "Penetration Testing & Audits",
+    "Cloud Architecture Security",
+    "OWASP Compliance Verification"
+  ];
+
+  // Combine fetched services titles and default services
+  const serviceList = services && services.length > 0
+    ? services.map(s => s.title)
+    : defaultServices;
+
+  const currentService = serviceList[serviceIndex];
+
+  useEffect(() => {
+    if (serviceList.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setFadeState("out");
+      setTimeout(() => {
+        setServiceIndex((prev) => (prev + 1) % serviceList.length);
+        setFadeState("in");
+      }, 350);
+    }, 4000); // Change every 4 seconds
+
+    return () => clearInterval(interval);
+  }, [serviceList]);
 
   return (
     <section className="hero" aria-labelledby="hero-heading">
       <div className="hero-content">
-        <p className="badge-pill">Cybersecurity &amp; Enterprise Software</p>
+        <p className="badge-pill">
+          <span className={`badge-text fade-${fadeState}`}>
+            {currentService}
+          </span>
+        </p>
         <h1
           id="hero-heading"
           className={`hero-headline${isRevealed ? " is-revealed" : ""}`}
@@ -116,9 +153,9 @@ export function Statement() {
       aria-labelledby="statement-heading"
       data-reveal-group=""
     >
-      <div className="section-head">
-        <p className="eyebrow">Built Deliberately</p>
-        <div>
+      <div className="statement-grid">
+        <div className="statement-content">
+          <p className="eyebrow">Built Deliberately</p>
           <Reveal as="h2" id="statement-heading" className="statement" staggerIndex={0}>
             We take on a small number of engagements each year, and treat security as a design
             constraint rather than a closing audit.
@@ -127,6 +164,15 @@ export function Statement() {
             Every platform we ship is threat-modelled before the first line of code, hardened
             against the OWASP ASVS standard, and handed over with the documentation an internal team
             needs to own it outright.
+          </Reveal>
+        </div>
+        <div className="statement-image-wrapper">
+          <Reveal className="statement-image-reveal" staggerIndex={2}>
+            <img
+              src={builtDeliberatelyImg}
+              alt="Detailed 3D cybersecurity elements including a laptop running code, a shield with a lock, an OWASP ASVS verification shield, a threat model card, and documentation book."
+              className="statement-image"
+            />
           </Reveal>
         </div>
       </div>

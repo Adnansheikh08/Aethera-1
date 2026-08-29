@@ -15,16 +15,17 @@
     <!-- Preconnect ahead of the font CSS request to remove a round trip from LCP. -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Instrument Serif carries the display voice; Inter handles body copy.
-
-         Inter is requested as the variable range 400..700 rather than the two
-         static instances 400 and 500. The stylesheet asks for 550, 600, 640, 650
-         and 660 in places, and with only two instances loaded the browser was
-         synthesising every one of those by smearing the 500 — which is what
-         makes headings look slightly muddy at large sizes. One variable file
-         also weighs less than the several statics it replaces. -->
+    <!-- IBM Plex Mono is used for headings and subheadings; Space Mono for body text. -->
     <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400..700&display=swap">
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap">
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            if (savedTheme === 'light') {
+                document.documentElement.classList.add('light');
+            }
+        })();
+    </script>
 </head>
 
 <body>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 
+import { ThemeToggle } from "./ThemeToggle.jsx";
 import { AdminAccessModal } from "../admin/AdminAccessModal.jsx";
 import { useAuth } from "../admin/AuthContext.jsx";
 import { useNavigation, useSectionSpy } from "../hooks/useNavigation.js";
@@ -148,23 +149,26 @@ export function Header() {
           </span>
         </Link>
 
-        <nav aria-label="Primary">
-          <button
-            type="button"
-            className="nav-toggle"
-            ref={toggleRef}
-            onClick={toggle}
-            aria-expanded={String(isOpen)}
-            aria-controls="primary-navigation"
-            aria-label="Toggle navigation menu"
-          >
-            <span className="nav-toggle-bar" aria-hidden="true" />
-          </button>
+        <div className="header-actions">
+          <ThemeToggle />
 
-          <ul
-            className="nav-links"
-            id="primary-navigation"
-            ref={panelRef}
+          <nav aria-label="Primary">
+            <button
+              type="button"
+              className="nav-toggle"
+              ref={toggleRef}
+              onClick={toggle}
+              aria-expanded={String(isOpen)}
+              aria-controls="primary-navigation"
+              aria-label="Toggle navigation menu"
+            >
+              <span className="nav-toggle-bar" aria-hidden="true" />
+            </button>
+
+            <ul
+              className="nav-links"
+              id="primary-navigation"
+              ref={panelRef}
             // Only collapsed while the mobile query matches, exactly as the
             // source's syncToViewport guaranteed.
             data-collapsed={isMobile ? String(!isOpen) : undefined}
@@ -217,7 +221,8 @@ export function Header() {
               )}
             </li>
           </ul>
-        </nav>
+          </nav>
+        </div>
       </div>
 
       {showAdminModal && <AdminAccessModal onClose={() => setShowAdminModal(false)} />}
