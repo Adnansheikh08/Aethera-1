@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 320" fill="none" stroke="#338fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Design Grid Background -->
+  <g opacity="0.12">
+    <path d="M225 50v150M270 50v150M315 50v150M360 50v150"/>
+    <path d="M180 87h220M180 125h220M180 162h220"/>
+  </g>
+  
+  <!-- Main Screen Wireframe -->
+  <g opacity="0.55">
+    <rect x="180" y="50" width="220" height="150" rx="12"/>
+    <path d="M180 78h220"/>
+    <circle cx="200" cy="64" r="4"/>
+    <circle cx="214" cy="64" r="4"/>
+    <circle cx="228" cy="64" r="4"/>
+  </g>
+
+  <!-- Design Toolbar -->
+  <g opacity="0.45">
+    <rect x="132" y="50" width="36" height="150" rx="8"/>
+    <!-- Cursor/Pointer Tool Icon -->
+    <path d="M148 64l-4 12 3-1 2 4 2-1-2-4 3-1z" stroke-width="1.5"/>
+    <!-- Text Tool Icon -->
+    <path d="M144 96h12M150 96v12" stroke-width="1.5"/>
+    <!-- Shape Tool Icon -->
+    <rect x="144" y="126" width="12" height="12" rx="2" stroke-width="1.5"/>
+    <!-- Pen Tool Icon -->
+    <path d="M145 162l7-7 2 2-7 7z" stroke-width="1.5"/>
+  </g>
+
+  <!-- Screen Interface Components (Buttons, Toggles, Sliders) -->
+  <g opacity="0.32">
+    <!-- Card component -->
+    <rect x="200" y="94" width="180" height="38" rx="6"/>
+    <!-- Toggle -->
+    <rect x="216" y="107" width="22" height="12" rx="6"/>
+    <circle cx="222" cy="113" r="3"/>
+    <!-- Slider -->
+    <path d="M256 113h108"/>
+    <circle cx="290" cy="113" r="4"/>
+    
+    <!-- Button Component -->
+    <rect x="200" y="146" width="70" height="22" rx="6"/>
+    <path d="M220 157h30"/>
+    
+    <!-- Text Blocks -->
+    <path d="M285 152h95M285 162h70"/>
+  </g>
+
+  <!-- Overlapping Screen (Responsive aspect) -->
+  <g opacity="0.22">
+    <rect x="50" y="110" width="96" height="160" rx="14"/>
+    <path d="M50 138h96"/>
+    <!-- Component blocks inside mobile preview -->
+    <rect x="66" y="152" width="64" height="24" rx="4"/>
+    <path d="M66 192h64M66 206h44M66 220h52"/>
+  </g>
+
+  <!-- Interactive Pointer/Cursor targeting wireframe element -->
+  <g opacity="0.85" stroke-width="2.5">
+    <path d="M312 136l-18 20 5 3 2 6 3-1-2-6 8-1z"/>
+  </g>
+</svg>

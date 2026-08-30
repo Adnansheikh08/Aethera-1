@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 320" fill="none" stroke="#338fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Code/Testing Node Graph -->
+  <g opacity="0.3">
+    <!-- Connector paths between nodes -->
+    <path d="M280 106v88"/>
+    <path d="M296 90h68v44"/>
+    <path d="M364 150h-48"/>
+  </g>
+
+  <!-- Passed Test Nodes -->
+  <g opacity="0.6">
+    <circle cx="280" cy="90" r="16"/>
+    <circle cx="380" cy="150" r="16"/>
+  </g>
+  <g opacity="0.85" stroke-width="2.5">
+    <!-- Checkmarks inside passed nodes -->
+    <path d="M273 90l5 5 9-9"/>
+    <path d="M373 150l5 5 9-9"/>
+  </g>
+
+  <!-- Failed Test Node / Bug -->
+  <g opacity="0.55">
+    <circle cx="280" cy="210" r="16"/>
+  </g>
+  <g opacity="0.85" stroke-width="2.5">
+    <!-- Cross/Bug icon in the target node -->
+    <path d="M274 204l12 12M286 204l-12 12"/>
+  </g>
+
+  <!-- Magnifying Glass scanning the failing node -->
+  <g opacity="0.85" stroke-width="2.5">
+    <circle cx="280" cy="210" r="28"/>
+    <path d="M260 230l-16 16"/>
+  </g>
+
+  <!-- Testing Checklist -->
+  <g opacity="0.45">
+    <rect x="120" y="50" width="124" height="170" rx="10"/>
+    
+    <!-- Item 1 (Checked) -->
+    <path d="M136 82l3 3 7-7" stroke-width="1.5"/>
+    <path d="M156 80h64" stroke-width="1.5"/>
+    
+    <!-- Item 2 (Checked) -->
+    <path d="M136 117l3 3 7-7" stroke-width="1.5"/>
+    <path d="M156 115h72" stroke-width="1.5"/>
+    
+    <!-- Item 3 (Checked) -->
+    <path d="M136 152l3 3 7-7" stroke-width="1.5"/>
+    <path d="M156 150h54" stroke-width="1.5"/>
+    
+    <!-- Item 4 (Unchecked/Failed) -->
+    <rect x="136" y="182" width="10" height="10" rx="2" stroke-width="1.5"/>
+    <path d="M156 187h60" stroke-width="1.5"/>
+  </g>
+
+  <!-- Overlapping Code/Terminal Background Screen -->
+  <g opacity="0.22">
+    <rect x="40" y="110" width="90" height="120" rx="8"/>
+    <path d="M40 134h90"/>
+    <path d="M54 154h54M54 172h36M54 190h42"/>
+  </g>
+</svg>
