@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef } from "react";
 
 import { Prose } from "./Prose.jsx";
+import { fastScrollToElement } from "../hooks/useNavigation.js";
 
 /**
  * A service card's "Detail" link opens this instead of routing to
@@ -42,7 +43,8 @@ export function ServiceModal({ service, onClose }) {
     event.preventDefault();
     close();
     requestAnimationFrame(() => {
-      document.getElementById("contact-section")?.scrollIntoView();
+      const contactSection = document.getElementById("contact-section");
+      if (contactSection) fastScrollToElement(contactSection);
     });
   }
 

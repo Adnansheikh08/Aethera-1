@@ -1472,7 +1472,7 @@ h6,
     inset-block-start: 0;
     inset-inline: 14%;
     height: 1px;
-    background: linear-gradient(90deg, transparent, hsla(213, 100%, 74%, 0.55), transparent);
+    background: linear-gradient(90deg, transparent, hsla(158, 72%, 60%, 0.5), transparent);
     opacity: 0.4;
     transition: opacity var(--duration-base) var(--ease);
     pointer-events: none;
@@ -2300,18 +2300,18 @@ h6,
 
 /* The form is the page's closing argument, so this is the most elevated surface
    on it: a brand-lit top edge and a wash pulled in from the corner. */
-.contact-info-card {
+.lead-form-card {
     position: relative;
     padding: var(--space-8);
     background:
-        radial-gradient(120% 90% at 100% 0%, hsla(213, 100%, 52%, 0.09), transparent 62%),
+        radial-gradient(120% 90% at 100% 0%, var(--contact-accent-soft), transparent 62%),
         var(--bg-surface);
     border: 1px solid var(--border-default);
     border-radius: var(--radius-2xl);
     box-shadow: var(--shadow-xl);
 }
 
-.contact-info-card::before {
+.lead-form-card::before {
     content: "";
     position: absolute;
     inset-block-start: 0;
@@ -2350,7 +2350,7 @@ h6,
     font-family: inherit;
     font-size: var(--text-sm);
     color: var(--text-primary);
-    /* Recessed rather than raised. These sit inside .contact-info-card, which is
+    /* Recessed rather than raised. These sit inside .lead-form-card, which is
        already --bg-surface, so matching it would have flattened the field into
        its own container; going darker than the card is what reads as a well.
        The inset hairline is the lip of that well catching light. */
@@ -2382,7 +2382,7 @@ h6,
 }
 
 .form-textarea {
-    min-height: 7rem;
+    min-height: 8.75rem;
     resize: vertical;
 }
 
@@ -2966,7 +2966,7 @@ h6,
         flex: 1;
     }
 
-    .contact-info-card {
+    .lead-form-card {
         padding: var(--space-6);
     }
 
@@ -3035,5 +3035,236 @@ h6,
     .js-enabled .hero-headline .reveal-word {
         opacity: 1;
         transform: none;
+    }
+}
+
+/* ==========================================================================
+   Contact section — premium two-column layout
+   ========================================================================== */
+
+/* The green the brand already carries in --success, promoted to a section
+   accent. Scoped to the contact section and the lead card (which also renders
+   on the landing page) so the rest of the site keeps its blue/cyan identity. */
+.contact-section,
+.lead-form-card {
+    --contact-accent: hsl(158, 72%, 52%);
+    --contact-accent-soft: hsla(158, 72%, 52%, 0.14);
+}
+
+:root.light .contact-section,
+:root.light .lead-form-card {
+    --contact-accent: hsl(158, 64%, 34%);
+    --contact-accent-soft: hsla(158, 64%, 40%, 0.12);
+}
+
+/* Tighter corners and a faint green halo distinguish the lead card from the
+   generic surface cards without shouting. */
+.lead-form-card {
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg), 0 0 64px hsla(158, 72%, 50%, 0.07);
+}
+
+.contact-section {
+    padding-block: var(--space-16) var(--space-12);
+    background-color: var(--bg-subtle);
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: var(--space-12);
+    align-items: start;
+}
+
+.contact-intro {
+    padding-block-start: var(--space-2);
+}
+
+.contact-title {
+    margin-block: var(--space-5) 0;
+    font-family: var(--font-display);
+    font-size: var(--text-4xl);
+    line-height: 1.15;
+    color: var(--text-primary);
+    text-wrap: balance;
+}
+
+.contact-accent {
+    color: var(--contact-accent);
+}
+
+.contact-lede {
+    max-width: 34rem;
+    margin-block: var(--space-5) var(--space-10);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: 1.7;
+    color: var(--text-secondary);
+}
+
+.contact-details {
+    display: grid;
+    gap: var(--space-3);
+    max-width: 26rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.contact-details li {
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--space-4) var(--space-5);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    transition: border-color var(--duration-fast) var(--ease);
+}
+
+.contact-details li:hover {
+    border-color: hsla(158, 72%, 52%, 0.35);
+}
+
+.contact-detail-label {
+    font-size: var(--text-2xs);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+}
+
+.contact-detail-value {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--text-primary);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+}
+
+a.contact-detail-value:hover {
+    color: var(--contact-accent);
+}
+
+.contact-form-side {
+    display: grid;
+    gap: var(--space-4);
+}
+
+.contact-back {
+    margin-block-start: var(--space-10);
+    text-align: center;
+}
+
+.contact-back-link {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--text-tertiary);
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease);
+}
+
+.contact-back-link:hover {
+    color: var(--contact-accent);
+}
+
+/* Compact paired rows — halves the form's vertical footprint without
+   shrinking the fields themselves. */
+.form-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: var(--space-4);
+}
+
+/* Green focus ring, scoped to the card so anything else borrowing the .form-*
+   classes keeps the brand blue. Invalid fields keep the red. */
+.lead-form-card .form-input:focus,
+.lead-form-card .form-select:focus,
+.lead-form-card .form-textarea:focus {
+    border-color: var(--contact-accent);
+    box-shadow: 0 0 0 3px var(--contact-accent-soft),
+        inset 0 1px 2px hsla(222, 60%, 2%, 0.4);
+}
+
+.lead-form-card .form-input[aria-invalid="true"]:focus,
+.lead-form-card .form-select[aria-invalid="true"]:focus,
+.lead-form-card .form-textarea[aria-invalid="true"]:focus {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px var(--danger-bg),
+        inset 0 1px 2px hsla(222, 60%, 2%, 0.4);
+}
+
+:root.light .lead-form-card .form-input:focus,
+:root.light .lead-form-card .form-select:focus,
+:root.light .lead-form-card .form-textarea:focus {
+    border-color: var(--contact-accent);
+    box-shadow: 0 0 0 3px var(--contact-accent-soft),
+        inset 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+/* Submit — the card's one loud surface: green fill, dark text for contrast,
+   a small hover lift and nothing more. */
+.lead-submit {
+    width: 100%;
+    padding: var(--space-4) var(--space-6);
+    font-size: var(--text-base);
+    color: hsl(167, 50%, 7%);
+    background: linear-gradient(135deg, hsl(158, 72%, 52%), hsl(164, 66%, 44%));
+    border: 1px solid hsla(158, 72%, 66%, 0.45);
+    box-shadow: 0 2px 12px hsla(158, 72%, 45%, 0.22),
+        inset 0 1px 0 hsla(158, 80%, 85%, 0.35);
+}
+
+.lead-submit:hover {
+    filter: brightness(1.08);
+    box-shadow: 0 8px 24px hsla(158, 72%, 46%, 0.3),
+        inset 0 1px 0 hsla(158, 80%, 85%, 0.4);
+    transform: translateY(-2px);
+}
+
+.lead-submit:active {
+    filter: none;
+    transform: translateY(0);
+}
+
+.lead-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    filter: none;
+    transform: none;
+}
+
+:root.light .lead-submit {
+    color: hsl(167, 60%, 96%);
+    background: linear-gradient(135deg, hsl(158, 64%, 36%), hsl(164, 60%, 30%));
+}
+
+/* The trust line reads as a footnote under the CTA rather than a preamble. */
+.lead-form-card .form-intro {
+    margin-block: var(--space-4) 0;
+    text-align: center;
+}
+
+.lead-form-card .form-navigation {
+    margin-block-start: var(--space-2);
+}
+
+@media (max-width: 64rem) {
+    .contact-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--space-10);
+    }
+}
+
+@media (max-width: 48rem) {
+    .contact-section {
+        padding-block: var(--space-12) var(--space-10);
+    }
+
+    .form-row {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .lead-form-card {
+        padding: var(--space-6);
     }
 }

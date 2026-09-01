@@ -140,6 +140,88 @@ export function useSectionSpy(sectionIds) {
 }
 
 /**
+ * Duration every guided scroll in the site nav runs at. The links used to lean
+ * on `scroll-behavior: smooth` on html, whose duration the browser scales with
+ * distance — a trip from the hero to the enquiry form took the better part of
+ * a second. A fixed sub-400ms budget keeps the motion perceptibly smooth while
+ * landing close enough to instant that rapid link-switching stays responsive.
+ */
+const NAV_SCROLL_DURATION_MS = 350;
+
+const easeOutCubic = (progress) => 1 - (1 - progress) ** 3;
+
+// One guided scroll at a time: a new one cancels its predecessor instead of
+// fighting it for the scrollbar.
+let guidedScroll = null;
+
+/**
+ * Window scroll in a fixed-duration eased tween. `behavior: "instant"` on every
+ * intermediate position is what keeps the stylesheet's `scroll-behavior: smooth`
+ * from wrapping each frame in an animation of its own. Wheel and touch input
+ * abort the tween — once the user takes over, the scroll is theirs.
+ */
+export function fastScrollTo(top, { duration = NAV_SCROLL_DURATION_MS } = {}) {
+  const startY = window.scrollY;
+  const maxTop = document.documentElement.scrollHeight - window.innerHeight;
+  const endTop = Math.max(0, Math.min(top, maxTop));
+
+  if (guidedScroll) guidedScroll.cancelled = true;
+
+  if (
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+    endTop === startY
+  ) {
+    window.scrollTo({ top: endTop, behavior: "instant" });
+    return;
+  }
+
+  const animation = { cancelled: false };
+  guidedScroll = animation;
+
+  const abort = () => {
+    animation.cancelled = true;
+  };
+  const cleanup = () => {
+    window.removeEventListener("wheel", abort);
+    window.removeEventListener("touchstart", abort);
+  };
+  window.addEventListener("wheel", abort, { passive: true });
+  window.addEventListener("touchstart", abort, { passive: true });
+
+  const startedAt = performance.now();
+  const step = (now) => {
+    if (animation.cancelled) {
+      cleanup();
+      return;
+    }
+    const progress = Math.min(1, (now - startedAt) / duration);
+    window.scrollTo({
+      top: startY + (endTop - startY) * easeOutCubic(progress),
+      behavior: "instant",
+    });
+    if (progress < 1) requestAnimationFrame(step);
+    else {
+      guidedScroll = null;
+      cleanup();
+    }
+  };
+  requestAnimationFrame(step);
+}
+
+/**
+ * Scrolls a section into view under the fixed header, at the nav's pace. The
+ * offset comes from the same scroll-padding-block-start the anchor jumps were
+ * using, so the destination does not shift between the two mechanisms.
+ */
+export function fastScrollToElement(element) {
+  const padding = Number.parseFloat(
+    getComputedStyle(document.documentElement).scrollPaddingBlockStart,
+  );
+  const offset = Number.isNaN(padding) ? 0 : padding;
+  fastScrollTo(element.getBoundingClientRect().top + window.scrollY - offset);
+}
+
+/**
  * Puts every client-side navigation at the top of the incoming page.
  *
  * Django served a fresh document per link, so the browser always started at the
@@ -162,8 +244,10 @@ export function useScrollTopOnNavigate() {
     previousPath.current = pathname;
 
     // A fragment names its own destination; only a bare path means "the top".
+    // The fragment takes the nav's fast guided scroll — the browser's smooth
+    // scroll would spend a distance-scaled second getting there.
     const target = hash ? document.getElementById(hash.slice(1)) : null;
-    if (target) target.scrollIntoView();
+    if (target) fastScrollToElement(target);
     else window.scrollTo({ top: 0, behavior: "instant" });
   }, [pathname, hash]);
 }

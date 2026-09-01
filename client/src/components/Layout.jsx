@@ -4,7 +4,12 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 import { ThemeToggle } from "./ThemeToggle.jsx";
 import { AdminAccessModal } from "../admin/AdminAccessModal.jsx";
 import { useAuth } from "../admin/AuthContext.jsx";
-import { useNavigation, useSectionSpy } from "../hooks/useNavigation.js";
+import {
+  fastScrollTo,
+  fastScrollToElement,
+  useNavigation,
+  useSectionSpy,
+} from "../hooks/useNavigation.js";
 import { useHeaderCondensed } from "../hooks/useScrollProgress.js";
 
 /**
@@ -53,6 +58,23 @@ const SPY_IDS = [
 const navKey = (item) => item.id ?? item.to;
 
 /**
+ * Same-document section jumps take the fast guided scroll rather than the
+ * browser's `scroll-behavior: smooth`, whose distance-scaled duration is what
+ * made a header click feel like a second of waiting. Off the landing page the
+ * anchor must still travel: the router lands on "/" and useScrollTopOnNavigate
+ * performs the same fast scroll once the section is mounted.
+ */
+function jumpToSection(event, sectionId) {
+  if (window.location.pathname !== "/") return;
+  event.preventDefault();
+  const target = document.getElementById(sectionId);
+  if (target) fastScrollToElement(target);
+  // replaceState keeps the URL honest without pushing a history entry the
+  // back button would then "navigate" without any scroll at all.
+  window.history.replaceState(null, "", `/#${sectionId}`);
+}
+
+/**
  * One nav entry, in whichever form the item calls for.
  *
  * A route entry has two different owners of its active state, and they need two
@@ -98,6 +120,7 @@ function NavEntry({ item, className, activeId, isLanding }) {
       href={`/#${item.id}`}
       className={className}
       aria-current={isLanding && activeId === item.id ? "true" : undefined}
+      onClick={(event) => jumpToSection(event, item.id)}
     >
       {item.label}
     </a>
@@ -118,9 +141,9 @@ function HomeLink({ className, isCurrent = false }) {
       className={className}
       aria-current={isCurrent ? "true" : undefined}
       onClick={() => {
-        // No `behavior`: that keeps the stylesheet's smooth scroll, which already
-        // degrades to an instant jump under prefers-reduced-motion.
-        if (isLanding) window.scrollTo({ top: 0 });
+        // The same fast guided scroll the section links use, so returning to
+        // the top costs the same ~350ms as any other jump.
+        if (isLanding) fastScrollTo(0);
       }}
     >
       Home
@@ -201,6 +224,7 @@ export function Header() {
                 href={`/#${CONTACT.id}`}
                 className="header-btn"
                 aria-current={isLanding && activeId === CONTACT.id ? "true" : undefined}
+                onClick={(event) => jumpToSection(event, CONTACT.id)}
               >
                 {CONTACT.label}
               </a>
@@ -257,7 +281,11 @@ export function Footer() {
                 </li>
               ))}
               <li>
-                <a href={`/#${CONTACT.id}`} className="contact-link">
+                <a
+                  href={`/#${CONTACT.id}`}
+                  className="contact-link"
+                  onClick={(event) => jumpToSection(event, CONTACT.id)}
+                >
                   {CONTACT.label}
                 </a>
               </li>
