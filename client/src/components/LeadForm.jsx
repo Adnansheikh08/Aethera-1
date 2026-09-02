@@ -20,10 +20,114 @@ function CheckIcon() {
   );
 }
 
+/** Clock for the reply-time badge in the card head. */
+function ClockIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 6v6l4 2" />
+    </svg>
+  );
+}
+
+/** Arrow that nudges right on CTA hover. */
+function ArrowRightIcon() {
+  return (
+    <svg
+      className="lead-submit-arrow"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.25"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d="M5 12h14" />
+      <path d="m13 6 6 6-6 6" />
+    </svg>
+  );
+}
+
+/** Feather-style glyphs that sit inside the inputs, one per field. */
+const FIELD_ICONS = {
+  user: (
+    <>
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
+    </>
+  ),
+  email: (
+    <>
+      <rect x="2" y="4" width="20" height="16" rx="2" />
+      <path d="m22 7-10 6L2 7" />
+    </>
+  ),
+  phone: (
+    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" />
+  ),
+  briefcase: (
+    <>
+      <rect x="2" y="7" width="20" height="14" rx="2" />
+      <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+    </>
+  ),
+  message: (
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+  ),
+};
+
+function FieldIcon({ name }) {
+  return (
+    <span className="field-glyph" aria-hidden="true">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+        focusable="false"
+      >
+        {FIELD_ICONS[name]}
+      </svg>
+    </span>
+  );
+}
+
+/**
+ * Wraps a control in the icon layout — but only in the `detailed` variant used
+ * by the contact page. The landing page renders the bare control, exactly as
+ * before, so its contact section is untouched by this component's styling.
+ */
+function FieldWrap({ icon, detailed, children }) {
+  if (!detailed) return children;
+  return (
+    <div className="field-icon-wrap">
+      <FieldIcon name={icon} />
+      {children}
+    </div>
+  );
+}
+
 /**
  * Lead capture form — single page form with all fields visible.
+ *
+ * `detailed` opts into the richer contact-page presentation (field icons,
+ * reply-time badge, wide CTA); the default is the compact landing-page form.
  */
-export function LeadForm({ serviceChoices = [] }) {
+export function LeadForm({ serviceChoices = [], detailed = false }) {
   // Focused-once flag for the honeypot: browsers autofill it without focus, so
   // focus is the one signal separating a human-driven fill from autofill.
   const honeypotTouched = useRef(false);
@@ -49,7 +153,15 @@ export function LeadForm({ serviceChoices = [] }) {
   return (
     <div className="lead-form-card">
       <div className="lead-form-head">
-        <h2 className="lead-form-title">Start a conversation</h2>
+        <div className="lead-form-head-row">
+          <h2 className="lead-form-title">Start a conversation</h2>
+          {detailed && (
+            <span className="lead-form-badge">
+              <ClockIcon />
+              Replies within 2 hrs
+            </span>
+          )}
+        </div>
         <p className="lead-form-sub">Tell us a little about your project.</p>
       </div>
 
@@ -93,14 +205,16 @@ export function LeadForm({ serviceChoices = [] }) {
         <div className="form-row">
           <div className="form-group">
             <label htmlFor="lead-name">Full name</label>
-            <input
-              {...fieldProps("name")}
-              type="text"
-              className="form-input"
-              placeholder="Your name"
-              maxLength={150}
-              required
-            />
+            <FieldWrap icon="user" detailed={detailed}>
+              <input
+                {...fieldProps("name")}
+                type="text"
+                className="form-input"
+                placeholder="Your name"
+                maxLength={150}
+                required
+              />
+            </FieldWrap>
             <p className="field-error" data-error-for="lead-name">
               {errors.name}
             </p>
@@ -108,13 +222,15 @@ export function LeadForm({ serviceChoices = [] }) {
 
           <div className="form-group">
             <label htmlFor="lead-email">Work email</label>
-            <input
-              {...fieldProps("email")}
-              type="email"
-              className="form-input"
-              placeholder="you@company.com"
-              required
-            />
+            <FieldWrap icon="email" detailed={detailed}>
+              <input
+                {...fieldProps("email")}
+                type="email"
+                className="form-input"
+                placeholder="you@company.com"
+                required
+              />
+            </FieldWrap>
             <p className="field-error" data-error-for="lead-email">
               {errors.email}
             </p>
@@ -124,14 +240,16 @@ export function LeadForm({ serviceChoices = [] }) {
         <div className="form-row">
           <div className="form-group">
             <label htmlFor="lead-phone">Contact number</label>
-            <input
-              {...fieldProps("phone")}
-              type="text"
-              className="form-input"
-              placeholder="+91 XXXXX XXXXX"
-              maxLength={20}
-              required
-            />
+            <FieldWrap icon="phone" detailed={detailed}>
+              <input
+                {...fieldProps("phone")}
+                type="text"
+                className="form-input"
+                placeholder="+91 XXXXX XXXXX"
+                maxLength={20}
+                required
+              />
+            </FieldWrap>
             <p className="field-error" data-error-for="lead-phone">
               {errors.phone}
             </p>
@@ -139,14 +257,16 @@ export function LeadForm({ serviceChoices = [] }) {
 
           <div className="form-group">
             <label htmlFor="lead-service">Service required</label>
-            <select {...fieldProps("service_type")} className="form-select" required>
-              <option value="">Select a service</option>
-              {serviceChoices.map((choice) => (
-                <option key={choice.value} value={choice.value}>
-                  {choice.label}
-                </option>
-              ))}
-            </select>
+            <FieldWrap icon="briefcase" detailed={detailed}>
+              <select {...fieldProps("service_type")} className="form-select" required>
+                <option value="">Select a service</option>
+                {serviceChoices.map((choice) => (
+                  <option key={choice.value} value={choice.value}>
+                    {choice.label}
+                  </option>
+                ))}
+              </select>
+            </FieldWrap>
             <p className="field-error" data-error-for="lead-service">
               {errors.service_type}
             </p>
@@ -157,12 +277,14 @@ export function LeadForm({ serviceChoices = [] }) {
           <label htmlFor="lead-info">
             Project brief <span className="visually-hidden">(optional)</span>
           </label>
-          <textarea
-            {...fieldProps("additional_info")}
-            className="form-textarea"
-            placeholder="Tell us about your project — goals, requirements, timeline..."
-            rows={4}
-          />
+          <FieldWrap icon="message" detailed={detailed}>
+            <textarea
+              {...fieldProps("additional_info")}
+              className="form-textarea"
+              placeholder="Tell us about your project — goals, requirements, timeline..."
+              rows={4}
+            />
+          </FieldWrap>
           <p className="field-error" data-error-for="lead-info">
             {errors.additional_info}
           </p>
@@ -170,7 +292,15 @@ export function LeadForm({ serviceChoices = [] }) {
 
         <div className="form-navigation">
           <button type="submit" className="cta-button lead-submit" data-submit="" disabled={isSubmitting}>
-            {isSubmitting ? "Submitting…" : "Start a Conversation →"}
+            {isSubmitting ? (
+              "Submitting…"
+            ) : detailed ? (
+              <>
+                Start a Conversation <ArrowRightIcon />
+              </>
+            ) : (
+              "Start a Conversation →"
+            )}
           </button>
         </div>
 
