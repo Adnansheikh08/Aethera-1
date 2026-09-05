@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import { getLandingContent } from "../api/client.js";
-import { LeadForm } from "../components/LeadForm.jsx";
+import { ContactSection } from "../components/ContactSection.jsx";
 import {
   Focus,
   Hero,
@@ -51,40 +51,16 @@ export function Landing({ introComplete }) {
       */}
 
       <Hero introComplete={introComplete} services={services} />
-      <Marquee />
+      <Marquee services={services} />
       <Statement />
       <Focus services={services} />
       <SelectedWork services={services} portfolioItems={portfolioItems} />
       <Proof caseStudies={caseStudies} />
       <Locations />
 
-      <section
-        id="contact-section"
-        className="container"
-        aria-labelledby="contact-heading"
-        data-reveal-group=""
-      >
-        <div className="section-head">
-          <p className="eyebrow">Selective Enquiries</p>
-          <div>
-            <h2 id="contact-heading" className="section-heading">
-              Initiate connection
-            </h2>
-            <p className="section-subtitle">
-              Tell us what you are building. We reply to every qualified inquiry within two business
-              hours.
-            </p>
-          </div>
-        </div>
-
-        {error && (
-          <p className="form-feedback error-box" role="alert">
-            The service catalogue could not be loaded. You can still reach us directly by email.
-          </p>
-        )}
-
-        <LeadForm serviceChoices={serviceChoices} />
-      </section>
+      {/* The same complete contact section the /contact page renders — pitch
+          column plus form — fed with the choices this page already fetched. */}
+      <ContactSection serviceChoices={serviceChoices} error={error} />
     </>
   );
 }

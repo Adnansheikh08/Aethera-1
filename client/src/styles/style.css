@@ -1016,6 +1016,79 @@ h6,
     padding-inline: var(--space-6);
 }
 
+/* Two-column hero: copy left, workspace visual right.
+
+   The columns are an 11:9 split (~55% / 45%), centre-aligned so the image
+   sits beside the headline rather than top- or bottom-aligning with it. Below
+   the large breakpoint there is no grid at all — the visual just stacks under
+   the copy, which puts it after the CTAs on mobile. */
+.hero-copy {
+    position: relative;
+}
+
+.hero-visual {
+    position: relative;
+    /* Centres the panel in its column; the grid's align-items: center below
+       handles the vertical half. Only needed in the stacked (mobile/tablet)
+       presentation — the grid breakpoint zeroes it. */
+    display: flex;
+    justify-content: center;
+    margin-block-start: var(--space-12);
+}
+
+.hero-visual-img {
+    display: block;
+    /* Intrinsic sizing, not a forced box: the width caps at the column and
+       the height follows the image's own 3:2, so the whole photo is always
+       shown — contain rather than cover means nothing is ever cropped.
+
+       The explicit `height: auto` is load-bearing. The <img> carries
+       width/height attributes for layout stability, and without a CSS height
+       those act as presentational hints — the element pins itself at its
+       natural 1024px tall inside a column-width box, and cover crops
+       two-thirds of the photo away. */
+    width: 100%;
+    max-width: 40rem;
+    height: auto;
+    object-fit: contain;
+    /* 24px — the premium-panel radius, matching --radius-2xl. */
+    border-radius: var(--radius-2xl);
+    border: 1px solid var(--glass-border);
+    /* A dark drop plus a faint blue/cyan bloom, so the panel reads as lit by
+       the same ambient source as the rest of the section. */
+    box-shadow: var(--shadow-xl),
+                0 0 60px hsla(213, 100%, 58%, 0.14),
+                0 0 120px hsla(196, 96%, 54%, 0.08);
+}
+
+@media (min-width: 64em) {
+    .hero-content {
+        display: grid;
+        /* Tilted slightly toward the visual (~49/51) so the workspace panel
+           sits ~16% larger than a even half-split would allow — big enough to
+           balance the display-size headline without crowding the copy. */
+        grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+        column-gap: var(--space-16);
+        align-items: center;
+    }
+
+    .hero-visual {
+        margin-block-start: 0;
+    }
+}
+
+/* Hover is the only interaction — a hair of scale, guarded to devices that
+   actually hover so touch scrolls never trigger it. */
+@media (hover: hover) {
+    .hero-visual-img {
+        transition: transform var(--duration-slow) var(--ease);
+    }
+
+    .hero-visual-img:hover {
+        transform: scale(1.01);
+    }
+}
+
 .badge-pill {
     display: inline-flex;
     align-items: center;
@@ -1472,7 +1545,7 @@ h6,
     inset-block-start: 0;
     inset-inline: 14%;
     height: 1px;
-    background: linear-gradient(90deg, transparent, hsla(213, 100%, 74%, 0.55), transparent);
+    background: linear-gradient(90deg, transparent, hsla(158, 72%, 60%, 0.5), transparent);
     opacity: 0.4;
     transition: opacity var(--duration-base) var(--ease);
     pointer-events: none;
@@ -2300,18 +2373,18 @@ h6,
 
 /* The form is the page's closing argument, so this is the most elevated surface
    on it: a brand-lit top edge and a wash pulled in from the corner. */
-.contact-info-card {
+.lead-form-card {
     position: relative;
     padding: var(--space-8);
     background:
-        radial-gradient(120% 90% at 100% 0%, hsla(213, 100%, 52%, 0.09), transparent 62%),
+        radial-gradient(120% 90% at 100% 0%, var(--contact-accent-soft), transparent 62%),
         var(--bg-surface);
     border: 1px solid var(--border-default);
     border-radius: var(--radius-2xl);
     box-shadow: var(--shadow-xl);
 }
 
-.contact-info-card::before {
+.lead-form-card::before {
     content: "";
     position: absolute;
     inset-block-start: 0;
@@ -2350,7 +2423,7 @@ h6,
     font-family: inherit;
     font-size: var(--text-sm);
     color: var(--text-primary);
-    /* Recessed rather than raised. These sit inside .contact-info-card, which is
+    /* Recessed rather than raised. These sit inside .lead-form-card, which is
        already --bg-surface, so matching it would have flattened the field into
        its own container; going darker than the card is what reads as a well.
        The inset hairline is the lip of that well catching light. */
@@ -2382,7 +2455,7 @@ h6,
 }
 
 .form-textarea {
-    min-height: 7rem;
+    min-height: 8.75rem;
     resize: vertical;
 }
 
@@ -2966,7 +3039,7 @@ h6,
         flex: 1;
     }
 
-    .contact-info-card {
+    .lead-form-card {
         padding: var(--space-6);
     }
 
@@ -3035,5 +3108,571 @@ h6,
     .js-enabled .hero-headline .reveal-word {
         opacity: 1;
         transform: none;
+    }
+}
+
+/* ==========================================================================
+   Contact page — a quiet pitch on the left, a compact form card on the right
+   ========================================================================== */
+
+/* The section rides the site's own blue/cyan identity rather than a private
+   accent: the --contact-* aliases simply re-map the primary ramp so the pitch
+   column, card, and CTA read as part of the same brand as every other page. */
+.contact-section,
+.lead-form-card {
+    --contact-accent: var(--primary-500);
+    --contact-accent-soft: hsla(213, 100%, 60%, 0.14);
+    --contact-accent-line: hsla(213, 100%, 60%, 0.4);
+    --contact-accent-glow: hsla(213, 100%, 50%, 0.08);
+}
+
+/* Light theme takes the deeper step of the same ramp, exactly as the rest of
+   the site does, so blue text stays readable on white. */
+:root.light .contact-section,
+:root.light .lead-form-card {
+    --contact-accent: var(--primary-400);
+    --contact-accent-soft: hsla(214, 89%, 51%, 0.12);
+    --contact-accent-line: hsla(214, 89%, 51%, 0.35);
+    --contact-accent-glow: hsla(214, 89%, 51%, 0.07);
+}
+
+.contact-section {
+    padding-block: var(--space-16) var(--space-12);
+    /* A faint green wash pooling in the top-left corner keeps the section from
+       reading as a flat grey slab behind the two-column grid. */
+    background:
+        radial-gradient(38rem 24rem at 6% 0%, var(--contact-accent-glow), transparent 70%),
+        var(--bg-subtle);
+}
+
+/* 45/55 split: the pitch column stays narrow, the card gets the room. */
+.contact-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 45fr) minmax(0, 55fr);
+    gap: var(--space-12);
+    align-items: center;
+}
+
+/* The eyebrow ships in the brand blue; on this page it follows the accent. */
+.contact-section .eyebrow {
+    color: var(--contact-accent);
+}
+
+.contact-section .eyebrow::before {
+    background: linear-gradient(90deg, transparent, var(--contact-accent));
+}
+
+/* --- the status pill -----------------------------------------------------
+   A quiet live signal that the studio has capacity. The dot pulses once every
+   few seconds — enough to read as "active", not enough to distract. */
+.contact-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-block-end: var(--space-5);
+    padding: 0.375rem 0.875rem;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--contact-accent);
+    background: var(--contact-accent-soft);
+    border: 1px solid var(--contact-accent-line);
+    border-radius: var(--radius-full);
+}
+
+.contact-status-dot {
+    position: relative;
+    width: 0.4375rem;
+    height: 0.4375rem;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--contact-accent);
+}
+
+.contact-status-dot::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--contact-accent);
+    animation: contact-pulse 2.4s var(--ease) infinite;
+}
+
+@keyframes contact-pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+
+    70%,
+    100% {
+        transform: scale(2.75);
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .contact-status-dot::after {
+        animation: none;
+    }
+}
+
+.contact-title {
+    margin-block: var(--space-4) var(--space-5);
+    font-size: clamp(2.25rem, 3.5vw, 3.25rem);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+}
+
+.contact-accent {
+    color: var(--contact-accent);
+}
+
+.contact-lede {
+    max-width: 32rem;
+    font-size: var(--text-base);
+    line-height: 1.7;
+    color: var(--text-tertiary);
+}
+
+/* --- the detail cards ----------------------------------------------------
+   Each channel is a tappable card: icon chip, label + value, and a chevron
+   that slides in on hover to say "the whole card is a link". */
+.contact-details {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+    margin-block-start: var(--space-10);
+    padding: 0;
+    list-style: none;
+}
+
+.contact-details li {
+    display: flex;
+    min-width: 0;
+}
+
+.contact-detail-card {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex: 1;
+    min-width: 0;
+    padding: var(--space-3) var(--space-4);
+    text-decoration: none;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    transition:
+        transform var(--duration-base) var(--ease),
+        border-color var(--duration-base) var(--ease),
+        box-shadow var(--duration-base) var(--ease);
+}
+
+.contact-detail-card:hover,
+.contact-detail-card:focus-visible {
+    transform: translateY(-2px);
+    border-color: var(--contact-accent-line);
+    box-shadow: 0 12px 28px var(--contact-accent-glow);
+}
+
+/* Icon chip: the accent tint lives here, not on the text. */
+.contact-detail-chip {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    flex-shrink: 0;
+    color: var(--contact-accent);
+    background: var(--contact-accent-soft);
+    border-radius: var(--radius-md);
+}
+
+.contact-detail-icon {
+    width: 1rem;
+    height: 1rem;
+}
+
+.contact-detail-text {
+    display: grid;
+    gap: 0.125rem;
+    min-width: 0;
+}
+
+.contact-detail-label {
+    font-size: var(--text-2xs);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+}
+
+.contact-detail-value {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--text-secondary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: color var(--duration-fast) var(--ease);
+}
+
+.contact-detail-card:hover .contact-detail-value,
+.contact-detail-card:focus-visible .contact-detail-value {
+    color: var(--contact-accent);
+}
+
+/* Chevron: hidden at rest, slides in from the left on hover. */
+.contact-detail-arrow {
+    width: 0.875rem;
+    height: 0.875rem;
+    flex-shrink: 0;
+    margin-inline-start: auto;
+    color: var(--contact-accent);
+    opacity: 0;
+    transform: translateX(-0.25rem);
+    transition:
+        opacity var(--duration-fast) var(--ease),
+        transform var(--duration-fast) var(--ease);
+}
+
+.contact-detail-card:hover .contact-detail-arrow,
+.contact-detail-card:focus-visible .contact-detail-arrow {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Touch devices have no hover, so the chevron would never appear — show it
+   at rest instead of promising an interaction that can't happen. */
+@media (hover: none) {
+    .contact-detail-arrow {
+        opacity: 0.6;
+        transform: none;
+    }
+}
+
+.contact-form-side {
+    min-width: 0;
+}
+
+.contact-back {
+    margin-block-start: var(--space-10);
+}
+
+.contact-back-link {
+    font-size: var(--text-sm);
+    color: var(--text-tertiary);
+    text-decoration: none;
+}
+
+.contact-back-link:hover {
+    color: var(--contact-accent);
+}
+
+/* --- the card ------------------------------------------------------------
+   Softly lit rather than loudly branded: a halo instead of a fill. The base
+   .lead-form-card rule above already supplies surface, border, the corner wash
+   and the blue top hairline; this tightens the geometry to the compact
+   20px-radius brief. */
+.lead-form-card {
+    padding: clamp(1.5rem, 2.5vw, 2.25rem);
+    border-radius: 1.25rem;
+    box-shadow: var(--shadow-lg), 0 0 56px var(--contact-accent-glow);
+}
+
+.lead-form-head {
+    margin-block-end: var(--space-6);
+}
+
+.lead-form-title {
+    margin-block-end: var(--space-1);
+    font-size: var(--text-xl);
+    letter-spacing: -0.01em;
+}
+
+.lead-form-sub {
+    font-size: var(--text-sm);
+    color: var(--text-tertiary);
+}
+
+/* --- detailed variant (contact page only) ---------------------------------
+   Everything in this block is scoped to .contact-section, so the landing
+   page's copy of this card keeps its compact look unchanged. */
+
+/* Title left, reply-time badge right. */
+.contact-section .lead-form-head-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+}
+
+.contact-section .lead-form-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.625rem;
+    font-size: var(--text-2xs);
+    font-weight: 600;
+    color: var(--contact-accent);
+    background: var(--contact-accent-soft);
+    border: 1px solid var(--contact-accent-line);
+    border-radius: var(--radius-full);
+}
+
+.contact-section .lead-form-badge svg {
+    width: 0.75rem;
+    height: 0.75rem;
+    flex-shrink: 0;
+}
+
+/* Field icons: a faint glyph parked inside the control's leading edge that
+   greens up as soon as its field takes focus. */
+.field-icon-wrap {
+    position: relative;
+}
+
+.field-glyph {
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: var(--space-4);
+    transform: translateY(-50%);
+    color: var(--text-faint);
+    pointer-events: none;
+    transition: color var(--duration-fast) var(--ease);
+}
+
+.field-glyph svg {
+    display: block;
+    width: 1rem;
+    height: 1rem;
+}
+
+.field-icon-wrap:focus-within .field-glyph {
+    color: var(--contact-accent);
+}
+
+/* The textarea's glyph anchors to the first line, not the vertical middle. */
+.field-icon-wrap:has(.form-textarea) .field-glyph {
+    inset-block-start: 0.875rem;
+    transform: none;
+}
+
+.contact-section .lead-form-card .field-icon-wrap .form-input,
+.contact-section .lead-form-card .field-icon-wrap .form-select,
+.contact-section .lead-form-card .field-icon-wrap .form-textarea {
+    padding-inline-start: 2.75rem;
+}
+
+/* Wide CTA with an arrow that nudges right on hover. */
+.contact-section .lead-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.contact-section .lead-submit-arrow {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+    transition: transform var(--duration-base) var(--ease);
+}
+
+.contact-section .lead-submit:hover .lead-submit-arrow,
+.contact-section .lead-submit:focus-visible .lead-submit-arrow {
+    transform: translateX(0.25rem);
+}
+
+/* Compact outcome note: one quiet line with an icon, not a banner. */
+.lead-form-card .form-feedback {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 0.875rem;
+    margin-block-end: var(--space-5);
+    font-size: var(--text-xs);
+    border-radius: 0.625rem;
+}
+
+.feedback-icon {
+    width: 0.875rem;
+    height: 0.875rem;
+    flex-shrink: 0;
+}
+
+.lead-form-card .form-feedback.success-box {
+    color: var(--contact-accent);
+    background: var(--contact-accent-soft);
+    border: 1px solid var(--contact-accent-line);
+}
+
+/* --- the fields -----------------------------------------------------------
+   Tight rhythm: 6px under a label, 20px between groups, two-up rows. */
+.lead-form-card .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+}
+
+.lead-form-card .form-group {
+    margin-block-end: var(--space-5);
+}
+
+.lead-form-card .form-group label {
+    margin-block-end: 0.375rem;
+    font-size: var(--text-2xs);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+}
+
+.lead-form-card .field-error {
+    margin-block-start: 0.375rem;
+    font-size: var(--text-2xs);
+}
+
+/* 54px controls — present, not towering. */
+.lead-form-card .form-input,
+.lead-form-card .form-select {
+    height: 3.375rem;
+    padding-block: 0;
+    padding-inline: var(--space-4);
+    border-radius: 0.75rem;
+}
+
+/* The brief stays a note, not an essay: fixed 130px, capped at 220px. */
+.lead-form-card .form-textarea {
+    height: 8.125rem;
+    min-height: 8.125rem;
+    max-height: 13.75rem;
+    padding: var(--space-3) var(--space-4);
+    border-radius: 0.75rem;
+    resize: vertical;
+}
+
+/* Green focus: a border and a whisper of a ring, nothing more. */
+.lead-form-card .form-input:focus,
+.lead-form-card .form-select:focus,
+.lead-form-card .form-textarea:focus {
+    border-color: var(--contact-accent);
+    background-color: hsla(222, 44%, 6%, 0.8);
+    box-shadow: 0 0 0 3px var(--contact-accent-soft),
+        inset 0 1px 2px hsla(222, 60%, 2%, 0.4);
+}
+
+/* Invalid fields keep their red — the accent must never mask an error. */
+.lead-form-card .form-input[aria-invalid="true"]:focus,
+.lead-form-card .form-select[aria-invalid="true"]:focus,
+.lead-form-card .form-textarea[aria-invalid="true"]:focus {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px var(--danger-bg),
+        inset 0 1px 2px hsla(222, 60%, 2%, 0.4);
+}
+
+:root.light .lead-form-card .form-input:focus,
+:root.light .lead-form-card .form-select:focus,
+:root.light .lead-form-card .form-textarea:focus {
+    border-color: var(--contact-accent);
+    box-shadow: 0 0 0 3px var(--contact-accent-soft),
+        inset 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+/* --- the CTA ---------------------------------------------------------------
+   A compact pill on the left, not a full-width bar — the form's own width
+   should not turn green. */
+.lead-form-card .form-navigation {
+    margin-block-start: var(--space-1);
+}
+
+.lead-submit {
+    width: 12.5rem;
+    min-height: 3.25rem;
+    padding-block: 0;
+    border-radius: 0.75rem;
+    /* The same paint .btn-primary carries site-wide: the signature blue→cyan
+       gradient, dark type on it, and the ambient bloom plus lit top edge. */
+    background: var(--gradient-brand);
+    color: var(--text-on-primary);
+    font-weight: 600;
+    box-shadow: 0 2px 12px hsla(213, 100%, 50%, 0.3),
+        inset 0 1px 0 hsla(210, 100%, 96%, 0.28);
+    transition: transform var(--duration-fast) var(--ease),
+        box-shadow var(--duration-fast) var(--ease),
+        filter var(--duration-fast) var(--ease);
+}
+
+.lead-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px hsla(213, 100%, 54%, 0.42),
+        inset 0 1px 0 hsla(210, 100%, 96%, 0.34);
+    filter: brightness(1.12) saturate(1.05);
+}
+
+.lead-submit:active {
+    transform: translateY(0);
+}
+
+.lead-submit:disabled {
+    opacity: 0.7;
+    cursor: default;
+    transform: none;
+}
+
+/* Security line: a footnote under the CTA, easy to skip. */
+.lead-form-card .form-intro {
+    margin-block: var(--space-3) 0;
+    font-size: 0.75rem;
+    color: var(--text-faint);
+}
+
+/* --- responsive ------------------------------------------------------------ */
+@media (max-width: 64rem) {
+    .contact-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-8);
+        align-items: start;
+    }
+
+    /* Stacked, the card should not sprawl across the whole viewport. */
+    .lead-form-card {
+        max-width: 40rem;
+    }
+}
+
+@media (max-width: 48rem) {
+    .contact-section {
+        padding-block: var(--space-12) var(--space-10);
+    }
+
+    .contact-title {
+        font-size: clamp(1.875rem, 7vw, 2.25rem);
+    }
+
+    .contact-lede {
+        font-size: var(--text-sm);
+    }
+
+    /* Single column: the email address is long enough that two-up cards
+       would truncate it into ellipses. */
+    .contact-details {
+        grid-template-columns: 1fr;
+        gap: var(--space-3);
+    }
+
+    .lead-form-card .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .lead-form-card {
+        max-width: none;
+    }
+
+    .lead-submit {
+        width: 100%;
     }
 }

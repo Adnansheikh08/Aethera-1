@@ -18,6 +18,9 @@ export const SERVICE_CHOICES = [
   "video-photo-editing",
   "high-ctr-thumbnail-design",
   "on-location-vlog-shoots",
+  "ui-ux-design",
+  "software-testing",
+  "odoo-erp-solutions",
 ];
 
 /** Human labels, kept alongside the slugs as Django's choices tuples did. */
@@ -28,6 +31,9 @@ export const SERVICE_LABELS = {
   "video-photo-editing": "Video & Photo Editing",
   "high-ctr-thumbnail-design": "High-CTR Thumbnail Design",
   "on-location-vlog-shoots": "On-Location Blog & Vlog Shoots",
+  "ui-ux-design": "UI/UX Design",
+  "software-testing": "Software Testing",
+  "odoo-erp-solutions": "Odoo Implementation and Development",
 };
 
 export const STATUS_LABELS = {

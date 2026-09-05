@@ -44,9 +44,11 @@ const EMPTY = {
  * SPA, but the rest of the contract is kept deliberately: validation here is a
  * UX affordance only — the Express endpoint remains the authority and returns
  * Django-shaped {field: [message]} errors, which are merged into the same error
- * map. The honeypot is carried in state but never focused or validated.
+ * map. The honeypot is carried in state and never focused or validated; a value
+ * that appears without a focus event is browser autofill, not a human, and is
+ * stripped before submission (see honeypotTouched).
  */
-export function useLeadWizard() {
+export function useLeadWizard({ honeypotTouched } = {}) {
   const [values, setValues] = useState(EMPTY);
   const [errors, setErrors] = useState({});
   const [activeIndex, setActiveIndex] = useState(0);
@@ -105,13 +107,38 @@ export function useLeadWizard() {
   const handleSubmit = useCallback(
     async (event) => {
       event.preventDefault();
-      if (!validateStep(activeIndex)) return;
+      // LeadForm shows every step's fields on one page, so validate them all —
+      // the active pane is not a proxy for what the user can see and fill.
+      const found = {};
+      for (const step of STEPS) {
+        for (const field of step.fields) {
+          if (!REQUIRED.has(field)) continue;
+          const value = String(values[field] ?? "").trim();
+          if (!value) {
+            found[field] = `${LABELS[field]} is required.`;
+          } else if (field === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+            found[field] = "Enter a valid email address.";
+          }
+        }
+      }
+      setErrors(found);
+      if (Object.keys(found).length > 0) {
+        // Focus the first invalid field, as validateStep does for a single step.
+        const first = Object.keys(found)[0];
+        stepRefs.current[0]?.querySelector(`[name="${first}"]`)?.focus();
+        return;
+      }
 
       setIsSubmitting(true);
       setFeedback(null);
 
+      // Autofill and password managers populate the hidden honeypot without
+      // ever focusing it — a value with no focus event behind it is a machine
+      // artifact, not a human, so blank it before it reaches the bot gate.
+      const payload = honeypotTouched?.current ? values : { ...values, website: "" };
+
       try {
-        const result = await submitLead(values);
+        const result = await submitLead(payload);
         setValues(EMPTY);
         setErrors({});
         setActiveIndex(0);
@@ -140,7 +167,7 @@ export function useLeadWizard() {
         setIsSubmitting(false);
       }
     },
-    [activeIndex, validateStep, values],
+    [values],
   );
 
   return {
