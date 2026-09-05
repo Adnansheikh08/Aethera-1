@@ -1016,6 +1016,79 @@ h6,
     padding-inline: var(--space-6);
 }
 
+/* Two-column hero: copy left, workspace visual right.
+
+   The columns are an 11:9 split (~55% / 45%), centre-aligned so the image
+   sits beside the headline rather than top- or bottom-aligning with it. Below
+   the large breakpoint there is no grid at all — the visual just stacks under
+   the copy, which puts it after the CTAs on mobile. */
+.hero-copy {
+    position: relative;
+}
+
+.hero-visual {
+    position: relative;
+    /* Centres the panel in its column; the grid's align-items: center below
+       handles the vertical half. Only needed in the stacked (mobile/tablet)
+       presentation — the grid breakpoint zeroes it. */
+    display: flex;
+    justify-content: center;
+    margin-block-start: var(--space-12);
+}
+
+.hero-visual-img {
+    display: block;
+    /* Intrinsic sizing, not a forced box: the width caps at the column and
+       the height follows the image's own 3:2, so the whole photo is always
+       shown — contain rather than cover means nothing is ever cropped.
+
+       The explicit `height: auto` is load-bearing. The <img> carries
+       width/height attributes for layout stability, and without a CSS height
+       those act as presentational hints — the element pins itself at its
+       natural 1024px tall inside a column-width box, and cover crops
+       two-thirds of the photo away. */
+    width: 100%;
+    max-width: 40rem;
+    height: auto;
+    object-fit: contain;
+    /* 24px — the premium-panel radius, matching --radius-2xl. */
+    border-radius: var(--radius-2xl);
+    border: 1px solid var(--glass-border);
+    /* A dark drop plus a faint blue/cyan bloom, so the panel reads as lit by
+       the same ambient source as the rest of the section. */
+    box-shadow: var(--shadow-xl),
+                0 0 60px hsla(213, 100%, 58%, 0.14),
+                0 0 120px hsla(196, 96%, 54%, 0.08);
+}
+
+@media (min-width: 64em) {
+    .hero-content {
+        display: grid;
+        /* Tilted slightly toward the visual (~49/51) so the workspace panel
+           sits ~16% larger than a even half-split would allow — big enough to
+           balance the display-size headline without crowding the copy. */
+        grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+        column-gap: var(--space-16);
+        align-items: center;
+    }
+
+    .hero-visual {
+        margin-block-start: 0;
+    }
+}
+
+/* Hover is the only interaction — a hair of scale, guarded to devices that
+   actually hover so touch scrolls never trigger it. */
+@media (hover: hover) {
+    .hero-visual-img {
+        transition: transform var(--duration-slow) var(--ease);
+    }
+
+    .hero-visual-img:hover {
+        transform: scale(1.01);
+    }
+}
+
 .badge-pill {
     display: inline-flex;
     align-items: center;

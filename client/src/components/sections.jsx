@@ -11,14 +11,23 @@ import { splitWords, useHeadlineReveal } from "../hooks/useReveal.js";
 import { useScrollLock } from "../hooks/useScrollLock.js";
 import { serviceBackground } from "../data/serviceBackgrounds.js";
 import builtDeliberatelyImg from "../assets/built-deliberately.png";
+import heroWorkspaceImg from "../assets/hero-workspace.jpg";
 
+/**
+ * Fallback ticker copy while the landing content is still in flight (or failed
+ * to load) — the same nine services the API returns, so the swap when titles
+ * arrive is a change of wording at worst, never a change of content.
+ */
 const CAPABILITIES = [
   "Web Development",
-  "Mobile Applications",
-  "Digital Advertising",
+  "Mobile App Development",
+  "Digital Advertising & Campaigns",
   "Video & Photo Editing",
-  "Thumbnail Design",
-  "On-Location Shoots",
+  "High-CTR Thumbnail Design",
+  "On-Location Blog & Vlog Shoots",
+  "UI/UX Design",
+  "Software Testing",
+  "Odoo Implementation and Development",
 ];
 
 /**
@@ -79,63 +88,88 @@ export function Hero({ introComplete, services = [] }) {
   return (
     <section className="hero" aria-labelledby="hero-heading">
       <div className="hero-content">
-        <p className="badge-pill">
-          <span className={`badge-text fade-${fadeState}`}>
-            {currentService}
-          </span>
-        </p>
-        <h1
-          id="hero-heading"
-          className={`hero-headline${isRevealed ? " is-revealed" : ""}`}
-        >
-          {/* Rendered as per-word spans so the stylesheet can stagger them;
-              whitespace chunks stay plain text to preserve spacing. */}
-          {splitWords("Building enterprise-grade ").map(({ chunk, isWord, wordIndex }, i) =>
-            isWord ? (
-              <span
-                key={`${chunk}-${i}`}
-                className="reveal-word"
-                style={{ "--word-index": wordIndex }}
-              >
-                {chunk}
-              </span>
-            ) : (
-              chunk
-            ),
-          )}
-          <span className="serif-italic">digital systems</span>
-        </h1>
-        <p className="hero-desc">
-          We engineer secure, high-performance platforms and multimedia campaigns for organisations
-          that demand zero downtime and provable security compliance.
-        </p>
-        <div className="hero-ctas">
-          <a href="#contact-section" className="cta-button btn-primary">
-            Contact
-          </a>
-          <a href="#work-section" className="cta-button btn-secondary">
-            Selected Work
+        {/* The two hero columns. .hero-copy holds every element the page
+            already rendered — unchanged — while .hero-visual carries the
+            workspace image. Below the large breakpoint the grid collapses and
+            the visual simply stacks under the copy, so the mobile order is
+            content first, image after the CTAs. */}
+        <div className="hero-copy">
+          <p className="badge-pill">
+            <span className={`badge-text fade-${fadeState}`}>
+              {currentService}
+            </span>
+          </p>
+          <h1
+            id="hero-heading"
+            className={`hero-headline${isRevealed ? " is-revealed" : ""}`}
+          >
+            {/* Rendered as per-word spans so the stylesheet can stagger them;
+                whitespace chunks stay plain text to preserve spacing. */}
+            {splitWords("Building enterprise-grade ").map(({ chunk, isWord, wordIndex }, i) =>
+              isWord ? (
+                <span
+                  key={`${chunk}-${i}`}
+                  className="reveal-word"
+                  style={{ "--word-index": wordIndex }}
+                >
+                  {chunk}
+                </span>
+              ) : (
+                chunk
+              ),
+            )}
+            <span className="serif-italic">digital systems</span>
+          </h1>
+          <p className="hero-desc">
+            We engineer secure, high-performance platforms and multimedia campaigns for organisations
+            that demand zero downtime and provable security compliance.
+          </p>
+          <div className="hero-ctas">
+            <a href="#contact-section" className="cta-button btn-primary">
+              Contact
+            </a>
+            <a href="#work-section" className="cta-button btn-secondary">
+              Selected Work
+            </a>
+          </div>
+          <a href="#statement-section" className="hero-scroll-hint">
+            Scroll
           </a>
         </div>
-        <a href="#statement-section" className="hero-scroll-hint">
-          Scroll
-        </a>
+        <div className="hero-visual">
+          <img
+            src={heroWorkspaceImg}
+            alt="Futuristic technology workspace with a laptop displaying a blue digital interface on a dark desk"
+            className="hero-visual-img"
+            width="1536"
+            height="1024"
+            decoding="async"
+          />
+        </div>
       </div>
     </section>
   );
 }
 
-/** The duplicate half is aria-hidden so the list is announced exactly once. */
-export function Marquee() {
+/**
+ * The duplicate half is aria-hidden so the list is announced exactly once.
+ *
+ * The items come from the same services payload the cards below render — one
+ * source, so the ticker can never advertise a service the catalogue has
+ * dropped. CAPABILITIES above only holds the line until that payload lands.
+ */
+export function Marquee({ services = [] }) {
+  const items = services.length > 0 ? services.map((service) => service.title) : CAPABILITIES;
+
   return (
     <div className="marquee" aria-label="Capabilities">
       <div className="marquee-track">
-        {CAPABILITIES.map((item) => (
+        {items.map((item) => (
           <span className="marquee-item" key={item}>
             {item}
           </span>
         ))}
-        {CAPABILITIES.map((item) => (
+        {items.map((item) => (
           <span className="marquee-item" key={`echo-${item}`} aria-hidden="true">
             {item}
           </span>

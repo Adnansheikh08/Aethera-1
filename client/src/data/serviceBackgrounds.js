@@ -6,6 +6,7 @@ import highCtrThumbnailDesign from "../assets/services/high-ctr-thumbnail-design
 import onLocationVlogShoots from "../assets/services/on-location-vlog-shoots.svg";
 import uiUxDesign from "../assets/services/ui-ux-design.svg";
 import softwareTesting from "../assets/services/software-testing.svg";
+import odooErpSolutions from "../assets/services/odoo-erp-solutions.svg";
 
 /**
  * Background artwork for the service cards, keyed by the slug the API already
@@ -30,6 +31,7 @@ const SERVICE_BACKGROUNDS = {
   "on-location-vlog-shoots": onLocationVlogShoots,
   "ui-ux-design": uiUxDesign,
   "software-testing": softwareTesting,
+  "odoo-erp-solutions": odooErpSolutions,
 };
 
 export const serviceBackground = (slug) => SERVICE_BACKGROUNDS[slug] ?? null;

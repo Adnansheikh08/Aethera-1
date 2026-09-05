@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 320" fill="none" stroke="#338fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- ERP Module Web -->
+  <g opacity="0.3">
+    <!-- Connector paths from the central core to each module -->
+    <path d="M240 160L142 90"/>
+    <path d="M240 160L344 94"/>
+    <path d="M240 160L122 226"/>
+    <path d="M240 160L354 230"/>
+    <path d="M240 160L240 82"/>
+    <path d="M240 160L240 230"/>
+  </g>
+
+  <!-- Central ERP Core (database stack) -->
+  <g opacity="0.6">
+    <ellipse cx="240" cy="118" rx="46" ry="14"/>
+    <path d="M194 118v44c0 7.7 20.6 14 46 14s46-6.3 46-14v-44"/>
+    <path d="M194 140c0 7.7 20.6 14 46 14s46-6.3 46-14"/>
+  </g>
+
+  <!-- Business Module Cards -->
+  <g opacity="0.45">
+    <rect x="96" y="56" width="88" height="56" rx="8"/>
+    <path d="M112 76h40M112 92h56" stroke-width="1.5"/>
+    <rect x="308" y="58" width="88" height="56" rx="8"/>
+    <path d="M324 78h44M324 94h32" stroke-width="1.5"/>
+    <rect x="74" y="198" width="88" height="56" rx="8"/>
+    <path d="M90 218h48M90 234h36" stroke-width="1.5"/>
+    <rect x="318" y="202" width="88" height="56" rx="8"/>
+    <path d="M334 222h52M334 238h28" stroke-width="1.5"/>
+  </g>
+
+  <!-- Workflow Automation Gear -->
+  <g opacity="0.85" stroke-width="2.5">
+    <circle cx="240" cy="256" r="16"/>
+    <path d="M240 232v9M240 271v9M216 256h9M255 256h9M223 239l6.4 6.4M250.6 266.6l6.4 6.4M223 273l6.4-6.4M250.6 245.4l6.4-6.4"/>
+  </g>
+
+  <!-- Configured/Go-Live Check Node -->
+  <g opacity="0.6">
+    <circle cx="240" cy="68" r="14"/>
+  </g>
+  <g opacity="0.85" stroke-width="2.5">
+    <path d="M234 68l4 4 8-8"/>
+  </g>
+
+  <!-- Background Dashboard Frame -->
+  <g opacity="0.22">
+    <rect x="36" y="26" width="408" height="268" rx="12"/>
+    <path d="M36 52h408"/>
+    <circle cx="56" cy="39" r="3"/><circle cx="70" cy="39" r="3"/><circle cx="84" cy="39" r="3"/>
+  </g>
+</svg>

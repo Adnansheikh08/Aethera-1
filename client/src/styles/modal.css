@@ -27,7 +27,16 @@
     z-index: 1001;
     max-width: 600px;
     width: 90vw;
-    max-height: 85vh;
+    max-height: 90vh;
+    /* A flex column is what makes the max-height bite. With the container
+       height left to its content, .modal-content's `height: 100%` resolves
+       against an indefinite height and collapses to auto — the panel grows
+       straight past the cap, .modal-body never overflows, and the tail of a
+       long description becomes unreachable. As a flex parent the container
+       hands .modal-content a definite height to fill, and the scroll chain
+       below starts working. */
+    display: flex;
+    flex-direction: column;
     animation: slideUp 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
@@ -43,7 +52,10 @@
     border-radius: var(--radius-2xl);
     box-shadow: var(--shadow-2xl);
     position: relative;
-    height: 100%;
+    /* Fills the capped container (see .modal-container) and then stops there —
+       min-height: 0 is what lets it shrink instead of overflowing. */
+    flex: 1;
+    min-height: 0;
     display: flex;
     flex-direction: column;
 }
@@ -87,6 +99,35 @@
        trackpad fling would still drag the background even with the body locked. */
     overscroll-behavior: contain;
     flex: 1;
+    /* Natural wheel/touch scrolling; programmatic scrolls (find-in-page,
+       keyboard) glide rather than jump. */
+    scroll-behavior: smooth;
+}
+
+/* Subtle scrollbar to match the dark premium panel. The UA default is a chunky
+   light-grey bar that reads as borrowed chrome; this keeps the thumb faint
+   until hovered, on a track that paints nothing at all. Firefox takes the
+   two-property route, WebKit/Blink the pseudo-elements. */
+.modal-body {
+    scrollbar-width: thin;
+    scrollbar-color: hsla(213, 100%, 60%, 0.35) transparent;
+}
+
+.modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: hsla(213, 100%, 60%, 0.3);
+    border-radius: var(--radius-full);
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background: hsla(213, 100%, 60%, 0.5);
 }
 
 .modal-title {

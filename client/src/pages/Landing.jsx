@@ -51,7 +51,7 @@ export function Landing({ introComplete }) {
       */}
 
       <Hero introComplete={introComplete} services={services} />
-      <Marquee />
+      <Marquee services={services} />
       <Statement />
       <Focus services={services} />
       <SelectedWork services={services} portfolioItems={portfolioItems} />
