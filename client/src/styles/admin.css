@@ -69,7 +69,7 @@
     height: 12rem;
     margin: var(--space-4) auto;
     background: hsl(0, 0%, 100%);
-    border: 1px solid hsla(213, 100%, 70%, 0.35);
+    border: 1px solid hsla(348, 83%, 45%, 0.35);
     border-radius: var(--radius-sm);
     box-shadow: 0 0 0 4px hsla(0, 0%, 100%, 0.06), var(--shadow-lg);
 }
@@ -92,10 +92,10 @@
     margin: var(--space-4) 0;
     padding: var(--space-4);
     list-style: none;
-    background: hsla(222, 44%, 5%, 0.55);
+    background: hsla(0, 0%, 5%, 0.55);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-md);
-    box-shadow: inset 0 1px 2px hsla(222, 60%, 2%, 0.5);
+    box-shadow: inset 0 1px 2px hsla(0, 0%, 2%, 0.5);
 }
 
 .admin-hint {
@@ -174,8 +174,8 @@
    hovered — the two were a hard 6%-vs-12% pair to tell apart. */
 .admin-nav a.active {
     color: var(--primary-800);
-    background: hsla(213, 100%, 60%, 0.14);
-    box-shadow: inset 0 0 0 1px hsla(213, 100%, 68%, 0.22);
+    background: hsla(348, 83%, 45%, 0.12);
+    box-shadow: inset 0 0 0 1px hsla(348, 83%, 48%, 0.22);
 }
 
 .admin-session {
@@ -446,7 +446,7 @@
     display: grid;
     place-items: center;
     padding: var(--space-6);
-    background: hsla(222, 47%, 2%, 0.74);
+    background: hsla(0, 0%, 3%, 0.74);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     z-index: 50;
@@ -462,8 +462,7 @@
     overscroll-behavior: contain;
     padding: var(--space-6);
     background-color: var(--bg-elevated);
-    background-image: radial-gradient(120% 80% at 100% 0%, hsla(213, 100%, 54%, 0.1), transparent 60%);
-    border: 1px solid var(--border-default);
+        border: 1px solid var(--border-default);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-2xl);
 }

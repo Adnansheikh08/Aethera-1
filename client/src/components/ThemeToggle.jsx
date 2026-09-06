@@ -8,7 +8,8 @@ export function ThemeToggle() {
     return "dark";
   });
 
-  // Sync theme to document element class and store choice
+  // Sync theme to document element class and store choice. Dark is the
+  // default state, so light is the one that needs the class.
   useEffect(() => {
     if (theme === "light") {
       document.documentElement.classList.add("light");

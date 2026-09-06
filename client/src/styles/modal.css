@@ -12,7 +12,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: hsla(222, 47%, 2%, 0.74);
+    background-color: hsla(0, 0%, 10%, 0.42);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     z-index: 1000;
@@ -47,7 +47,6 @@
    modal implementations do not look like two different products. */
 .modal-content {
     background-color: var(--bg-elevated);
-    background-image: radial-gradient(120% 80% at 100% 0%, hsla(213, 100%, 54%, 0.1), transparent 60%);
     border: 1px solid var(--border-default);
     border-radius: var(--radius-2xl);
     box-shadow: var(--shadow-2xl);
@@ -69,7 +68,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: hsla(222, 44%, 5%, 0.5);
+    background: hsla(0, 0%, 8%, 0.55);
     border: 1px solid var(--border-default);
     border-radius: 50%;
     cursor: pointer;
@@ -110,7 +109,7 @@
    two-property route, WebKit/Blink the pseudo-elements. */
 .modal-body {
     scrollbar-width: thin;
-    scrollbar-color: hsla(213, 100%, 60%, 0.35) transparent;
+    scrollbar-color: hsla(348, 83%, 45%, 0.35) transparent;
 }
 
 .modal-body::-webkit-scrollbar {
@@ -122,12 +121,12 @@
 }
 
 .modal-body::-webkit-scrollbar-thumb {
-    background: hsla(213, 100%, 60%, 0.3);
+    background: hsla(348, 83%, 45%, 0.22);
     border-radius: var(--radius-full);
 }
 
 .modal-body::-webkit-scrollbar-thumb:hover {
-    background: hsla(213, 100%, 60%, 0.5);
+    background: hsla(348, 83%, 45%, 0.5);
 }
 
 .modal-title {
@@ -183,22 +182,20 @@
     font-size: 0.95rem;
 }
 
-/* Matches .btn-primary in style.css. `color: white` had to go: under the
-   inverted ramp --primary-600 is a bright hsl(212, 100%, 67%), so white on it
-   landed around 2.3:1 — the fill is now the light half of the pair and the text
-   is the dark one. Gradients cannot be interpolated, so hover brightens with a
-   filter instead of trying to transition the background. */
+/* Matches .btn-primary in style.css. The gold fill is bright, so the text is
+   the dark half of the pair — espresso on gold is the only pairing that
+   clears contrast at these lightnesses. Hover brightens with a filter. */
 .modal-actions .btn-primary {
     background: var(--gradient-brand);
     color: var(--text-on-primary);
     border: 1px solid transparent;
-    box-shadow: var(--glow-sm), inset 0 1px 0 hsla(210, 100%, 96%, 0.28);
+    box-shadow: var(--glow-sm), inset 0 1px 0 hsla(0, 0%, 99%, 0.7);
 }
 
 .modal-actions .btn-primary:hover {
     filter: brightness(1.08);
     transform: translateY(-2px);
-    box-shadow: var(--glow-md), inset 0 1px 0 hsla(210, 100%, 96%, 0.28);
+    box-shadow: var(--glow-md), inset 0 1px 0 hsla(0, 0%, 99%, 0.7);
 }
 
 .modal-actions .btn-secondary {

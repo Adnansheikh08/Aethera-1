@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Dark, matching `color-scheme: dark` on :root in style.css. This one is
          read before any CSS arrives, so it is what stops the browser painting a
-         white canvas for the first frame. -->
+         light canvas for the first frame. -->
     <meta name="color-scheme" content="dark">
     <title>Aethera — Enterprise Software Agency &amp; Cybersecurity</title>
     <meta name="description"
@@ -15,11 +15,14 @@
     <!-- Preconnect ahead of the font CSS request to remove a round trip from LCP. -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- IBM Plex Mono is used for headings and subheadings; Space Mono for body text. -->
+    <!-- One grotesque for everything — the Swiss way. Inter carries display
+         and body (hierarchy comes from size and weight, not a second
+         typeface); Space Mono stays for monospaced moments. -->
     <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap">
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Space+Mono:wght@400;700&display=swap">
     <script>
         (function() {
+            // Dark is the default; the toggle opts into .light instead.
             const savedTheme = localStorage.getItem('theme') || 'dark';
             if (savedTheme === 'light') {
                 document.documentElement.classList.add('light');
