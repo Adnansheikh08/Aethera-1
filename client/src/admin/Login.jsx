@@ -77,7 +77,7 @@ export default function Login({ embedded = false }) {
   const card = (
     <div className="admin-auth-card">
       <p className="section-eyebrow">Restricted</p>
-      <h1>Aethera Console</h1>
+      <h1>ServeXservices Console</h1>
 
       {error && (
         <p className="admin-alert" role="alert">
@@ -179,7 +179,7 @@ export default function Login({ embedded = false }) {
   return (
     <div className="admin-auth">
       <Helmet>
-        <title>Admin Sign In — Aethera</title>
+        <title>Admin Sign In — ServeXservices</title>
         {/* An admin surface must never reach an index, unlike the public pages. */}
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>

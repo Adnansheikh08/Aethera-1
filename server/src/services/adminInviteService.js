@@ -49,9 +49,9 @@ export async function createInvite({ email, permissions, invitedBy }) {
   const inviteLink = `${config.clientOrigin}/admin/invite?token=${inviteToken}`;
   const { sent } = await sendMail({
     to: normalisedEmail,
-    subject: "You've been invited to the Aethera admin console",
+    subject: "You've been invited to the ServeXservices admin console",
     text: `You've been invited as an admin. Set your password within 3 days: ${inviteLink}`,
-    html: `<p>You've been invited as an admin on Aethera.</p><p><a href="${inviteLink}">Set your password</a> (valid 3 days).</p>`,
+    html: `<p>You've been invited as an admin on ServeXservices.</p><p><a href="${inviteLink}">Set your password</a> (valid 3 days).</p>`,
   });
 
   return { user, inviteToken, inviteLink, emailed: sent, expiresAt: user.invite_expires_at };

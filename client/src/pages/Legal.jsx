@@ -6,8 +6,8 @@ export function PrivacyPolicy() {
   return (
     <>
       <Helmet>
-        <title>Privacy Policy — Aethera</title>
-        <meta name="description" content="Aethera's Privacy Policy outlines how we collect, protect, and manage your personal data with GDPR and DPDP compliance." />
+        <title>Privacy Policy — ServeXservices</title>
+        <meta name="description" content="ServeXservices' Privacy Policy outlines how we collect, protect, and manage your personal data with GDPR and DPDP compliance." />
       </Helmet>
 
       <header className="page-header">
@@ -25,7 +25,7 @@ export function PrivacyPolicy() {
 
           <h2>1. Introduction</h2>
           <p>
-            At Aethera, we take your privacy seriously. This Privacy Policy explains how we collect, 
+            At ServeXservices, we take your privacy seriously. This Privacy Policy explains how we collect, 
             use, disclose, and safeguard your information when you visit our website and use our services. 
             We are committed to maintaining the highest standards of data protection and compliance with 
             global privacy regulations, including GDPR (EU) and the Digital Personal Data Protection (DPDP) 
@@ -112,7 +112,7 @@ export function PrivacyPolicy() {
 
           <h2>8. Security Measures</h2>
           <p>
-            Aethera implements comprehensive security controls:
+            ServeXservices implements comprehensive security controls:
           </p>
           <ul>
             <li>OWASP ASVS Level 3 hardening standard</li>
@@ -220,8 +220,8 @@ export function Terms() {
   return (
     <>
       <Helmet>
-        <title>Terms of Service — Aethera</title>
-        <meta name="description" content="Aethera Terms of Service outline the conditions for using our services, including liability, warranties, and service expectations." />
+        <title>Terms of Service — ServeXservices</title>
+        <meta name="description" content="ServeXservices Terms of Service outline the conditions for using our services, including liability, warranties, and service expectations." />
       </Helmet>
 
       <header className="page-header">
@@ -239,14 +239,14 @@ export function Terms() {
 
           <h2>1. Acceptance of Terms</h2>
           <p>
-            By accessing and using Aethera Agency's website and services, you acknowledge that you have 
+            By accessing and using ServeXservices Agency's website and services, you acknowledge that you have 
             read, understood, and agree to be bound by these Terms of Service. If you do not agree to 
             these terms, please do not use our services.
           </p>
 
           <h2>2. Service Definition</h2>
           <p>
-            Aethera Agency provides specialised services in the following areas:
+            ServeXservices Agency provides specialised services in the following areas:
           </p>
           <ul>
             <li><strong>Cybersecurity Architecture Audits:</strong> Threat modelling, penetration testing, and security assessments</li>
@@ -274,7 +274,7 @@ export function Terms() {
 
           <h2>4. Code Liability &amp; Warranties</h2>
           <p>
-            Aethera executes comprehensive quality assurance processes including:
+            ServeXservices executes comprehensive quality assurance processes including:
           </p>
           <ul>
             <li>OWASP ASVS Level 3 hardening standards</li>
@@ -319,8 +319,8 @@ export function Terms() {
             rights to use, modify, and distribute the work product.
           </p>
           <p>
-            <strong>Aethera IP:</strong> Pre-existing tools, frameworks, templates, processes, and 
-            methodologies remain Aethera's property. You receive a non-exclusive, royalty-free license 
+            <strong>ServeXservices IP:</strong> Pre-existing tools, frameworks, templates, processes, and 
+            methodologies remain ServeXservices' property. You receive a non-exclusive, royalty-free license 
             to use these as part of the deliverables.
           </p>
           <p>
@@ -343,12 +343,12 @@ export function Terms() {
 
           <h2>8. Limitation of Liability</h2>
           <p>
-            <strong>Liability Cap:</strong> To the maximum extent permitted by law, Aethera's total 
+            <strong>Liability Cap:</strong> To the maximum extent permitted by law, ServeXservices' total 
             liability arising from these Terms or services shall not exceed the total fees paid by the 
             client in the 12 months preceding the claim.
           </p>
           <p>
-            <strong>Excluded Damages:</strong> In no event shall Aethera be liable for indirect, 
+            <strong>Excluded Damages:</strong> In no event shall ServeXservices be liable for indirect, 
             incidental, special, consequential, or punitive damages, including:
           </p>
           <ul>
@@ -364,7 +364,7 @@ export function Terms() {
 
           <h2>9. Indemnification</h2>
           <p>
-            <strong>By the Client:</strong> You agree to indemnify and hold harmless Aethera from any 
+            <strong>By the Client:</strong> You agree to indemnify and hold harmless ServeXservices from any 
             claims arising from:
           </p>
           <ul>
@@ -374,7 +374,7 @@ export function Terms() {
             <li>Your breach of these Terms or the SOW</li>
           </ul>
           <p>
-            <strong>By Aethera:</strong> Aethera indemnifies you against claims that the original 
+            <strong>By ServeXservices:</strong> ServeXservices indemnifies you against claims that the original 
             deliverables, as created and unmodified, infringe third-party intellectual property rights.
           </p>
 
@@ -385,7 +385,7 @@ export function Terms() {
           </p>
           <p>
             <strong>Additional Costs:</strong> Out-of-scope changes typically incur additional fees. 
-            Aethera will provide a revised estimate before proceeding with out-of-scope work.
+            ServeXservices will provide a revised estimate before proceeding with out-of-scope work.
           </p>
           <p>
             <strong>Timeline Impact:</strong> Scope changes may extend the project timeline. Revised 
@@ -438,7 +438,7 @@ export function Terms() {
 
           <h2>13. Cybersecurity Services Disclaimer</h2>
           <p>
-            For clients engaging Aethera for cybersecurity audits, penetration testing, or threat assessments:
+            For clients engaging ServeXservices for cybersecurity audits, penetration testing, or threat assessments:
           </p>
           <ul>
             <li><strong>No Guarantee:</strong> Security testing cannot guarantee elimination of all vulnerabilities</li>
@@ -449,7 +449,7 @@ export function Terms() {
             <li><strong>Ongoing Security:</strong> Continued security requires ongoing monitoring, updates, and patching beyond the assessment</li>
           </ul>
           <p>
-            Aethera provides professional security assessments in accordance with industry best practices but does not 
+            ServeXservices provides professional security assessments in accordance with industry best practices but does not 
             warrant complete absence of security flaws.
           </p>
 
@@ -460,7 +460,7 @@ export function Terms() {
           </p>
           <ul>
             <li><strong>Email:</strong> <a href="mailto:mohammadharoonu@gmail.com">mohammadharoonu@gmail.com</a></li>
-            <li><strong>Mailing Address:</strong> Aethera Agency, Lucknow, Uttar Pradesh, India</li>
+            <li><strong>Mailing Address:</strong> ServeXservices Agency, Lucknow, Uttar Pradesh, India</li>
             <li><strong>Phone:</strong> <a href="tel:+917985765985">+91 79857 65985</a></li>
           </ul>
           <p>
@@ -470,7 +470,7 @@ export function Terms() {
 
           <h2>15. Accessibility Statement</h2>
           <p>
-            Aethera is committed to providing accessible services and digital experiences compliant with:
+            ServeXservices is committed to providing accessible services and digital experiences compliant with:
           </p>
           <ul>
             <li>Web Content Accessibility Guidelines (WCAG) 2.1 Level AA</li>
@@ -519,19 +519,19 @@ export function Terms() {
 
           <h2>13. Warranties &amp; Disclaimers</h2>
           <p>
-            <strong>Disclaimer of Warranties:</strong> EXCEPT AS EXPRESSLY STATED IN THE SOW, AETHERA 
+            <strong>Disclaimer of Warranties:</strong> EXCEPT AS EXPRESSLY STATED IN THE SOW, SERVEXSERVICES 
             PROVIDES SERVICES ON AN "AS-IS" BASIS WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, 
             INCLUDING WARRANTY OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.
           </p>
           <p>
             <strong>Service Availability:</strong> While we strive for high availability as specified in our SLA, 
-            Aethera does not warrant uninterrupted service. Scheduled maintenance and unforeseen incidents may cause 
+            ServeXservices does not warrant uninterrupted service. Scheduled maintenance and unforeseen incidents may cause 
             temporary unavailability.
           </p>
 
           <h2>13. Security &amp; Data Protection</h2>
           <p>
-            Aethera maintains industry-standard security practices as detailed in our Privacy Policy:
+            ServeXservices maintains industry-standard security practices as detailed in our Privacy Policy:
           </p>
           <ul>
             <li>AES-256 encryption for data at rest</li>
@@ -546,7 +546,7 @@ export function Terms() {
           <ul>
             <li>Maintaining strong passwords and access credentials</li>
             <li>Protecting your authentication tokens</li>
-            <li>Promptly notifying Aethera of any suspected security incidents</li>
+            <li>Promptly notifying ServeXservices of any suspected security incidents</li>
           </ul>
 
           <h2>16. Prohibited Uses</h2>
@@ -568,7 +568,7 @@ export function Terms() {
 
           <h2>17. Third-Party Services &amp; Links</h2>
           <p>
-            Our website may contain links to third-party websites and services. Aethera:
+            Our website may contain links to third-party websites and services. ServeXservices:
           </p>
           <ul>
             <li>Does not endorse or guarantee third-party content or services</li>
@@ -637,7 +637,7 @@ export function Terms() {
 
           <h2>22. Modifications to Terms</h2>
           <p>
-            Aethera reserves the right to modify these Terms at any time. Material changes will be 
+            ServeXservices reserves the right to modify these Terms at any time. Material changes will be 
             communicated via email or prominent website notice. Your continued use of our services 
             following notice of changes constitutes acceptance of modified terms.
           </p>
@@ -649,7 +649,7 @@ export function Terms() {
           <h2>23. Entire Agreement</h2>
           <p>
             These Terms of Service, along with any SOW or separate agreement, constitute the entire 
-            agreement between you and Aethera regarding the services. They supersede all prior 
+            agreement between you and ServeXservices regarding the services. They supersede all prior 
             understandings, negotiations, and agreements.
           </p>
           <p>
@@ -668,7 +668,7 @@ export function Terms() {
               Phone: <a href="tel:+917985765985">+91 79857 65985</a>
             </li>
             <li>
-              Instagram: <a href="https://www.instagram.com/aethera09" target="_blank" rel="noopener noreferrer">@aethera09</a>
+              Instagram: <a href="https://www.instagram.com/serve_services" target="_blank" rel="noopener noreferrer">@serve_services</a>
             </li>
           </ul>
         </div>
@@ -685,7 +685,7 @@ export function NotFound() {
   return (
     <>
       <Helmet>
-        <title>Page Not Found — Aethera</title>
+        <title>Page Not Found — ServeXservices</title>
         <meta name="robots" content="noindex" />
       </Helmet>
 

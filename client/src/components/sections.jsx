@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { Reveal } from "./Reveal.jsx";
@@ -48,104 +48,67 @@ const LOCATIONS = [
   { tag: "Remote", city: "Noida", address: "Uttar Pradesh, India", zone: "Asia/Kolkata" },
 ];
 
-export function Hero({ introComplete, services = [] }) {
+export function Hero({ introComplete }) {
   // The headline cascade waits for the intro to resolve, as the vanilla
   // composition root did by awaiting the preloader's promise.
   const isRevealed = useHeadlineReveal(120, { enabled: introComplete });
-  const [serviceIndex, setServiceIndex] = useState(0);
-  const [fadeState, setFadeState] = useState("in");
-
-  const defaultServices = [
-    "Cybersecurity & Enterprise Software",
-    "Secure Application Engineering",
-    "Threat Analysis & Mitigation",
-    "Penetration Testing & Audits",
-    "Cloud Architecture Security",
-    "OWASP Compliance Verification"
-  ];
-
-  // Combine fetched services titles and default services
-  const serviceList = services && services.length > 0
-    ? services.map(s => s.title)
-    : defaultServices;
-
-  const currentService = serviceList[serviceIndex];
-
-  useEffect(() => {
-    if (serviceList.length <= 1) return;
-
-    const interval = setInterval(() => {
-      setFadeState("out");
-      setTimeout(() => {
-        setServiceIndex((prev) => (prev + 1) % serviceList.length);
-        setFadeState("in");
-      }, 350);
-    }, 4000); // Change every 4 seconds
-
-    return () => clearInterval(interval);
-  }, [serviceList]);
 
   return (
     <section className="hero" aria-labelledby="hero-heading">
+      {/* The workspace photo is the section's ground rather than a panel inside
+          it — full-bleed behind the copy. aria-hidden because it is decorative:
+          everything it communicates, the headline and the badge already say. */}
+      <div className="hero-background" aria-hidden="true">
+        <img
+          src={heroWorkspaceImg}
+          alt=""
+          className="hero-background-img"
+          decoding="async"
+        />
+        <div className="hero-background-overlay" />
+      </div>
       <div className="hero-content">
-        {/* The two hero columns. .hero-copy holds every element the page
-            already rendered — unchanged — while .hero-visual carries the
-            workspace image. Below the large breakpoint the grid collapses and
-            the visual simply stacks under the copy, so the mobile order is
-            content first, image after the CTAs. */}
-        <div className="hero-copy">
-          <p className="badge-pill">
-            <span className={`badge-text fade-${fadeState}`}>
-              {currentService}
-            </span>
-          </p>
-          <h1
-            id="hero-heading"
-            className={`hero-headline${isRevealed ? " is-revealed" : ""}`}
-          >
-            {/* Rendered as per-word spans so the stylesheet can stagger them;
-                whitespace chunks stay plain text to preserve spacing. */}
-            {splitWords("Building enterprise-grade ").map(({ chunk, isWord, wordIndex }, i) =>
-              isWord ? (
-                <span
-                  key={`${chunk}-${i}`}
-                  className="reveal-word"
-                  style={{ "--word-index": wordIndex }}
-                >
-                  {chunk}
-                </span>
-              ) : (
-                chunk
-              ),
-            )}
-            <span className="serif-italic">digital systems</span>
-          </h1>
-          <p className="hero-desc">
-            We engineer secure, high-performance platforms and multimedia campaigns for organisations
-            that demand zero downtime and provable security compliance.
-          </p>
-          <div className="hero-ctas">
-            <a href="#contact-section" className="cta-button btn-primary">
-              Contact
-            </a>
-            <a href="#work-section" className="cta-button btn-secondary">
-              Selected Work
-            </a>
-          </div>
-          <a href="#statement-section" className="hero-scroll-hint">
-            Scroll
+        {/* A fixed compliance claim, not a rotating one. The badge is the first
+            thing the page says about itself, and the one line that has to be
+            true on every load — so it states the standard we actually hold
+            ourselves to rather than cycling through the service catalogue. */}
+        <p className="badge-pill">OWASP Compliance Verification</p>
+        <h1
+          id="hero-heading"
+          className={`hero-headline${isRevealed ? " is-revealed" : ""}`}
+        >
+          {/* Rendered as per-word spans so the stylesheet can stagger them;
+              whitespace chunks stay plain text to preserve spacing. */}
+          {splitWords("Building enterprise-grade ").map(({ chunk, isWord, wordIndex }, i) =>
+            isWord ? (
+              <span
+                key={`${chunk}-${i}`}
+                className="reveal-word"
+                style={{ "--word-index": wordIndex }}
+              >
+                {chunk}
+              </span>
+            ) : (
+              chunk
+            ),
+          )}
+          <span className="serif-italic">digital systems</span>
+        </h1>
+        <p className="hero-desc">
+          We engineer secure, high-performance platforms and multimedia campaigns for organisations
+          that demand zero downtime and provable security compliance.
+        </p>
+        <div className="hero-ctas">
+          <a href="#contact-section" className="cta-button btn-primary">
+            Contact
+          </a>
+          <a href="#work-section" className="cta-button btn-secondary">
+            Selected Work
           </a>
         </div>
-        <div className="hero-visual">
-          <img
-            src={heroWorkspaceImg}
-            alt="Futuristic technology workspace with a laptop displaying a blue digital interface on a dark desk"
-            className="hero-visual-img"
-            width="1536"
-            height="1024"
-            decoding="async"
-          />
-        </div>
+        <a href="#statement-section" className="hero-scroll-hint">
+          Scroll
+        </a>
       </div>
     </section>
   );
@@ -181,13 +144,23 @@ export function Marquee({ services = [] }) {
 
 export function Statement() {
   return (
-    <section
-      id="statement-section"
-      className="container"
-      aria-labelledby="statement-heading"
-      data-reveal-group=""
-    >
-      <div className="statement-grid">
+    <section id="statement-section" className="statement-section" aria-labelledby="statement-heading">
+      {/* The render is the section's ground, not a panel standing beside the
+          copy — the same treatment the hero gives its workspace photo. It is
+          decorative for a literal reason: the paragraph over it already names
+          every element the illustration shows (threat model, OWASP ASVS,
+          documentation), so the alt text it used to carry restated the copy
+          instead of adding to it. */}
+      <div className="statement-background" aria-hidden="true">
+        <img
+          src={builtDeliberatelyImg}
+          alt=""
+          className="statement-background-img"
+          decoding="async"
+        />
+        <div className="statement-background-overlay" />
+      </div>
+      <div className="statement-shell" data-reveal-group="">
         <div className="statement-content">
           <p className="eyebrow">Built Deliberately</p>
           <Reveal as="h2" id="statement-heading" className="statement" staggerIndex={0}>
@@ -198,15 +171,6 @@ export function Statement() {
             Every platform we ship is threat-modelled before the first line of code, hardened
             against the OWASP ASVS standard, and handed over with the documentation an internal team
             needs to own it outright.
-          </Reveal>
-        </div>
-        <div className="statement-image-wrapper">
-          <Reveal className="statement-image-reveal" staggerIndex={2}>
-            <img
-              src={builtDeliberatelyImg}
-              alt="Detailed 3D cybersecurity elements including a laptop running code, a shield with a lock, an OWASP ASVS verification shield, a threat model card, and documentation book."
-              className="statement-image"
-            />
           </Reveal>
         </div>
       </div>

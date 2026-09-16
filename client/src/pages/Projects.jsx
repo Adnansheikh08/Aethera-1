@@ -39,17 +39,17 @@ export function Projects() {
   return (
     <>
       <Helmet>
-        <title>Projects — Aethera</title>
+        <title>Projects — ServeXservices</title>
         <meta
           name="description"
-          content="Platforms, applications and campaigns Aethera has shipped to production — filter the portfolio by discipline."
+          content="Platforms, applications and campaigns ServeXservices has shipped to production — filter the portfolio by discipline."
         />
-        <meta property="og:title" content="Projects — Aethera" />
+        <meta property="og:title" content="Projects — ServeXservices" />
         <meta
           property="og:description"
           content="A complete index of the platforms and campaigns we have delivered."
         />
-        <meta name="twitter:title" content="Projects — Aethera" />
+        <meta name="twitter:title" content="Projects — ServeXservices" />
         <meta
           name="twitter:description"
           content="A complete index of the platforms and campaigns we have delivered."

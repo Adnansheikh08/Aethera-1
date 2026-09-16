@@ -64,11 +64,11 @@ export function ServiceDetail() {
             SiteMeta, which derives the URL from the router.
           */}
           <Helmet>
-            <title>{`${service.title} — Aethera`}</title>
+            <title>{`${service.title} — ServeXservices`}</title>
             <meta name="description" content={service.short_description} />
-            <meta property="og:title" content={`${service.title} — Aethera`} />
+            <meta property="og:title" content={`${service.title} — ServeXservices`} />
             <meta property="og:description" content={service.short_description} />
-            <meta name="twitter:title" content={`${service.title} — Aethera`} />
+            <meta name="twitter:title" content={`${service.title} — ServeXservices`} />
             <meta name="twitter:description" content={service.short_description} />
           </Helmet>
 
@@ -125,15 +125,15 @@ export function CaseStudyDetail() {
       {study && (
         <>
           <Helmet>
-            <title>{`${study.client_name} Case Study — Aethera`}</title>
+            <title>{`${study.client_name} Case Study — ServeXservices`}</title>
             <meta name="description" content={study.metrics} />
             {/* Django's base.html allowed a per-page og:type; case studies are
                 editorial write-ups, so they announce themselves as articles.
                 Everything else is inherited from SiteMeta. */}
             <meta property="og:type" content="article" />
-            <meta property="og:title" content={`${study.client_name} Case Study — Aethera`} />
+            <meta property="og:title" content={`${study.client_name} Case Study — ServeXservices`} />
             <meta property="og:description" content={study.metrics} />
-            <meta name="twitter:title" content={`${study.client_name} Case Study — Aethera`} />
+            <meta name="twitter:title" content={`${study.client_name} Case Study — ServeXservices`} />
             <meta name="twitter:description" content={study.metrics} />
           </Helmet>
 

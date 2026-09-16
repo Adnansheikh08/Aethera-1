@@ -305,6 +305,63 @@
     background: rgba(0, 0, 0, 0.04);
 }
 
+/* The hero's ambient orb is a light source for a dark room. On white it has
+   nothing to light and only muddies the photo, so it is dropped outright
+   rather than dimmed. */
+:root.light .hero::after {
+    display: none;
+}
+
+/* The same full-bleed ground at light-mode strength. On white the render lands
+   as one muted mauve-grey across the whole section, which is the point: a
+   single consistent tone rather than a white field with a picture parked on
+   the right-hand third. */
+:root.light .hero-background-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    /* A fifth of the way up from the page, which is where a watermark lives on
+       white. Dark mode cannot come near this number — see the base rule. */
+    opacity: 0.22;
+}
+
+/* Flat, for the same reason as the dark theme's: the left-to-right white ramp
+   that used to live here is exactly the "sharp white-to-pink gradient" it was
+   never meant to be — it existed to fade a right-hand panel into the page, and
+   there is no longer a panel. Only the edge seals are kept. */
+:root.light .hero-background-overlay {
+    background: linear-gradient(180deg,
+        #ffffff 0%,
+        transparent 9%,
+        transparent 91%,
+        #ffffff 100%);
+}
+
+/* The statement render needs less ink on white than on the dark page: the same
+   figure that reads as a soft grey wash here would read as a deliberate
+   illustration there. Same split as the hero's, for the same reason — a
+   dark-ground image has far more headroom against white. */
+:root.light .statement-background-img {
+    opacity: 0.22;
+}
+
+:root.light .statement-background-overlay {
+    background:
+        linear-gradient(90deg,
+            #ffffff 0%,
+            #ffffff 12%,
+            rgba(255, 255, 255, 0.34) 32%,
+            transparent 50%),
+        linear-gradient(180deg,
+            #ffffff 0%,
+            transparent 8%,
+            transparent 92%,
+            #ffffff 100%);
+}
+
 :root.light .modal-close,
 :root.light .service-modal-close {
     background: rgba(0, 0, 0, 0.04);
@@ -960,10 +1017,14 @@ h6,
     position: relative;
     display: flex;
     align-items: center;
-    min-height: min(88vh, 52rem);
+    min-height: min(92vh, 56rem);
     padding-block: var(--space-20) var(--space-16);
     overflow: hidden;
-    perspective: 1000px;
+    /* The section paints its own ground. The background photo and its overlay
+       both grade into this colour, and a layer can only blend into what is
+       actually behind it — left transparent, the overlay's tail dissolved into
+       the page and the seam read as a band across the section. */
+    background-color: var(--bg-page);
 }
 
 /* Engineering grid.
@@ -976,12 +1037,17 @@ h6,
     content: "";
     position: absolute;
     inset: 0;
+    z-index: 1;
     background-image:
         linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
         linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
     background-size: 4.5rem 4.5rem;
-    mask-image: radial-gradient(72% 62% at 46% 38%, black, transparent 76%);
-    -webkit-mask-image: radial-gradient(72% 62% at 46% 38%, black, transparent 76%);
+    /* Centred on the section, because the copy column is: the gratings now sit
+       behind a full-bleed photo rather than beside the text, and a mask pinned
+       to the old left-hand column would fade the grid out over the half of the
+       section that now carries the image. */
+    mask-image: radial-gradient(75% 75% at 50% 40%, black, transparent 85%);
+    -webkit-mask-image: radial-gradient(75% 75% at 50% 40%, black, transparent 85%);
     pointer-events: none;
 }
 
@@ -991,17 +1057,17 @@ h6,
 .hero::after {
     content: "";
     position: absolute;
-    inset-block-start: -28%;
-    inset-inline-end: -8%;
-    width: min(46rem, 88vw);
+    inset-block-start: -24%;
+    inset-inline-end: -6%;
+    width: min(48rem, 90vw);
     aspect-ratio: 1;
     /* A blurred solid, not a gradient: the blur alone produces the soft
        ambient pool of warm light, which keeps the theme gradient-free. */
-    background: hsla(348, 83%, 50%, 0.09);
-    filter: blur(72px);
+    background: hsla(348, 83%, 50%, 0.1);
+    filter: blur(80px);
     pointer-events: none;
+    z-index: 2;
     animation: float-orb 24s ease-in-out infinite;
-    transform-style: preserve-3d;
 }
 
 @keyframes float-orb {
@@ -1012,88 +1078,71 @@ h6,
 
 .hero-content {
     position: relative;
+    /* Above the background photo (1) and its ambient orb (2). The copy has to
+       outrank both, or the image paints over the headline. */
+    z-index: 3;
     width: 100%;
     max-width: var(--shell-max);
     margin-inline: auto;
     padding-inline: var(--space-6);
-}
-
-/* Two-column hero: copy left, workspace visual right.
-
-   The columns are an 11:9 split (~55% / 45%), centre-aligned so the image
-   sits beside the headline rather than top- or bottom-aligning with it. Below
-   the large breakpoint there is no grid at all — the visual just stacks under
-   the copy, which puts it after the CTAs on mobile. */
-.hero-copy {
-    position: relative;
-}
-
-.hero-visual {
-    position: relative;
-    /* Centres the panel in its column; the grid's align-items: center below
-       handles the vertical half. Only needed in the stacked (mobile/tablet)
-       presentation — the grid breakpoint zeroes it. */
     display: flex;
-    justify-content: center;
-    margin-block-start: var(--space-12);
+    flex-direction: column;
+    align-items: flex-start;
 }
 
-.hero-visual-img {
-    display: block;
-    /* Intrinsic sizing, not a forced box: the width caps at the column and
-       the height follows the image's own 3:2, so the whole photo is always
-       shown — contain rather than cover means nothing is ever cropped.
+/* Full-bleed background.
 
-       The explicit `height: auto` is load-bearing. The <img> carries
-       width/height attributes for layout stability, and without a CSS height
-       those act as presentational hints — the element pins itself at its
-       natural 1024px tall inside a column-width box, and cover crops
-       two-thirds of the photo away. */
+   The workspace photo is the section's ground rather than a panel standing in
+   it: edge to edge on every side, with the copy composited over it. It is
+   aria-hidden in the markup because it carries no information the copy does not
+   already state. */
+.hero-background {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+/* The graphic is the section's ground, not a panel standing in it: full-bleed
+   from edge to edge, so the tone holds at every point of the hero instead of
+   only appearing on the side the copy leaves free.
+
+   Held at half strength so it reads as a watermark behind the copy rather than
+   as a photograph sitting beside it. The figure is not free: the render's own
+   ground is near-black, so on this near-black page the opacity is the only
+   thing separating "soft graphic" from "dead black rectangle", and it runs out
+   of headroom well before the light theme's value does. */
+.hero-background-img {
+    position: absolute;
+    inset: 0;
     width: 100%;
-    max-width: 40rem;
-    height: auto;
-    object-fit: contain;
-    /* 24px — the premium-panel radius, matching --radius-2xl. */
-    border-radius: var(--radius-2xl);
-    border: 1px solid var(--glass-border);
-    /* Mono treatment: the photo ships in full colour but the theme spends
-       exactly one hue, and the photo is not allowed to spend it too —
-       grayscale plus a touch of contrast reads as deliberate editorial
-       photography instead of a mismatched stock image. */
-    filter: grayscale(100%) contrast(1.08);
-    /* A dark drop plus a faint crimson bloom, so the panel reads as lit by
-       the same ambient source as the rest of the section. */
-    box-shadow: var(--shadow-xl),
-                0 0 60px hsla(348, 83%, 45%, 0.12),
-                0 0 120px hsla(348, 83%, 50%, 0.07);
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    opacity: 0.45;
+    pointer-events: none;
 }
 
-@media (min-width: 64em) {
-    .hero-content {
-        display: grid;
-        /* Tilted slightly toward the visual (~49/51) so the workspace panel
-           sits ~16% larger than a even half-split would allow — big enough to
-           balance the display-size headline without crowding the copy. */
-        grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
-        column-gap: var(--space-16);
-        align-items: center;
-    }
+/* The tint that ties the graphic back to the page colour.
 
-    .hero-visual {
-        margin-block-start: 0;
-    }
-}
-
-/* Hover is the only interaction — a hair of scale, guarded to devices that
-   actually hover so touch scrolls never trigger it. */
-@media (hover: hover) {
-    .hero-visual-img {
-        transition: transform var(--duration-slow) var(--ease);
-    }
-
-    .hero-visual-img:hover {
-        transform: scale(1.01);
-    }
+   Flat, not directional. With the image covering the whole section there is no
+   copy column left to protect, so a left-to-right wash has nothing to do but
+   reintroduce the hard edge this change exists to remove. What remains is one
+   uniform scrim that evens out the render's own bright and dark halves, plus a
+   short fade at the very top and bottom so the section keeps no seam against
+   the header above it or the marquee below. */
+.hero-background-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        linear-gradient(180deg,
+            var(--bg-page) 0%,
+            transparent 9%,
+            transparent 91%,
+            var(--bg-page) 100%),
+        hsla(0, 0%, 4%, 0.2);
 }
 
 .badge-pill {
@@ -1114,24 +1163,6 @@ h6,
     box-shadow: var(--shadow-sm), inset 0 1px 0 hsla(0, 0%, 99%, 0.6);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-}
-
-.badge-text {
-    display: inline-block;
-    transition: opacity 0.35s cubic-bezier(0.25, 1, 0.5, 1),
-                transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.badge-text.fade-out {
-    opacity: 0;
-    transform: translateY(-4px);
-}
-
-.badge-text.fade-in {
-    opacity: 1;
-    transform: translateY(0);
 }
 
 /* Status light. The ring is a second shadow on the same dot rather than another
@@ -1404,19 +1435,44 @@ h6,
     color: var(--text-secondary);
 }
 
-/* Statement responsive side-by-side grid */
-.statement-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-8);
+/* Statement — full-bleed ground with the copy over it, the same shape as the
+   hero.
+
+   The section is its own shell rather than a .container, because the render
+   behind it has to reach the viewport edges: .container caps at --shell-max
+   and would clip the background to that column, leaving page colour down both
+   sides. .statement-shell does the column's job for the copy alone. */
+.statement-section {
+    position: relative;
+    display: flex;
     align-items: center;
+    /* Sized against the render, not against the viewport.
+
+       The render is a 1024x1024 square. Under the old 44rem cap the section was
+       2.2:1 at desktop, and a cover-fit square into a 2.2:1 box discards 55% of
+       the composition's height — leaving the centre band (the lock) and cropping
+       the checklist off the top and the book off the bottom. A squared image
+       needs a squarer box before any fit mode can show all of it.
+
+       Named rather than inlined because three rules have to agree on it: the
+       section's height, the render's width, and the feather's start. The
+       breakpoint below redefines this one property and all three follow. */
+    --statement-render: min(86vh, 50rem);
+    min-height: var(--statement-render);
+    padding-block: var(--space-section);
+    overflow: hidden;
+    background-color: var(--bg-page);
 }
 
-@media (min-width: 64em) {
-    .statement-grid {
-        grid-template-columns: 1.2fr 0.8fr;
-        gap: var(--space-12);
-    }
+.statement-shell {
+    position: relative;
+    /* Above the render (1) and its overlay (2). The copy has to outrank both,
+       or the image paints over the heading. */
+    z-index: 3;
+    width: 100%;
+    max-width: var(--shell-max);
+    margin-inline: auto;
+    padding-inline: var(--space-6);
 }
 
 .statement-content {
@@ -1425,51 +1481,78 @@ h6,
     gap: var(--space-4);
 }
 
-.statement-image-wrapper {
-    position: relative;
-    border-radius: var(--radius-2xl);
-    border: 1px solid var(--border-default);
-    background: var(--bg-surface);
-    box-shadow: var(--shadow-xl);
+/* Mirrors .hero-background: the render is the section's ground, not a panel
+   standing in it. */
+.statement-background {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
     overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: box-shadow var(--duration-base) var(--ease), border-color var(--duration-base) var(--ease);
 }
 
-.statement-image-wrapper::before {
-    content: "";
+.statement-background-img {
+    position: absolute;
+    /* A square box pinned to the trailing edge, rather than inset: 0 with a fit
+       mode inside it.
+
+       Under `inset: 0` the element box is the whole 1440-wide section while the
+       drawn render is only ~774 of it, so the letterbox edge is a hard vertical
+       seam at the render's left side — the thing a watermark must not have. A
+       percentage mask can't fix that either, because mask-image measures the
+       element box, not the drawn content.
+
+       Sizing the box to --statement-render makes box == drawn content for this
+       1024x1024 source, so the mask below measures the render itself and the
+       feather lands exactly on its edge. margin-block: auto keeps it centred if
+       the copy ever makes the section taller than the render. */
+    inset-block: 0;
+    inset-inline-end: 0;
+    margin-block: auto;
+    width: var(--statement-render);
+    height: var(--statement-render);
+    /* The box is square and so is the source, so this crops nothing; contain
+       rather than cover only so a future non-square render letterboxes instead
+       of being silently cropped. */
+    object-fit: contain;
+    /* Feather the render's leading edge into the page.
+
+       This is what replaces the old hard letterbox seam, and it is also what
+       buys the copy its contrast: the paragraph runs to x=784 while the render
+       starts at x=666, so the ~30% of the render sitting under the text is held
+       near-transparent and the composition proper only reaches full strength
+       past it. */
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.32) 16%, #000 44%);
+    mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.32) 16%, #000 44%);
+    /* The mono rule still applies — the render arrives in full colour and the
+       theme spends one hue. See the light-theme note below. */
+    filter: grayscale(100%) contrast(1.08);
+    opacity: 0.45;
+    pointer-events: none;
+}
+
+/* Readability scrim.
+
+   Lighter than it used to be, because the mask above now does most of this
+   work: the render is already near-transparent under the copy. What is left is
+   the vertical seals that stop the render meeting the section's top and bottom
+   edges, and a shallow left wash so the paragraph keeps its contrast even where
+   the feather has already faded the render out. */
+.statement-background-overlay {
     position: absolute;
     inset: 0;
     pointer-events: none;
-    border-radius: inherit;
-    border: 1px solid transparent;
-    background: var(--gradient-hairline) border-box;
-    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-}
-
-.statement-image {
-    width: 100%;
-    height: auto;
-    display: block;
-    object-fit: cover;
-    /* Same mono rule as the hero photo — the 3D render arrives in full
-       colour, the theme spends one hue, and the photo does not get to spend
-       a second one. */
-    filter: grayscale(100%) contrast(1.08);
-    transition: transform var(--duration-slow) var(--ease);
-}
-
-.statement-image-wrapper:hover {
-    border-color: var(--border-strong);
-    box-shadow: var(--shadow-2xl), var(--glow-md);
-}
-
-.statement-image-wrapper:hover .statement-image {
-    transform: scale(1.03);
+    background:
+        linear-gradient(90deg,
+            var(--bg-page) 0%,
+            var(--bg-page) 12%,
+            hsla(0, 0%, 4%, 0.30) 32%,
+            transparent 50%),
+        linear-gradient(180deg,
+            var(--bg-page) 0%,
+            transparent 8%,
+            transparent 92%,
+            var(--bg-page) 100%);
 }
 
 /* ==========================================================================
@@ -2986,6 +3069,17 @@ h6,
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: var(--space-8);
     }
+
+    /* Full-bleed at every width now, so there is no share of the section to
+       renegotiate here — only strength. The graphic covers a larger fraction
+       of a narrower viewport, so it steps back rather than forward. */
+    .hero-background-img {
+        opacity: 0.4;
+    }
+
+    :root.light .hero-background-img {
+        opacity: 0.2;
+    }
 }
 
 @media (max-width: 48rem) {
@@ -3027,8 +3121,35 @@ h6,
     }
 
     .hero {
-        min-height: auto;
-        padding-block: var(--space-16);
+        min-height: 85vh;
+        padding-block: var(--space-16) var(--space-12);
+    }
+
+    .hero-content {
+        padding-inline: var(--space-4);
+    }
+
+    /* The base rules already put the graphic full-bleed and flat here; on a
+       small screen it sits behind proportionally more of the copy, so it steps
+       back further rather than flipping direction. */
+    .hero-background-img {
+        opacity: 0.35;
+    }
+
+    :root.light .hero-background-img {
+        opacity: 0.18;
+    }
+
+    /* The render is square and a phone is not. Left to the viewport, the section
+       runs ~390x726 here and a square render inside it letterboxes away a third
+       of the band. Clamping the height to something near the render's own aspect
+       keeps the fit tight and hands the remaining sliver to the overlay's top
+       and bottom seals.
+
+       Redefining the token rather than min-height: the render's width and the
+       mask's feather are both derived from it and would otherwise desync. */
+    .statement-section {
+        --statement-render: min(60vh, 30rem);
     }
 
     .hero-ctas .cta-button {
@@ -3052,6 +3173,14 @@ h6,
 }
 
 @media (max-width: 36rem) {
+    .hero {
+        padding-block: var(--space-12) var(--space-8);
+    }
+
+    .hero-content {
+        padding-inline: var(--space-4);
+    }
+
     .footer-top {
         grid-template-columns: minmax(0, 1fr);
     }

@@ -26,8 +26,8 @@ const CONTACT_DETAILS = [
   },
   {
     label: "Instagram",
-    value: "@aethera09",
-    href: "https://www.instagram.com/aethera09",
+    value: "@serve_services",
+    href: "https://www.instagram.com/serve_services",
     icon: "instagram",
     external: true,
   },

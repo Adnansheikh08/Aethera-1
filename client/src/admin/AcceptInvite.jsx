@@ -40,7 +40,7 @@ export default function AcceptInvite() {
   return (
     <div className="admin-auth">
       <Helmet>
-        <title>Accept invite — Aethera</title>
+        <title>Accept invite — ServeXservices</title>
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
 
