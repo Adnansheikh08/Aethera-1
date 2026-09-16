@@ -10,12 +10,12 @@ export function Contact() {
   return (
     <>
       <Helmet>
-        <title>Contact Us — Aethera</title>
-        <meta name="description" content="Get in touch with the Aethera engineering team. We reply to every qualified inquiry within two business hours." />
-        <meta property="og:title" content="Contact Us — Aethera" />
+        <title>Contact Us — ServeXservices</title>
+        <meta name="description" content="Get in touch with the ServeXservices engineering team. We reply to every qualified inquiry within two business hours." />
+        <meta property="og:title" content="Contact Us — ServeXservices" />
         <meta property="og:description" content="Reach out to discuss your project requirements." />
-        <meta name="twitter:title" content="Contact Us — Aethera" />
-        <meta name="twitter:description" content="Get in touch with the Aethera engineering team." />
+        <meta name="twitter:title" content="Contact Us — ServeXservices" />
+        <meta name="twitter:description" content="Get in touch with the ServeXservices engineering team." />
       </Helmet>
 
       {/* The section markup itself lives in ContactSection, shared with the

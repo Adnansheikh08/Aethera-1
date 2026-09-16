@@ -50,7 +50,7 @@ export function Landing({ introComplete }) {
         absence reads as intentional rather than as a missed port.
       */}
 
-      <Hero introComplete={introComplete} services={services} />
+      <Hero introComplete={introComplete} />
       <Marquee services={services} />
       <Statement />
       <Focus services={services} />

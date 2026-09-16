@@ -165,8 +165,8 @@ export function Header() {
   return (
     <header className={`site-header${isCondensed ? " is-condensed" : ""}`}>
       <div className="nav-container">
-        <Link to="/" className="brand" aria-label="Aethera home">
-          Aethera
+        <Link to="/" className="brand" aria-label="ServeXservices home">
+          ServeXservices
           <span className="orange-char" aria-hidden="true">
             .
           </span>
@@ -261,7 +261,7 @@ export function Footer() {
         <div className="footer-top">
           <div>
             <Link to="/" className="footer-brand">
-              Aethera
+              ServeXservices
             </Link>
             <p className="footer-tagline">
               Hardened enterprise software and cyber-secure media platforms, engineered for
@@ -381,12 +381,12 @@ export function Footer() {
                   <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
                 </svg>
                 <a
-                  href="https://www.instagram.com/aethera09?igsh=MXV1djFtbWpkNjJqeA=="
+                  href="https://www.instagram.com/serve_services?igsh=MXV1djFtbWpkNjJqeA=="
                   className="contact-link"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  @aethera09
+                  @serve_services
                 </a>
               </li>
             </ul>
@@ -404,7 +404,7 @@ export function Footer() {
 
         <div className="footer-bottom">
           {/* Django rendered this with {% now "Y" %}; the client computes it. */}
-          <p>&copy; {new Date().getFullYear()} Aethera Agency</p>
+          <p>&copy; {new Date().getFullYear()} ServeXservices Agency</p>
           <div className="footer-legal">
             <NavLink to="/privacy-policy">Privacy Policy</NavLink>
             <NavLink to="/terms">Terms of Service</NavLink>
@@ -423,7 +423,7 @@ export function WhatsAppFloat() {
       className="whatsapp-float"
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Contact Aethera on WhatsApp"
+      aria-label="Contact ServeXservices on WhatsApp"
     >
       <svg
         viewBox="0 0 24 24"

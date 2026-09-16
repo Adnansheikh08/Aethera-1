@@ -35,7 +35,7 @@ function AdminHeader() {
     <header className="admin-header">
       <div className="admin-header-inner">
         <Link to="/admin" className="admin-brand">
-          Aethera<span className="orange-char">.</span>
+          ServeXservices<span className="orange-char">.</span>
           <span className="admin-brand-suffix">Console</span>
         </Link>
 

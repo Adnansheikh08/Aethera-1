@@ -14,7 +14,7 @@ import { Contact } from "./pages/Contact.jsx";
 import { Projects } from "./pages/Projects.jsx";
 import { NotFound, PrivacyPolicy, Terms } from "./pages/Legal.jsx";
 
-const SITE_TITLE = "Aethera — Enterprise Software Agency & Cybersecurity";
+const SITE_TITLE = "ServeXservices — Enterprise Software Agency & Cybersecurity";
 const SITE_DESCRIPTION =
   "We build secure, high-performance, and ultra-scalable web platforms and enterprise applications aligned to the OWASP ASVS standard.";
 
@@ -41,7 +41,7 @@ function SiteMeta() {
       <title>{SITE_TITLE}</title>
       <meta name="description" content={SITE_DESCRIPTION} />
       <link rel="canonical" href={url} />
-      <meta property="og:site_name" content="Aethera" />
+      <meta property="og:site_name" content="ServeXservices" />
       <meta property="og:type" content="website" />
       <meta property="og:url" content={url} />
       <meta property="og:title" content={SITE_TITLE} />
@@ -50,7 +50,7 @@ function SiteMeta() {
         content="We engineer secure, high-performance, and ultra-scalable web platforms."
       />
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content="Aethera — Enterprise Software Agency" />
+      <meta name="twitter:title" content="ServeXservices — Enterprise Software Agency" />
       <meta
         name="twitter:description"
         content="Hardened enterprise software and cyber-secure media platforms."

@@ -128,7 +128,7 @@ export function Preloader({ onComplete }) {
       <div className="preloader-content-wrapper">
         {bootText && <div className="preloader-boot-text">{bootText}</div>}
         <div className={`preloader-logo ${isBrandVisible ? "is-visible" : ""}`}>
-          AETHERA<span className="orange-char">.</span>
+          serveXservices<span className="orange-char">.</span>
         </div>
       </div>
     </div>
