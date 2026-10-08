@@ -52,6 +52,19 @@ export const config = {
 
   clientOrigin: process.env.CLIENT_ORIGIN || "http://localhost:5173",
 
+  // Public origin of the site, used for the absolute URLs in sitemap.xml and
+  // robots.txt. Deliberately not derived from the request: nginx proxies those
+  // two paths with X-Forwarded-Proto: http, so req.protocol reports http for a
+  // site served over https and the sitemap would advertise URLs that do not
+  // exist. Required in production for the same reason — the localhost fallback
+  // is right for development and would be a silent SEO failure if it ever
+  // reached a crawler. Trailing slashes are stripped so callers can append a
+  // path directly.
+  siteUrl: (isProd ? required("SITE_URL") : process.env.SITE_URL || "http://localhost:5173").replace(
+    /\/+$/,
+    "",
+  ),
+
   payments: {
     stripeSecretKey: process.env.STRIPE_SECRET_KEY || "",
     stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY || "",
