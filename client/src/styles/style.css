@@ -301,10 +301,6 @@
     box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(0, 0%, 100%, 0.6);
 }
 
-:root.light .security-badge {
-    background: rgba(0, 0, 0, 0.04);
-}
-
 /* The hero's ambient orb is a light source for a dark room. On white it has
    nothing to light and only muddies the photo, so it is dropped outright
    rather than dimmed. */
@@ -2757,7 +2753,11 @@ h6,
 
 .footer-top {
     display: grid;
-    grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr));
+    /* Brand statement, then the contact column — the two blocks the footer has
+       left. The brand keeps the wider share it had in the four-column layout,
+       so the composition still reads as brand-first rather than as two
+       equally-weighted halves. */
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
     gap: var(--space-10);
     padding-block-end: var(--space-12);
     border-block-end: 1px solid var(--border-inverse);
@@ -2801,22 +2801,6 @@ h6,
 
 .site-footer .contact-link:focus-visible {
     outline-color: var(--primary-500);
-}
-
-.badge-container {
-    display: grid;
-    gap: var(--space-2);
-    justify-items: start;
-}
-
-.security-badge {
-    padding: var(--space-1) var(--space-3);
-    font-size: var(--text-2xs);
-    font-weight: 500;
-    color: var(--text-secondary);
-    background: hsla(0, 0%, 100%, 0.06);
-    border: 1px solid var(--border-inverse);
-    border-radius: var(--radius-full);
 }
 
 .footer-bottom {

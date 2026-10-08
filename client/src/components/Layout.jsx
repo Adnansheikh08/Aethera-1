@@ -16,10 +16,9 @@ import { useHeaderCondensed } from "../hooks/useScrollProgress.js";
  * Site-wide wayfinding order — Home, About, Services, Projects, Testimonial,
  * Contact Us.
  *
- * The header nav and the footer's Navigate list both render this array, wrapped
- * by the same Home and Contact entries, so the two lists cannot drift apart.
- * An entry with `id` is an anchor into a landing-page section, exactly as
- * base.html's nav was; an entry with `to` is a route of its own.
+ * The header nav renders this array, wrapped by the same Home and Contact
+ * entries. An entry with `id` is an anchor into a landing-page section, exactly
+ * as base.html's nav was; an entry with `to` is a route of its own.
  */
 const NAV_ITEMS = [
   { id: "statement-section", label: "About" },
@@ -30,7 +29,7 @@ const NAV_ITEMS = [
   { id: "proof-section", label: "Testimonial" },
 ];
 
-/** Closes every nav list: a button in the header, a plain link in the footer. */
+/** Closes the header nav list, styled as the header's filled button. */
 const CONTACT = { id: "contact-section", label: "Contact Us" };
 
 /**
@@ -270,29 +269,6 @@ export function Footer() {
           </div>
 
           <div>
-            <h2 className="footer-heading">Navigate</h2>
-            <ul className="footer-list">
-              <li>
-                <HomeLink className="contact-link" />
-              </li>
-              {NAV_ITEMS.map((item) => (
-                <li key={navKey(item)}>
-                  <NavEntry item={item} className="contact-link" />
-                </li>
-              ))}
-              <li>
-                <a
-                  href={`/#${CONTACT.id}`}
-                  className="contact-link"
-                  onClick={(event) => jumpToSection(event, CONTACT.id)}
-                >
-                  {CONTACT.label}
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div>
             <h2 className="footer-heading">Contact</h2>
             <ul className="footer-list">
               <li>
@@ -390,15 +366,6 @@ export function Footer() {
                 </a>
               </li>
             </ul>
-          </div>
-
-          <div>
-            <h2 className="footer-heading">Assurance</h2>
-            <div className="badge-container">
-              <span className="security-badge">OWASP ASVS Hardened</span>
-              <span className="security-badge">ISO 27001 Ready</span>
-              <span className="security-badge">WAF &amp; IP Lockout Active</span>
-            </div>
           </div>
         </div>
 
