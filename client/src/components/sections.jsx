@@ -204,6 +204,9 @@ function ServiceCard({ service, index, onDetailClick }) {
       <div>
         <h3 className="card-title">{service.title}</h3>
         <p>{service.short_description}</p>
+        <Link to={`/services/${service.slug}`} className="learn-more">
+          View service<span className="visually-hidden"> details for {service.title}</span>
+        </Link>
         <button
           className="learn-more"
           onClick={() => onDetailClick(service)}

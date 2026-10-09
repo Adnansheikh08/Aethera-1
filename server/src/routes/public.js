@@ -161,44 +161,14 @@ router.post(
   }),
 );
 
-/** Ported from apps/agency/views.py robots_txt. */
+/** Keep the production frontend as the single crawl-directives owner. */
 router.get("/robots.txt", (req, res) => {
-  const origin = `${req.protocol}://${req.get("host")}`;
-  res
-    .type("text/plain")
-    .send(
-      ["User-agent: *", `Disallow: /${process.env.ADMIN_URL_PATH || "portal-admin-8f2e9a7c"}/`, `Sitemap: ${origin}/sitemap.xml`].join("\n"),
-    );
+  res.redirect(308, "https://www.servexservices.com/robots.txt");
 });
 
-/** Ported from apps/agency/views.py sitemap_xml. */
-router.get(
-  "/sitemap.xml",
-  asyncHandler(async (req, res) => {
-    const origin = `${req.protocol}://${req.get("host")}`;
-    const [services, caseStudies] = await Promise.all([
-      getActiveServices(),
-      getPublishedCaseStudies(),
-    ]);
-
-    const urls = [
-      `<url><loc>${origin}/</loc><priority>1.0</priority></url>`,
-      // No trailing slash: SiteMeta builds the canonical from the router's
-      // pathname, so /projects/ here would advertise a URL the page itself
-      // never claims as canonical.
-      `<url><loc>${origin}/projects</loc><priority>0.9</priority></url>`,
-      ...services.map(
-        (s) => `<url><loc>${origin}/services/${s.slug}/</loc><priority>0.8</priority></url>`,
-      ),
-      ...caseStudies.map(
-        (c) => `<url><loc>${origin}/case-studies/${c.slug}/</loc><priority>0.7</priority></url>`,
-      ),
-    ];
-
-    res.type("application/xml").send(
-      `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  ${urls.join("\n  ")}\n</urlset>`,
-    );
-  }),
-);
+/** Preserve the endpoint while keeping sitemap ownership on the frontend. */
+router.get("/sitemap.xml", (_req, res) => {
+  res.redirect(308, "https://www.servexservices.com/sitemap.xml");
+});
 
 export default router;
