@@ -10,6 +10,9 @@ function DetailState({ error, children }) {
   if (error) {
     return (
       <>
+        <Helmet>
+          <meta name="robots" content="noindex, nofollow" />
+        </Helmet>
         <header className="page-header">
           <p className="eyebrow">Not found</p>
           <h1 className="page-title">{error.status === 404 ? "Page not found" : "Unavailable"}</h1>
