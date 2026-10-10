@@ -78,7 +78,7 @@ export function PrivacyPolicy() {
             We retain your personal data only as long as necessary to fulfill the purposes for which 
             it was collected, typically 2 years from the date of last contact. After this period, 
             data is securely destroyed. You may request deletion at any time by contacting us at{" "}
-            <a href="mailto:mohammadharoonu@gmail.com">mohammadharoonu@gmail.com</a>.
+            <a href="mailto:servexservices798@gmail.com">servexservices798@gmail.com</a>.
           </p>
 
           <h2>6. Your Privacy Rights (GDPR &amp; DPDP Act)</h2>
@@ -93,7 +93,7 @@ export function PrivacyPolicy() {
             <li><strong>Right to Object:</strong> Opt-out of specific data processing activities</li>
           </ul>
           <p>
-            To exercise any of these rights, contact us directly at <a href="mailto:mohammadharoonu@gmail.com">mohammadharoonu@gmail.com</a>.
+            To exercise any of these rights, contact us directly at <a href="mailto:servexservices798@gmail.com">servexservices798@gmail.com</a>.
           </p>
 
           <h2>7. Cookie Consents &amp; Tracking</h2>
@@ -195,10 +195,10 @@ export function PrivacyPolicy() {
           </p>
           <ul>
             <li>
-              Email: <a href="mailto:mohammadharoonu@gmail.com">mohammadharoonu@gmail.com</a>
+              Email: <a href="mailto:servexservices798@gmail.com">servexservices798@gmail.com</a>
             </li>
             <li>
-              Phone: <a href="tel:+917985765985">+91 79857 65985</a>
+              Phone: <a href="tel:+919454945906">+91 94549 45906</a>
             </li>
           </ul>
           <p>
@@ -459,9 +459,9 @@ export function Terms() {
             sent in writing (email or registered mail) to:
           </p>
           <ul>
-            <li><strong>Email:</strong> <a href="mailto:mohammadharoonu@gmail.com">mohammadharoonu@gmail.com</a></li>
+            <li><strong>Email:</strong> <a href="mailto:servexservices798@gmail.com">servexservices798@gmail.com</a></li>
             <li><strong>Mailing Address:</strong> ServeXservices Agency, Lucknow, Uttar Pradesh, India</li>
-            <li><strong>Phone:</strong> <a href="tel:+917985765985">+91 79857 65985</a></li>
+            <li><strong>Phone:</strong> <a href="tel:+919454945906">+91 94549 45906</a></li>
           </ul>
           <p>
             Notices sent via email are effective upon receipt. Notices sent via registered mail are effective 5 business 
@@ -480,7 +480,7 @@ export function Terms() {
           <p>
             If you encounter accessibility barriers or require accommodations (e.g., screen reader compatibility, 
             alternative formats, accessibility services), please contact us immediately at{" "}
-            <a href="mailto:mohammadharoonu@gmail.com">mohammadharoonu@gmail.com</a>.
+            <a href="mailto:servexservices798@gmail.com">servexservices798@gmail.com</a>.
           </p>
           <p>
             We actively work to identify and address accessibility issues. Your feedback helps us improve our services 
@@ -593,7 +593,7 @@ export function Terms() {
           <p>
             <strong>Informal Resolution:</strong> Before initiating formal proceedings, you agree to 
             attempt informal resolution by contacting us at{" "}
-            <a href="mailto:mohammadharoonu@gmail.com">mohammadharoonu@gmail.com</a> with a detailed 
+            <a href="mailto:servexservices798@gmail.com">servexservices798@gmail.com</a> with a detailed
             description of the dispute.
           </p>
           <p>
@@ -662,10 +662,10 @@ export function Terms() {
           </p>
           <ul>
             <li>
-              Email: <a href="mailto:mohammadharoonu@gmail.com">mohammadharoonu@gmail.com</a>
+              Email: <a href="mailto:servexservices798@gmail.com">servexservices798@gmail.com</a>
             </li>
             <li>
-              Phone: <a href="tel:+917985765985">+91 79857 65985</a>
+              Phone: <a href="tel:+919454945906">+91 94549 45906</a>
             </li>
             <li>
               Instagram: <a href="https://www.instagram.com/serve_services" target="_blank" rel="noopener noreferrer">@serve_services</a>
