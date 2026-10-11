@@ -2756,6 +2756,10 @@ h6,
 
 .footer-top {
     display: grid;
+    /* Brand statement, then the contact column — the two blocks the footer has
+       left. The brand keeps the wider share it had in the four-column layout,
+       so the composition still reads as brand-first rather than as two
+       equally-weighted halves. */
     grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
     gap: var(--space-10);
     padding-block-end: var(--space-12);
