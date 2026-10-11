@@ -834,8 +834,10 @@ export default function Admin() {
       <div className="admin-frame">
         <Helmet>
           {/* The public pages advertise themselves; an admin console must never
-              reach an index. */}
+              reach an index, and it overrides the site-wide canonical so the
+              console cannot be attributed to a public URL. */}
           <meta name="robots" content="noindex, nofollow" />
+          <link rel="canonical" href="" />
         </Helmet>
         <AdminHeader />
         <main className="admin-main">
