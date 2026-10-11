@@ -21,6 +21,7 @@ export const SERVICE_CHOICES = [
   "ui-ux-design",
   "software-testing",
   "odoo-erp-solutions",
+  "seo",
 ];
 
 /** Human labels, kept alongside the slugs as Django's choices tuples did. */
@@ -34,6 +35,7 @@ export const SERVICE_LABELS = {
   "ui-ux-design": "UI/UX Design",
   "software-testing": "Software Testing",
   "odoo-erp-solutions": "Odoo Implementation and Development",
+  "seo": "SEO",
 };
 
 export const STATUS_LABELS = {

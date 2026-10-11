@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 320" fill="none" stroke="#C8102E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Measurement grid -->
+  <g opacity="0.12">
+    <path d="M120 60v200M200 60v200M280 60v200M360 60v200"/>
+    <path d="M80 110h320M80 180h320M80 250h320"/>
+  </g>
+
+  <!-- Browser window holding the results -->
+  <g opacity="0.22">
+    <rect x="48" y="34" width="384" height="252" rx="14"/>
+    <path d="M48 64h384"/>
+    <circle cx="68" cy="49" r="3"/><circle cx="82" cy="49" r="3"/><circle cx="96" cy="49" r="3"/>
+  </g>
+
+  <!-- Search bar and query -->
+  <g opacity="0.45">
+    <rect x="72" y="82" width="242" height="30" rx="15"/>
+    <path d="M92 97h132" stroke-width="1.5"/>
+  </g>
+
+  <!-- Magnifier -->
+  <g opacity="0.85" stroke-width="2.5">
+    <circle cx="398" cy="97" r="12"/>
+    <path d="M407 106l11 11"/>
+  </g>
+
+  <!-- Result rows, shortening down the page -->
+  <g opacity="0.3">
+    <rect x="72" y="132" width="168" height="10" rx="5"/>
+    <rect x="72" y="154" width="132" height="10" rx="5"/>
+    <rect x="72" y="176" width="150" height="10" rx="5"/>
+    <rect x="72" y="198" width="104" height="10" rx="5"/>
+  </g>
+
+  <!-- Top-position marker against the first result -->
+  <g opacity="0.85" stroke-width="2.5">
+    <path d="M248 143l9-9 9 9"/>
+  </g>
+
+  <!-- Crawl tree: root page feeding two child pages -->
+  <g opacity="0.32">
+    <rect x="104" y="232" width="24" height="18" rx="4"/>
+    <path d="M128 241h24"/>
+    <path d="M152 227v28"/>
+    <path d="M152 227h20M152 255h20"/>
+    <rect x="172" y="219" width="22" height="16" rx="4"/>
+    <rect x="172" y="247" width="22" height="16" rx="4"/>
+  </g>
+
+  <!-- Organic traffic, trending up -->
+  <g opacity="0.55">
+    <path d="M270 266V150"/>
+    <path d="M270 266h150"/>
+    <path d="M270 242l28-22 26 13 32-32 28 11 36-44"/>
+  </g>
+  <g opacity="0.6">
+    <circle cx="298" cy="220" r="3"/>
+    <circle cx="356" cy="201" r="3"/>
+    <circle cx="384" cy="212" r="3"/>
+  </g>
+  <g opacity="0.9" stroke-width="2.5">
+    <path d="M416 183L420 168L406 175"/>
+  </g>
+</svg>

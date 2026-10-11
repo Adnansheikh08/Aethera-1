@@ -2102,6 +2102,30 @@ h6,
     border-radius: var(--radius-lg);
 }
 
+/* A real homepage capture, when one is mapped for the slug. It has no window
+   chrome to measure, so the box is sized by aspect ratio instead of by its
+   content — matching the placeholder's proportions closely enough that a
+   screenshot card and a placeholder card still read as the same component.
+   Anchored to the top because a full-page capture is far taller than this box,
+   and the top of the homepage is the part worth showing. */
+.portfolio-media.has-screenshot {
+    aspect-ratio: 16 / 10;
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+/* Captures too wide to fill that box without losing their edges — see
+   UNCROPPED_SLUGS in data/projectScreenshots.js. `contain` keeps the whole
+   capture and leaves a band behind instead; the band is painted the light end
+   of the ramp, which the semantic layer never inverts, because it stands in for
+   the white paper of the capture it sits under in both themes. The ratio above
+   still governs the box, so this card lines up with the ones beside it. */
+.portfolio-media.has-screenshot.is-uncropped {
+    background-color: var(--neutral-0);
+    background-size: contain;
+}
+
 .window-header {
     display: flex;
     gap: var(--space-2);
@@ -2384,27 +2408,6 @@ h6,
 .location-address {
     font-size: var(--text-sm);
     color: var(--text-tertiary);
-}
-
-.location-clock {
-    margin-block-start: var(--space-4);
-    padding-block-start: var(--space-4);
-    font-family: var(--font-mono);
-    font-size: var(--text-sm);
-    font-variant-numeric: tabular-nums;
-    color: var(--text-secondary);
-    border-block-start: 1px solid var(--border-subtle);
-}
-
-/* The placeholder is dimmed until the module confirms a live value. */
-.location-clock[data-clock] {
-    color: var(--text-faint);
-}
-
-/* Cyan once the clock is actually ticking — mono tabular digits in the accent
-   read as a live readout, which is the whole point of showing local time. */
-.location-clock[data-clock].is-live {
-    color: var(--accent-600);
 }
 
 /* ==========================================================================

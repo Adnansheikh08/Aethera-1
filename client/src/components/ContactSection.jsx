@@ -14,14 +14,14 @@ const CONTACT_DETAILS = [
   },
   {
     label: "Email",
-    value: "mohammadharoonu@gmail.com",
-    href: "mailto:mohammadharoonu@gmail.com",
+    value: "servexservices798@gmail.com",
+    href: "mailto:servexservices798@gmail.com",
     icon: "email",
   },
   {
     label: "Phone",
-    value: "+91 79857 65985",
-    href: "tel:+917985765985",
+    value: "+91 94549 45906",
+    href: "tel:+919454945906",
     icon: "phone",
   },
   {

@@ -1,0 +1,30 @@
+{
+  "name": "servexservices",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "ServeXservices — Vite SPA (client/) plus the Express API, deployed as one Vercel project.",
+  "//": "Vercel installs dependencies from the project root only. The list below mirrors the runtime dependencies in server/package.json so that api/index.js — and the server/ modules it imports — resolve when the function is bundled. It is duplicated, not shared: keep the two in sync when adding a server runtime dependency. Swapping both packages to npm workspaces would remove the duplication, but it changes how `npm ci` behaves in the client/ and server/ subdirectories, which the Dockerfile relies on.",
+  "scripts": {
+    "build": "npm --prefix client run build"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.9.5",
+    "nodemailer": "^9.0.5",
+    "pino": "^9.6.0",
+    "qrcode": "^1.5.4",
+    "speakeasy": "^2.0.0",
+    "zod": "^3.24.1"
+  }
+}

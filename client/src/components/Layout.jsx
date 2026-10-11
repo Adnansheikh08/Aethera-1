@@ -314,8 +314,8 @@ export function Footer() {
                   <rect x="2" y="4" width="20" height="16" rx="2" />
                   <path d="m2 7 10 6 10-6" />
                 </svg>
-                <a href="mailto:mohammadharoonu@gmail.com" className="contact-link">
-                  mohammadharoonu@gmail.com
+                <a href="mailto:servexservices798@gmail.com" className="contact-link">
+                  servexservices798@gmail.com
                 </a>
               </li>
               <li>
@@ -334,8 +334,8 @@ export function Footer() {
                 >
                   <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2 4.2 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z" />
                 </svg>
-                <a href="tel:+917985765985" className="contact-link">
-                  +91 79857 65985
+                <a href="tel:+919454945906" className="contact-link">
+                  +91 94549 45906
                 </a>
               </li>
               <li>
@@ -386,7 +386,7 @@ export function Footer() {
 export function WhatsAppFloat() {
   return (
     <a
-      href="https://wa.me/917985765985"
+      href="https://wa.me/919454945906"
       className="whatsapp-float"
       target="_blank"
       rel="noopener noreferrer"

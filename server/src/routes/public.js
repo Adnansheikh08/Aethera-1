@@ -1,6 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 
+import { config } from "../config/index.js";
 import { asyncHandler, ApiError } from "../middleware/errors.js";
 import { validate, leadSchema, erasureSchema } from "../validators/schemas.js";
 import { createLead, processDataErasure } from "../services/leadService.js";

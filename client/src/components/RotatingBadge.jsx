@@ -17,6 +17,7 @@ const SERVICES = [
   "UI/UX Design",
   "Software Testing",
   "Odoo Implementation & Development",
+  "SEO",
 ];
 
 const ROTATE_INTERVAL_MS = 2200;
