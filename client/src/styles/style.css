@@ -746,10 +746,18 @@ h6,
 }
 
 .brand {
-    font-size: var(--text-xl);
-    font-weight: 650;
-    letter-spacing: -0.03em;
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
     color: var(--text-primary);
+}
+
+.brand-logo {
+    display: block;
+    width: 5.5rem;
+    height: 2.75rem;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
 }
 
 .orange-char {
