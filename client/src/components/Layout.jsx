@@ -166,10 +166,11 @@ export function Header() {
     <header className={`site-header${isCondensed ? " is-condensed" : ""}`}>
       <div className="nav-container">
         <Link to="/" className="brand" aria-label="ServeXservices home">
-          ServeXservices
-          <span className="orange-char" aria-hidden="true">
-            .
-          </span>
+          <img
+            className="brand-logo"
+            src="/servexservices-logo.png"
+            alt="ServeXservices"
+          />
         </Link>
 
         <div className="header-actions">
