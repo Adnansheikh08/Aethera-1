@@ -16,9 +16,10 @@ import { useHeaderCondensed } from "../hooks/useScrollProgress.js";
  * Site-wide wayfinding order — Home, About, Services, Projects, Testimonial,
  * Contact Us.
  *
- * The header nav renders this array, wrapped by the same Home and Contact
- * entries. An entry with `id` is an anchor into a landing-page section, exactly
- * as base.html's nav was; an entry with `to` is a route of its own.
+ * The header nav and the footer's Navigate list both render this array, wrapped
+ * by the same Home and Contact entries, so the two lists cannot drift apart.
+ * An entry with `id` is an anchor into a landing-page section, exactly as
+ * base.html's nav was; an entry with `to` is a route of its own.
  */
 const NAV_ITEMS = [
   { id: "statement-section", label: "About" },
@@ -29,7 +30,7 @@ const NAV_ITEMS = [
   { id: "proof-section", label: "Testimonial" },
 ];
 
-/** Closes the header nav list, styled as the header's filled button. */
+/** Closes every nav list: a button in the header, a plain link in the footer. */
 const CONTACT = { id: "contact-section", label: "Contact Us" };
 
 /**

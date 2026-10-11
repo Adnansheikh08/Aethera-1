@@ -16,7 +16,7 @@ import heroWorkspaceImg from "../assets/hero-workspace.jpg";
 
 /**
  * Fallback ticker copy while the landing content is still in flight (or failed
- * to load) — the same nine services the API returns, so the swap when titles
+ * to load) — the same ten services the API returns, so the swap when titles
  * arrive is a change of wording at worst, never a change of content.
  */
 const CAPABILITIES = [
@@ -29,6 +29,7 @@ const CAPABILITIES = [
   "UI/UX Design",
   "Software Testing",
   "Odoo Implementation and Development",
+  "SEO",
 ];
 
 /**
@@ -204,9 +205,6 @@ function ServiceCard({ service, index, onDetailClick }) {
       <div>
         <h3 className="card-title">{service.title}</h3>
         <p>{service.short_description}</p>
-        <Link to={`/services/${service.slug}`} className="learn-more">
-          View service<span className="visually-hidden"> details for {service.title}</span>
-        </Link>
         <button
           className="learn-more"
           onClick={() => onDetailClick(service)}

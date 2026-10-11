@@ -15,7 +15,6 @@ import { Projects } from "./pages/Projects.jsx";
 import { NotFound, PrivacyPolicy, Terms } from "./pages/Legal.jsx";
 
 const SITE_TITLE = "ServeXservices — Enterprise Software Agency & Cybersecurity";
-const SITE_URL = "https://www.servexservices.com";
 const SITE_DESCRIPTION =
   "We build secure, high-performance, and ultra-scalable web platforms and enterprise applications aligned to the OWASP ASVS standard.";
 
@@ -35,13 +34,12 @@ const SITE_DESCRIPTION =
  */
 function SiteMeta() {
   const { pathname } = useLocation();
-  const url = new URL(pathname, SITE_URL).toString();
+  const url = `${window.location.origin}${pathname}`;
 
   return (
     <Helmet>
       <title>{SITE_TITLE}</title>
       <meta name="description" content={SITE_DESCRIPTION} />
-      <meta name="robots" content="index, follow" />
       <link rel="canonical" href={url} />
       <meta property="og:site_name" content="ServeXservices" />
       <meta property="og:type" content="website" />
@@ -52,7 +50,6 @@ function SiteMeta() {
         content="We engineer secure, high-performance, and ultra-scalable web platforms."
       />
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:url" content={url} />
       <meta name="twitter:title" content="ServeXservices — Enterprise Software Agency" />
       <meta
         name="twitter:description"

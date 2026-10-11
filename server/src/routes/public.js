@@ -162,14 +162,78 @@ router.post(
   }),
 );
 
-/** Keep the production frontend as the single crawl-directives owner. */
-router.get("/robots.txt", (req, res) => {
-  res.redirect(308, "https://www.servexservices.com/robots.txt");
+/**
+ * Ported from apps/agency/views.py robots_txt.
+ *
+ * nginx proxies /robots.txt to this route as well as /api/robots.txt: without
+ * that the SPA fallback answers with index.html and a 200, and a crawler reads
+ * the app shell as a robots file.
+ */
+router.get("/robots.txt", (_req, res) => {
+  res
+    .type("text/plain")
+    .send(
+      [
+        "User-agent: *",
+        `Disallow: /${config.adminUrlPath}/`,
+        `Sitemap: ${config.siteUrl}/sitemap.xml`,
+      ].join("\n"),
+    );
 });
 
-/** Preserve the endpoint while keeping sitemap ownership on the frontend. */
-router.get("/sitemap.xml", (_req, res) => {
-  res.redirect(308, "https://www.servexservices.com/sitemap.xml");
-});
+/**
+ * Static entries, in the order they are published. Everything here is a real
+ * route on the SPA; the admin console and the 404 catch-all are left out
+ * because they carry a noindex meta tag.
+ */
+const STATIC_PATHS = [
+  { path: "/", priority: "1.0" },
+  { path: "/projects", priority: "0.9" },
+  { path: "/contact", priority: "0.8" },
+  { path: "/privacy-policy", priority: "0.3" },
+  { path: "/terms", priority: "0.3" },
+];
+
+/** A <loc> is XML text: a bare & or < would invalidate the whole document. */
+const escapeXml = (value) =>
+  value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+/**
+ * Ported from apps/agency/views.py sitemap_xml, reached at /sitemap.xml through
+ * the nginx proxy as well as at /api/sitemap.xml directly.
+ *
+ * Every loc is built from config.siteUrl rather than req.protocol + Host — see
+ * the note on siteUrl in config/index.js for why the request cannot be trusted
+ * to name the scheme.
+ *
+ * No path carries a trailing slash. SiteMeta builds the canonical from the
+ * router's pathname, and React Router claims the slash-less form, so listing
+ * /services/x/ would advertise a URL the page never canonicalises to and split
+ * the two across duplicate-content handling.
+ */
+router.get(
+  "/sitemap.xml",
+  asyncHandler(async (_req, res) => {
+    const [services, caseStudies] = await Promise.all([
+      getActiveServices(),
+      getPublishedCaseStudies(),
+    ]);
+
+    const entries = [
+      ...STATIC_PATHS,
+      ...services.map((s) => ({ path: `/services/${s.slug}`, priority: "0.8" })),
+      ...caseStudies.map((c) => ({ path: `/case-studies/${c.slug}`, priority: "0.7" })),
+    ];
+
+    const urls = entries.map(
+      ({ path, priority }) =>
+        `<url><loc>${escapeXml(`${config.siteUrl}${path}`)}</loc><priority>${priority}</priority></url>`,
+    );
+
+    res.type("application/xml").send(
+      `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  ${urls.join("\n  ")}\n</urlset>`,
+    );
+  }),
+);
 
 export default router;
