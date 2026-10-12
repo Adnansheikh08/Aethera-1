@@ -59,10 +59,15 @@ const ROOT_ALIASES = new Map([
 
 /** Vercel Node runtime entry: (req, res), same contract as an http handler. */
 export default async function handler(req, res) {
-  await ensureDatabase();
-
   const [pathname, search] = req.url.split("?");
   const alias = ROOT_ALIASES.get(pathname);
+  const isRobotsRequest = pathname === "/robots.txt" || pathname === "/api/robots.txt";
+
+  // robots.txt is static and must remain available even when the database is
+  // temporarily unavailable. The sitemap is intentionally database-backed so
+  // it can include only currently published dynamic pages.
+  if (!isRobotsRequest) await ensureDatabase();
+
   if (alias) req.url = search ? `${alias}?${search}` : alias;
 
   return app(req, res);

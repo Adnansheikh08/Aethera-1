@@ -23,6 +23,10 @@ const persistConsent = (consent) => {
     }
 };
 
+const notifyConsentChange = (consent) => {
+    window.dispatchEvent(new CustomEvent("aethera:consent-change", { detail: consent }));
+};
+
 /**
  * Granular cookie consent.
  *
@@ -92,6 +96,7 @@ export const useCookieConsent = ({ enabled = true, categories = ["analytics", "m
 
     const close = useCallback((decision) => {
         persistConsent(decision);
+        notifyConsentChange(decision);
         setConsent(decision);
         setIsVisible(false);
 

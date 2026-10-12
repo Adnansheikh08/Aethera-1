@@ -175,6 +175,7 @@ router.get("/robots.txt", (_req, res) => {
     .send(
       [
         "User-agent: *",
+        "Disallow: /api/",
         `Disallow: /${config.adminUrlPath}/`,
         `Sitemap: ${config.siteUrl}/sitemap.xml`,
       ].join("\n"),

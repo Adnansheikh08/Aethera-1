@@ -6,6 +6,7 @@ import Admin from "./admin/Admin.jsx";
 import AcceptInvite from "./admin/AcceptInvite.jsx";
 import { AuthProvider } from "./admin/AuthContext.jsx";
 import { CookieBanner, Preloader, ScrollProgress } from "./components/Chrome.jsx";
+import { GoogleAnalytics } from "./components/GoogleAnalytics.jsx";
 import { Footer, Header, WhatsAppFloat } from "./components/Layout.jsx";
 import { useScrollTopOnNavigate } from "./hooks/useNavigation.js";
 import { CaseStudyDetail, ServiceDetail } from "./pages/Detail.jsx";
@@ -17,7 +18,8 @@ import { NotFound, PrivacyPolicy, Terms } from "./pages/Legal.jsx";
 const SITE_TITLE = "ServeXservices — Enterprise Software Agency & Cybersecurity";
 const SITE_DESCRIPTION =
   "We build secure, high-performance, and ultra-scalable web platforms and enterprise applications aligned to the OWASP ASVS standard.";
-const SITE_LOGO = "/servexservices-logo.png";
+const SITE_ORIGIN = "https://www.servexservices.com";
+const SITE_LOGO = `${SITE_ORIGIN}/servexservices-logo.png`;
 
 /**
  * Site-wide head defaults, ported from the non-block parts of base.html.
@@ -35,7 +37,7 @@ const SITE_LOGO = "/servexservices-logo.png";
  */
 function SiteMeta() {
   const { pathname } = useLocation();
-  const url = `${window.location.origin}${pathname}`;
+  const url = `${SITE_ORIGIN}${pathname === "/" ? "/" : pathname}`;
 
   return (
     <Helmet>
@@ -50,7 +52,7 @@ function SiteMeta() {
         property="og:description"
         content="We engineer secure, high-performance, and ultra-scalable web platforms."
       />
-      <meta property="og:image" content={`${window.location.origin}${SITE_LOGO}`} />
+      <meta property="og:image" content={SITE_LOGO} />
       <meta property="og:image:alt" content="ServeXservices logo" />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content="ServeXservices — Enterprise Software Agency" />
@@ -58,7 +60,7 @@ function SiteMeta() {
         name="twitter:description"
         content="Hardened enterprise software and cyber-secure media platforms."
       />
-      <meta name="twitter:image" content={`${window.location.origin}${SITE_LOGO}`} />
+      <meta name="twitter:image" content={SITE_LOGO} />
       <meta name="twitter:image:alt" content="ServeXservices logo" />
     </Helmet>
   );
@@ -82,6 +84,7 @@ function PublicSite() {
   return (
     <>
       <SiteMeta />
+      <GoogleAnalytics />
 
       {/* Only the landing page had the intro sequence; deep links skip it. */}
       {isLanding && !introComplete && <Preloader onComplete={() => setIntroComplete(true)} />}
