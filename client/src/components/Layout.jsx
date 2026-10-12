@@ -167,9 +167,15 @@ export function Header() {
       <div className="nav-container">
         <Link to="/" className="brand" aria-label="ServeXservices home">
           <img
-            className="brand-logo"
+            className="brand-logo brand-logo-dark"
             src="/servexservices-logo.png"
             alt="ServeXservices"
+          />
+          <img
+            className="brand-logo brand-logo-light"
+            src="/serveXserviceslightmodelogo.png"
+            alt=""
+            aria-hidden="true"
           />
         </Link>
 

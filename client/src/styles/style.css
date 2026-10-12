@@ -746,18 +746,41 @@ h6,
 }
 
 .brand {
+    position: relative;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
+    width: 5.5rem;
     min-height: 2.75rem;
+    height: 2.75rem;
     color: var(--text-primary);
 }
 
 .brand-logo {
+    position: absolute;
+    inset: 0;
     display: block;
-    width: 5.5rem;
-    height: 2.75rem;
-    object-fit: cover;
+    width: 100%;
+    height: 100%;
     border-radius: var(--radius-sm);
+    object-fit: contain;
+    transition: opacity var(--duration-base) ease;
+}
+
+.brand-logo-dark {
+    opacity: 1;
+}
+
+.brand-logo-light {
+    opacity: 0;
+}
+
+:root.light .brand-logo-dark {
+    opacity: 0;
+}
+
+:root.light .brand-logo-light {
+    opacity: 1;
 }
 
 .orange-char {
