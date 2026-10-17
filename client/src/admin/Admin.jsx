@@ -144,6 +144,7 @@ const RESOURCES = {
       ["title", "text", { required: true }],
       ["slug", "text", { required: true, pattern: "[a-z0-9-]+", title: "Lowercase kebab-case" }],
       ["description", "textarea", { required: true }],
+      ["skills", "skills", { label: "Skills (comma or line separated)" }],
       ["project_url", "url", { label: "Project URL (optional)" }],
       ["is_published", "checkbox", { label: "Published" }],
     ],
@@ -197,6 +198,9 @@ function CrudPage({ resource }) {
       const input = elements[name];
       if (!input) continue;
       if (type === "checkbox") body[name] = input.checked;
+      else if (type === "skills") {
+        body[name] = input.value.split(/[\n,]/).map((skill) => skill.trim()).filter(Boolean);
+      }
       else body[name] = input.value.trim();
     }
 
@@ -280,6 +284,13 @@ function CrudPage({ resource }) {
                         rows={4}
                         required={options.required}
                         defaultValue={editing !== "new" ? editing[name] ?? "" : ""}
+                      />
+                    ) : type === "skills" ? (
+                      <textarea
+                        name={name}
+                        rows="3"
+                        placeholder="React, Node.js, PostgreSQL"
+                        defaultValue={editing !== "new" ? (editing[name] ?? []).join(", ") : ""}
                       />
                     ) : (
                       <input

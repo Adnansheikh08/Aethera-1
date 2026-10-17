@@ -4,6 +4,8 @@ import { Helmet } from "react-helmet-async";
 
 import { getCaseStudy, getService } from "../api/client.js";
 import { Prose } from "../components/Prose.jsx";
+import { PortfolioBoard } from "../components/sections.jsx";
+import { serviceBackground } from "../data/serviceBackgrounds.js";
 
 /** Shared loading / not-found shell for both detail pages. */
 function DetailState({ error, children }) {
@@ -81,10 +83,22 @@ export function ServiceDetail() {
           </Helmet>
 
           <header className="page-header">
-            <p className="eyebrow">Service Capability</p>
-            <h1 id="service-title" className="page-title">
-              {service.title}
-            </h1>
+            <div className="service-detail-hero">
+              {serviceBackground(service.slug) && (
+                <img
+                  className="service-detail-art"
+                  src={serviceBackground(service.slug)}
+                  alt=""
+                  aria-hidden="true"
+                />
+              )}
+              <div>
+                <p className="eyebrow">Service Capability</p>
+                <h1 id="service-title" className="page-title">
+                  {service.title}
+                </h1>
+              </div>
+            </div>
           </header>
 
           <section className="container" aria-labelledby="service-title">
@@ -93,6 +107,32 @@ export function ServiceDetail() {
             <div className="prose">
               <Prose text={service.description} />
             </div>
+
+            <section className="service-skills" aria-labelledby="skills-title">
+              <p className="eyebrow">Core skills</p>
+              <h2 id="skills-title" className="section-heading">Tools and capabilities</h2>
+              {service.skills?.length ? (
+                <ul className="skill-list">
+                  {service.skills.map((skill) => <li key={skill}>{skill}</li>)}
+                </ul>
+              ) : (
+                <p className="section-subtitle">Skills used across our work in this discipline.</p>
+              )}
+            </section>
+
+            <section className="service-projects" aria-labelledby="service-projects-title">
+              <div className="section-head">
+                <div>
+                  <p className="eyebrow">Selected work</p>
+                  <h2 id="service-projects-title" className="section-heading">Projects in {service.title}</h2>
+                </div>
+              </div>
+              {service.projects?.length ? (
+                <PortfolioBoard services={[service]} portfolioItems={service.projects} />
+              ) : (
+                <p className="filter-empty">Projects for this capability are being prepared.</p>
+              )}
+            </section>
 
             <div className="hero-ctas">
               <a href="/#contact-section" className="cta-button btn-primary">

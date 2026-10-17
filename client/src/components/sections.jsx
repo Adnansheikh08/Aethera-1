@@ -356,6 +356,11 @@ function PortfolioCard({ item, index, cardProps }) {
       <span className="metric-badge">{item.service?.title}</span>
       <h3 className="card-title">{item.title}</h3>
       <p>{item.description}</p>
+      {item.skills?.length > 0 && (
+        <ul className="project-skills" aria-label={`Skills used for ${item.title}`}>
+          {item.skills.map((skill) => <li key={skill}>{skill}</li>)}
+        </ul>
+      )}
       {item.project_url && (
         <a
           href={item.project_url}

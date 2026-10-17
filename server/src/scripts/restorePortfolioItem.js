@@ -34,7 +34,15 @@ if (!slug) {
 
 // Only the fields portfolioItemSchema actually defines; audit payloads also carry
 // id/created_at/updated_at, which must not be written back as content.
-const CONTENT_FIELDS = ["service", "title", "slug", "description", "project_url", "is_published"];
+const CONTENT_FIELDS = [
+  "service",
+  "title",
+  "slug",
+  "description",
+  "skills",
+  "project_url",
+  "is_published",
+];
 
 const pick = (source) =>
   Object.fromEntries(CONTENT_FIELDS.filter((f) => f in source).map((f) => [f, source[f]]));

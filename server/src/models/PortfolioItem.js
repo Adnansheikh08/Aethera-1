@@ -20,6 +20,11 @@ const portfolioItemSchema = new mongoose.Schema(
     title: { type: String, required: true, maxlength: 200 },
     slug: { type: String, required: true, unique: true, index: true, maxlength: 200 },
     description: { type: String, required: true },
+    skills: {
+      type: [String],
+      default: [],
+      validate: (values) => values.length <= 30,
+    },
     project_url: { type: String, default: "", maxlength: 500 },
     is_published: { type: Boolean, default: true, index: true },
   },

@@ -105,6 +105,7 @@ const PORTFOLIO = [
     title: "Fintech Ledger System Hardening",
     description:
       "Audited and encrypted banking deposit database handling $45M+ in monthly transactional volume.",
+    skills: ["Node.js", "MongoDB", "Redis", "OWASP ASVS"],
     project_url: "https://github.com/aethera-agency",
   },
   {
@@ -113,6 +114,7 @@ const PORTFOLIO = [
     title: "E-Commerce scale ad campaigns",
     description:
       "Rebuilt digital campaign strategy for enterprise apparel retailer, reducing acquisition costs by 32%.",
+    skills: ["Google Ads", "Meta Ads", "UTM Tracking", "Conversion Analytics"],
     project_url: "https://aethera.agency",
   },
 ];

@@ -52,6 +52,12 @@ export const portfolioItemSchema = z.object({
   title: z.string().trim().min(1).max(200),
   slug: z.string().trim().min(1).max(200).regex(/^[a-z0-9-]+$/, "Slug must be lowercase kebab-case"),
   description: z.string().min(1),
+  skills: z
+    .array(z.string().trim().min(1).max(80))
+    .max(30)
+    .optional()
+    .default([])
+    .transform((skills) => [...new Set(skills)]),
   project_url: z.string().url().max(500).or(z.literal("")).optional().default(""),
   is_published: z.boolean().optional().default(true),
 });

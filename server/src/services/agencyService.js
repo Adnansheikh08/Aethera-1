@@ -40,7 +40,12 @@ export async function getPublishedCaseStudies() {
 export async function getServiceBySlug(slug) {
   const service = await Service.findOne({ slug, is_active: true }).lean();
   if (!service) throw new ApiError(404, "Service not found");
-  return serialize(service);
+  const projects = await PortfolioItem.find({ service: service._id, is_published: true })
+    .populate("service", "title slug")
+    .sort({ created_at: -1 })
+    .lean();
+  const skills = [...new Set(projects.flatMap((project) => project.skills ?? []))];
+  return serialize({ ...service, projects, skills });
 }
 
 /** get_object_or_404(CaseStudy, slug=..., is_published=True) */
