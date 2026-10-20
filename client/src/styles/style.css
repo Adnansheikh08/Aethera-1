@@ -3072,6 +3072,36 @@ h6,
     z-index: 1;
 }
 
+.detail-loading {
+    display: flex;
+    min-height: 18rem;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+.detail-loading p {
+    margin: 0;
+}
+
+.detail-loading-spinner {
+    width: 1.25rem;
+    height: 1.25rem;
+    flex: 0 0 auto;
+    border: 2px solid var(--border-strong);
+    border-block-start-color: var(--primary-500);
+    border-radius: 50%;
+    animation: detail-loading-spin 0.8s linear infinite;
+}
+
+@keyframes detail-loading-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 .service-skills,
 .service-projects {
     margin-block-start: var(--space-16);

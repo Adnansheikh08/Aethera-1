@@ -8,7 +8,7 @@ import { PortfolioBoard } from "../components/sections.jsx";
 import { serviceBackground } from "../data/serviceBackgrounds.js";
 
 /** Shared loading / not-found shell for both detail pages. */
-function DetailState({ error, children }) {
+function DetailState({ error, loading, loadingLabel = "Loading details\u2026", children }) {
   if (error) {
     return (
       <>
@@ -42,6 +42,15 @@ function DetailState({ error, children }) {
     );
   }
 
+  if (loading) {
+    return (
+      <section className="detail-loading" aria-live="polite" aria-busy="true">
+        <span className="detail-loading-spinner" aria-hidden="true" />
+        <p>{loadingLabel}</p>
+      </section>
+    );
+  }
+
   return children;
 }
 
@@ -65,7 +74,7 @@ export function ServiceDetail() {
   }, [slug]);
 
   return (
-    <DetailState error={error}>
+    <DetailState error={error} loading={!service} loadingLabel="Loading service details\u2026">
       {service && (
         <>
           {/*
@@ -169,7 +178,7 @@ export function CaseStudyDetail() {
   }, [slug]);
 
   return (
-    <DetailState error={error}>
+    <DetailState error={error} loading={!study} loadingLabel="Loading case study\u2026">
       {study && (
         <>
           <Helmet>
