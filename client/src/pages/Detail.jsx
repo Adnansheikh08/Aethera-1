@@ -8,7 +8,7 @@ import { PortfolioBoard } from "../components/sections.jsx";
 import { serviceBackground } from "../data/serviceBackgrounds.js";
 
 /** Shared loading / not-found shell for both detail pages. */
-function DetailState({ error, loading, loadingLabel = "Loading details\u2026", children }) {
+function DetailState({ error, loading, loadingLabel = "Loading details for", children }) {
   if (error) {
     return (
       <>
