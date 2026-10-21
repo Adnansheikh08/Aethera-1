@@ -21,6 +21,50 @@
     <priority>0.3</priority>
   </url>
   <url>
+    <loc>https://www.servexservices.com/admin</loc>
+    <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://www.servexservices.com/admin/invite</loc>
+    <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://www.servexservices.com/admin/leads</loc>
+    <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://www.servexservices.com/admin/services</loc>
+    <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://www.servexservices.com/admin/portfolio</loc>
+    <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://www.servexservices.com/admin/case-studies</loc>
+    <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://www.servexservices.com/admin/transactions</loc>
+    <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://www.servexservices.com/admin/erasures</loc>
+    <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://www.servexservices.com/admin/audit</loc>
+    <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://www.servexservices.com/admin/admins</loc>
+    <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://www.servexservices.com/admin/change-password</loc>
+    <priority>0.2</priority>
+  </url>
+  <url>
     <loc>https://www.servexservices.com/services/web-development</loc>
     <priority>0.8</priority>
   </url>
